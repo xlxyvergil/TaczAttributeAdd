@@ -1,0 +1,20 @@
+modLoader="javafml"
+loaderVersion="[46,)"
+license="LGPL-3.0"
+
+[[mods]]
+modId="puffish_attributes"
+version="${version}"
+displayName="Pufferfish's Attributes"
+authors="Pufferfish"
+description="Adds more attributes to the game."
+
+[[dependencies.puffish_attributes]]
+modId="forge"
+mandatory=true
+versionRange="[46,)"
+
+[[dependencies.puffish_attributes]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20,1.20.2)"
