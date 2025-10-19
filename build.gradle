@@ -120,61 +120,16 @@ repositories {
     maven {
         // 阿里云镜像，方便国内开发
         url = uri("https://maven.aliyun.com/repository/public/")
-        content {
-            includeGroup 'org.apache.commons'
-        }
     }
     maven {
-        // location of the maven that hosts JEI files since January 2023
-        // Patchouli
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
+        // Forge 官方仓库
+        url = 'https://maven.minecraftforge.net'
     }
     maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "Mod Maven"
-        url = "https://modmaven.k-4u.nl"
+        // SpongePowered Mixin 仓库
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven { url "https://maven.shedaniel.me/" } // cloth config api
-    maven { url "https://dvs1.progwml6.com/files/maven/" }
-    maven { url "https://modmaven.dev" }
-    maven {
-        name = 'tterrag maven'
-        url = 'https://maven.tterrag.com/'
-    }
-    maven {
-        // Shedaniel's maven (Architectury API)
-        url = "https://maven.architectury.dev"
-        content {
-            includeGroup "dev.architectury"
-        }
-    }
-    maven {
-        // latvian.dev Maven (KubeJS and Rhino)
-        url "https://maven.latvian.dev/releases"
-        content {
-            includeGroup "dev.latvian.mods"
-            includeGroup "dev.latvian.apps"
-        }
-    }
-    maven {
-        url 'https://jitpack.io'
-        content {
-            includeGroup "com.github.rtyley"
-            includeGroup "com.github.FiguraMC.luaj"
-        }
-    }
-    maven {
-        name "KosmX's maven"
-        url 'https://maven.kosmx.dev/'
-    }
-    mavenCentral() // MixinExtras is there
+    mavenCentral()
     mavenLocal()
     flatDir {
         dir 'libs'
@@ -186,26 +141,8 @@ dependencies {
 
     // Tacz mod dependency
     implementation fg.deobf(files("libs/tacz-1.20.1-1.1.6-hotfix.jar"))
-    
-    // Puffish Skills mod dependency
-    implementation fg.deobf(files("libs/puffish_skills-0.15.1-1.20-forge.jar"))
-    
-    // Puffish Attributes mod dependency (required by puffish_skills)
-    implementation fg.deobf(files("libs/puffish_attributes-0.7.2-1.20-forge.jar"))
 
-    // compile against the JEI API but do not include it at runtime
-    compileOnly(fg.deobf("mezz.jei:jei-1.20.1-common-api:${jei_version}"))
-    compileOnly(fg.deobf("mezz.jei:jei-1.20.1-forge-api:${jei_version}"))
-    // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-1.20.1-forge:${jei_version}"))
-
-    implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_forge}")
-
-    // 引入 MixinExtras 以解决一些棘手的 Mixin 冲突问题
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.6"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.6")) {
-        jarJar.ranged(it, "[0.3.6,)")
-    }
+    // Mixin annotation processor
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

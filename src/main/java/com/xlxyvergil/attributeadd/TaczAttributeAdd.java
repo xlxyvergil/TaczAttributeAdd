@@ -2,9 +2,7 @@ package com.xlxyvergil.attributeadd;
 
 import com.xlxyvergil.attributeadd.config.ModConfig;
 import com.xlxyvergil.attributeadd.init.ModAttributes;
-import com.xlxyvergil.attributeadd.rewards.BulletGunDamageReward;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -34,11 +32,7 @@ public class TaczAttributeAdd {
 
     private void setup(FMLCommonSetupEvent event) {
         DebugLogger.info("FMLCommonSetupEvent triggered");
-        event.enqueueWork(() -> {
-            DebugLogger.debug("Starting reward system registration");
-            // 注册奖励系统（在服务器和客户端都需要注册）
-            BulletGunDamageReward.register();
-            DebugLogger.info("Reward system registration completed");
-        });
+        // Puffish Skills集成通过内置attribute奖励实现，无需手动注册奖励系统
+        DebugLogger.info("Puffish Skills集成已通过内置attribute奖励实现");
     }
 }

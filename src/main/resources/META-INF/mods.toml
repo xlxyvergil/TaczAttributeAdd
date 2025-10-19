@@ -38,22 +38,7 @@ description="Adds gun damage attributes to Tacz mod."
 [[dependencies.taczattributeadd]]
     modId="tacz"
     mandatory=true
-    versionRange="[1.1.6,)"
+    versionRange="[1.1.4,)"
     ordering="NONE"
     side="BOTH"
 
-# Puffish Skills mod dependency
-[[dependencies.taczattributeadd]]
-    modId="puffish_skills"
-    mandatory=true
-    versionRange="[0.15.1,)"
-    ordering="NONE"
-    side="BOTH"
-
-# Puffish Attributes mod dependency
-[[dependencies.taczattributeadd]]
-    modId="puffish_attributes"
-    mandatory=true
-    versionRange="[0.7.2,)"
-    ordering="NONE"
-    side="BOTH"
