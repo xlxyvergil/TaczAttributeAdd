@@ -7,11 +7,10 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-@Mod("taczattributeadd")
+@Mod("taa")
 public class TaczAttributeAdd {
-    public static final String MOD_ID = "taczattributeadd";
+    public static final String MOD_ID = "taa";
     
     public TaczAttributeAdd() {
         DebugLogger.info("TaczAttributeAdd mod constructor called");
@@ -25,14 +24,6 @@ public class TaczAttributeAdd {
         DebugLogger.debug("Registering attribute system");
         ModAttributes.ATTRIBUTES.register(modEventBus);
         
-        modEventBus.addListener(this::setup);
-        
         DebugLogger.info("TaczAttributeAdd mod initialization completed");
-    }
-
-    private void setup(FMLCommonSetupEvent event) {
-        DebugLogger.info("FMLCommonSetupEvent triggered");
-        // Puffish Skills集成通过内置attribute奖励实现，无需手动注册奖励系统
-        DebugLogger.info("Puffish Skills集成已通过内置attribute奖励实现");
     }
 }
