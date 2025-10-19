@@ -2,11 +2,11 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.xlxyvergil.attributeadd.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [],
-  "client": [
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
     "BulletDamageMixin"
   ],
+  "client": [],
   "server": [],
   "injectors": {
     "defaultRequire": 1
