@@ -1,6 +1,6 @@
 TACZ-1.19.2
 libs
-build/libs/taa-1.0.0.jar
+build
 .vscode/settings.json
 .gradle/file-system.probe
 .gradle/buildOutputCleanup/outputFiles.bin
