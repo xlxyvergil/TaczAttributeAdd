@@ -1,5 +1,6 @@
 package com.xlxyvergil.attributeadd.rewards;
 
+import com.xlxyvergil.attributeadd.config.ModConfig;
 import com.xlxyvergil.attributeadd.init.ModAttributes;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,11 +26,12 @@ public class BulletGunDamageReward {
             // 获取特定枪械类型伤害加成
             double specificMultiplier = getSpecificGunTypeMultiplier(entity, gunItem);
             
-            // 计算总伤害倍率
-            double totalMultiplier = generalMultiplier + specificMultiplier;
+            // 根据配置选择计算方式
+            double totalMultiplier = calculateTotalMultiplier(generalMultiplier, specificMultiplier);
             
             DebugLogger.debug("伤害倍率计算 - 通用: " + generalMultiplier + 
                             ", 特定: " + specificMultiplier + 
+                            ", 计算方式: " + ModConfig.DAMAGE_CALCULATION_MODE.get() + 
                             ", 总计: " + totalMultiplier);
             
             return totalMultiplier;
@@ -37,6 +39,35 @@ public class BulletGunDamageReward {
         } catch (Exception e) {
             DebugLogger.error("计算伤害倍率失败: " + e.getMessage());
             return 0.0;
+        }
+    }
+    
+    /**
+     * 根据配置计算总伤害倍率
+     */
+    private static double calculateTotalMultiplier(double generalMultiplier, double specificMultiplier) {
+        ModConfig.DamageCalculationMode mode = ModConfig.DAMAGE_CALCULATION_MODE.get();
+        
+        switch (mode) {
+            case MAX:
+                // 取最大值
+                return Math.max(generalMultiplier, specificMultiplier);
+                
+            case ADD:
+                // 相加
+                return generalMultiplier + specificMultiplier;
+                
+            case MULTIPLY:
+                // 相乘：专属加成和通用加成分别作为乘法因子
+                // 公式：(1 + 专属加成) × (1 + 通用加成)
+                // 例如：专属加成0.3，通用加成0.2，相乘结果为 (1+0.3)*(1+0.2) = 1.56
+                double specificFactor = 1.0 + specificMultiplier;
+                double generalFactor = 1.0 + generalMultiplier;
+                return specificFactor * generalFactor;
+                
+            default:
+                // 默认取最大值
+                return Math.max(generalMultiplier, specificMultiplier);
         }
     }
     

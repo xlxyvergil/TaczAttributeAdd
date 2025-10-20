@@ -15,6 +15,9 @@ public class ModConfig {
     
     // 调试模式
     public static final ForgeConfigSpec.BooleanValue DEBUG_MODE;
+    
+    // 属性值计算方式
+    public static final ForgeConfigSpec.EnumValue<DamageCalculationMode> DAMAGE_CALCULATION_MODE;
 
     static {
         BUILDER.push("Tacz Attribute Add Configuration");
@@ -31,9 +34,22 @@ public class ModConfig {
                 .comment("调试模式", "启用调试日志输出")
                 .define("debugMode", false);
         
+        DAMAGE_CALCULATION_MODE = BUILDER
+                .comment("伤害计算模式", "选择属性值的计算方式：MAX（取最大值）、ADD（相加）、MULTIPLY（相乘）")
+                .defineEnum("damageCalculationMode", DamageCalculationMode.MAX);
+        
         BUILDER.pop();
         SPEC = BUILDER.build();
         
         DebugLogger.info("Mod configuration initialized");
+    }
+    
+    /**
+     * 伤害计算模式枚举
+     */
+    public enum DamageCalculationMode {
+        MAX,    // 取最大值
+        ADD,    // 相加
+        MULTIPLY // 相乘
     }
 }
