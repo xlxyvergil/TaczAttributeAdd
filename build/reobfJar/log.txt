@@ -1,5 +1,5 @@
 Java Launcher: C:\Program Files\Java\jdk-17\bin\java.exe
-Arguments: '--in-jar, G:\TaczAttributeAdd\build\libs\taa-1.0.0.jar, --out-jar, G:\TaczAttributeAdd\build\reobfJar\output.jar, --srg-in, G:\TaczAttributeAdd\build\createMcpToSrg\output.tsrg, --srg-in, G:\TaczAttributeAdd\build\tmp\compileJava\compileJava-mappings.tsrg, --live'
+Arguments: '--in-jar, G:\TaczAttributeAdd\build\libs\taczattributeadd-1.0.0.jar, --out-jar, G:\TaczAttributeAdd\build\reobfJar\output.jar, --srg-in, G:\TaczAttributeAdd\build\createMcpToSrg\output.tsrg, --srg-in, G:\TaczAttributeAdd\build\tmp\compileJava\compileJava-mappings.tsrg, --live'
 Classpath:
  - C:\Users\xlxyvergil\.gradle\caches\forge_gradle\maven_downloader\net\md-5\SpecialSource\1.11.0\SpecialSource-1.11.0-shaded.jar
  - G:\TaczAttributeAdd\libs\tacz-1.20.1-1.1.6-hotfix.jar

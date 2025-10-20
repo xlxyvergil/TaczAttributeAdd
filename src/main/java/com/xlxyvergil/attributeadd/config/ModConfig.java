@@ -14,6 +14,9 @@ public class ModConfig {
     public static final ForgeConfigSpec.DoubleValue MAX_DAMAGE_MULTIPLIER;
     public static final ForgeConfigSpec.BooleanValue ENABLE_SPECIFIC_GUN_TYPES;
     
+    // 技能配置
+    public static final ForgeConfigSpec.BooleanValue ENABLE_PUFFISH_SKILLS_INTEGRATION;
+    
     static {
         BUILDER.push("debug");
         ENABLE_DEBUG_LOGGING = BUILDER
@@ -31,6 +34,12 @@ public class ModConfig {
         ENABLE_SPECIFIC_GUN_TYPES = BUILDER
                 .comment("启用特定枪械类型伤害加成")
                 .define("enableSpecificGunTypes", true);
+        BUILDER.pop();
+        
+        BUILDER.push("skills");
+        ENABLE_PUFFISH_SKILLS_INTEGRATION = BUILDER
+                .comment("启用Puffish Skills集成")
+                .define("enablePuffishSkillsIntegration", true);
         BUILDER.pop();
         
         SPEC = BUILDER.build();

@@ -11,7 +11,7 @@ license="MIT"
 issueTrackerURL="https://github.com/xlxyvergil/TaczAttributeAdd/issues"
 
 [[mods]]
-modId="taa"
+modId="taczattributeadd"
 version="1.0.0"
 displayName="Tacz Attribute Add"
 updateJSONURL="https://github.com/xlxyvergil/TaczAttributeAdd/releases/latest"
@@ -22,7 +22,7 @@ authors="xlxyvergil"
 description="Adds gun damage attributes to Tacz mod."
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.taa]]
+[[dependencies.taczattributeadd]]
     # the modid of the dependency
     modId="forge"
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -35,10 +35,25 @@ description="Adds gun damage attributes to Tacz mod."
     side="BOTH"
 
 # Tacz mod dependency
-[[dependencies.taa]]
+[[dependencies.taczattributeadd]]
     modId="tacz"
     mandatory=true
-    versionRange="[1.1.4,)"
+    versionRange="[1.1.6,)"
     ordering="NONE"
     side="BOTH"
 
+# Puffish Skills mod dependency (optional - for integration)
+[[dependencies.taczattributeadd]]
+    modId="puffish_skills"
+    mandatory=false
+    versionRange="[0.15.1,)"
+    ordering="NONE"
+    side="BOTH"
+
+# Puffish Attributes mod dependency (optional - required by puffish_skills)
+[[dependencies.taczattributeadd]]
+    modId="puffish_attributes"
+    mandatory=false
+    versionRange="[0.7.2,)"
+    ordering="NONE"
+    side="BOTH"
