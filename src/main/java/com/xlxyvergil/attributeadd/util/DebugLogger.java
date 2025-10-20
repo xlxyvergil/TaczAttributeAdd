@@ -22,7 +22,7 @@ public class DebugLogger {
      * 记录调试信息
      */
     public static void debug(String message) {
-        if (ModConfig.ENABLE_DEBUG_LOGGING.get()) {
+        if (ModConfig.DEBUG_MODE.get()) {
             LOGGER.debug(formatMessage(message, "DEBUG"));
         }
     }
@@ -44,14 +44,14 @@ public class DebugLogger {
     }
     
     public static void startTimer(String timerId) {
-        if (ModConfig.ENABLE_DEBUG_LOGGING.get()) {
+        if (ModConfig.DEBUG_MODE.get()) {
             TIMERS.put(timerId, System.currentTimeMillis());
             debug("Timer started: " + timerId);
         }
     }
     
     public static void endTimer(String timerId) {
-        if (ModConfig.ENABLE_DEBUG_LOGGING.get()) {
+        if (ModConfig.DEBUG_MODE.get()) {
             Long startTime = TIMERS.remove(timerId);
             if (startTime != null) {
                 long duration = System.currentTimeMillis() - startTime;
@@ -61,7 +61,7 @@ public class DebugLogger {
     }
     
     public static void logAttributeProcessing(String playerName, String attributeName, float originalValue, float modifiedValue, String context) {
-        if (ModConfig.ENABLE_DEBUG_LOGGING.get()) {
+        if (ModConfig.DEBUG_MODE.get()) {
             String message = String.format(
                 "Attribute Processing - Player: %s, Attribute: %s, Original: %.2f, Modified: %.2f, Context: %s",
                 playerName, attributeName, originalValue, modifiedValue, context
@@ -71,7 +71,7 @@ public class DebugLogger {
     }
     
     public static void logDamageCalculation(String playerName, String gunType, float originalDamage, float modifiedDamage, String targetType) {
-        if (ModConfig.ENABLE_DAMAGE_CALCULATION_LOGGING.get()) {
+        if (ModConfig.DEBUG_MODE.get()) {
             String message = String.format(
                 "Damage Calculation - Player: %s, Gun: %s, Original: %.2f, Modified: %.2f, Target: %s",
                 playerName, gunType, originalDamage, modifiedDamage, targetType
@@ -81,7 +81,7 @@ public class DebugLogger {
     }
     
     public static void logEventHandling(String eventName, String handlerName, String details) {
-        if (ModConfig.ENABLE_DEBUG_LOGGING.get()) {
+        if (ModConfig.DEBUG_MODE.get()) {
             String message = String.format(
                 "Event Handling - Event: %s, Handler: %s, Details: %s",
                 eventName, handlerName, details

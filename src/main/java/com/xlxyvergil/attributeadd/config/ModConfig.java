@@ -1,62 +1,47 @@
 package com.xlxyvergil.attributeadd.config;
 
+import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
 
 public class ModConfig {
-    public static final ForgeConfigSpec SPEC;
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    
-    // 调试配置
-    public static final ForgeConfigSpec.BooleanValue ENABLE_DEBUG_LOGGING;
-    public static final ForgeConfigSpec.BooleanValue ENABLE_DAMAGE_CALCULATION_LOGGING;
-    
-    // 属性配置
+    public static final ForgeConfigSpec SPEC;
+
+    // 最大伤害倍率配置
     public static final ForgeConfigSpec.DoubleValue MAX_DAMAGE_MULTIPLIER;
+    
+    // 是否启用特定枪械类型属性
     public static final ForgeConfigSpec.BooleanValue ENABLE_SPECIFIC_GUN_TYPES;
     
-    // 技能配置
-    public static final ForgeConfigSpec.BooleanValue ENABLE_PUFFISH_SKILLS_INTEGRATION;
+    // 调试模式
+    public static final ForgeConfigSpec.BooleanValue DEBUG_MODE;
     
-    // 伤害计算模式配置
+    // 属性值计算方式
     public static final ForgeConfigSpec.EnumValue<DamageCalculationMode> DAMAGE_CALCULATION_MODE;
-    
+
     static {
-        BUILDER.push("debug");
-        ENABLE_DEBUG_LOGGING = BUILDER
-                .comment("启用调试日志输出")
-                .define("enableDebugLogging", false);
-        ENABLE_DAMAGE_CALCULATION_LOGGING = BUILDER
-                .comment("启用伤害计算详细日志")
-                .define("enableDamageCalculationLogging", false);
-        BUILDER.pop();
+        BUILDER.push("Tacz Attribute Add Configuration");
         
-        BUILDER.push("attributes");
         MAX_DAMAGE_MULTIPLIER = BUILDER
-                .comment("最大伤害倍率限制")
-                .defineInRange("maxDamageMultiplier", 1024.0, 1.0, 10000.0);
+                .comment("最大伤害倍率限制", "设置属性可以提供的最大伤害倍率上限，支持热重载")
+                .defineInRange("maxDamageMultiplier", 1024.0D, 1.0D, 10000.0D);
+        
         ENABLE_SPECIFIC_GUN_TYPES = BUILDER
-                .comment("启用特定枪械类型伤害加成")
+                .comment("启用特定枪械类型属性", "如果启用，将为不同枪械类型（手枪、步枪等）创建独立的伤害属性")
                 .define("enableSpecificGunTypes", true);
-        BUILDER.pop();
         
-        BUILDER.push("skills");
-        ENABLE_PUFFISH_SKILLS_INTEGRATION = BUILDER
-                .comment("启用Puffish Skills集成")
-                .define("enablePuffishSkillsIntegration", true);
-        BUILDER.pop();
+        DEBUG_MODE = BUILDER
+                .comment("调试模式", "启用调试日志输出")
+                .define("debugMode", false);
         
-        BUILDER.push("damage_calculation");
         DAMAGE_CALCULATION_MODE = BUILDER
-                .comment("伤害计算模式: MAX(取最大值)、ADD(相加)、MULTIPLY(相乘)")
+                .comment("伤害计算模式", "选择属性值的计算方式：MAX（取最大值）、ADD（相加）、MULTIPLY（相乘）")
                 .defineEnum("damageCalculationMode", DamageCalculationMode.MAX);
-        BUILDER.pop();
         
+        BUILDER.pop();
         SPEC = BUILDER.build();
-    }
-    
-    public static void register() {
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, SPEC);
+        
+        DebugLogger.info("Mod configuration initialized");
     }
     
     /**

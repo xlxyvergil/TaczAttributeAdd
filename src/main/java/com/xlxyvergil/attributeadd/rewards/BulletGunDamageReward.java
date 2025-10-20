@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * 枪械伤害工具类 - 提供智能伤害加成计算功能
- * 注意：Puffish Skills集成已通过内置的attribute奖励实现，无需自定义奖励类
+ * 使用独立的属性系统实现枪械伤害加成
  */
 public class BulletGunDamageReward {
     

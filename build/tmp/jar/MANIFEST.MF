@@ -5,6 +5,6 @@ Specification-Version: 1
 Implementation-Title: TaczAttributeAdd
 Implementation-Version: 1.0.0
 Implementation-Vendor: xlxyvergil
-Implementation-Timestamp: 2025-10-20T14:45:41+0800
+Implementation-Timestamp: 2025-10-20T15:46:46+0800
 MixinConfigs: taa.mixins.json
 
