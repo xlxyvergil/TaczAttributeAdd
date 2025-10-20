@@ -26,9 +26,12 @@ public class BulletGunDamageReward {
      * 5. 选择最大的属性值作为动态伤害数据
      */
     public static double getSmartDamageMultiplier(LivingEntity throwerIn, ItemStack gunItem) {
+        DebugLogger.debug("=== 伤害加成来源分析开始 ===");
+        
         // 1. 检查玩家是否手持枪械
         if (gunItem == null || gunItem.isEmpty()) {
             DebugLogger.debug("玩家未手持枪械，不应用动态伤害加成");
+            DebugLogger.debug("=== 伤害加成来源分析结束 - 无枪械 ===");
             return 0.0;
         }
         
@@ -36,8 +39,12 @@ public class BulletGunDamageReward {
         String gunType = getGunType(gunItem);
         if (gunType == null || gunType.isEmpty()) {
             DebugLogger.debug("无法获取枪械类型，使用通用伤害加成");
-            return getGenericDamageMultiplier(throwerIn);
+            double genericMultiplier = getGenericDamageMultiplier(throwerIn);
+            DebugLogger.debug("=== 伤害加成来源分析结束 - 仅通用加成: " + genericMultiplier + " ===");
+            return genericMultiplier;
         }
+        
+        DebugLogger.debug("枪械类型识别: " + gunType);
         
         // 3. 检查玩家是否有该枪械类型的专属属性
         double specificMultiplier = getSpecificGunDamageMultiplier(throwerIn, gunType);
@@ -48,11 +55,21 @@ public class BulletGunDamageReward {
         // 5. 根据配置选择属性组合方式
         double finalMultiplier = calculateTotalMultiplier(specificMultiplier, genericMultiplier);
         
-        DebugLogger.debug("智能伤害加成选择 - 枪械类型: " + gunType + 
-                        ", 专属加成: " + specificMultiplier + 
-                        ", 通用加成: " + genericMultiplier + 
-                        ", 计算方式: " + ModConfig.DAMAGE_CALCULATION_MODE.get() + 
-                        ", 最终加成: " + finalMultiplier);
+        DebugLogger.debug("伤害加成来源详情:");
+        DebugLogger.debug("  - 专属属性加成: " + specificMultiplier + " (枪械类型: " + gunType + ")");
+        DebugLogger.debug("  - 通用属性加成: " + genericMultiplier);
+        DebugLogger.debug("  - 计算模式: " + ModConfig.DAMAGE_CALCULATION_MODE.get());
+        DebugLogger.debug("  - 最终伤害倍率: " + finalMultiplier);
+        
+        // 检查伤害为0的情况
+        if (finalMultiplier <= 0.0) {
+            DebugLogger.warn("警告: 最终伤害倍率为0或负数!");
+            DebugLogger.warn("  - 专属加成: " + specificMultiplier);
+            DebugLogger.warn("  - 通用加成: " + genericMultiplier);
+            DebugLogger.warn("  - 玩家属性检查: " + (throwerIn.getAttributes() != null ? "属性系统正常" : "属性系统异常"));
+        }
+        
+        DebugLogger.debug("=== 伤害加成来源分析结束 ===");
         
         return Math.max(finalMultiplier, 0.0); // 确保倍率不小于0
     }
@@ -95,14 +112,21 @@ public class BulletGunDamageReward {
     private static double getSpecificGunDamageMultiplier(LivingEntity throwerIn, String gunType) {
         Attribute specificAttribute = getSpecificGunAttribute(gunType);
         if (specificAttribute == null) {
+            DebugLogger.debug("特定枪械属性未找到 - 枪械类型: " + gunType);
             return 1.0; // 返回基础值1.0
         }
         
         AttributeInstance attributeInstance = throwerIn.getAttribute(specificAttribute);
         if (attributeInstance != null) {
-            return attributeInstance.getValue(); // 直接返回属性值
+            double value = attributeInstance.getValue();
+            DebugLogger.debug("属性详细值 [" + specificAttribute.getDescriptionId() + "]: " +
+                "基础=" + attributeInstance.getBaseValue() + ", " +
+                "加成=" + (attributeInstance.getValue() - attributeInstance.getBaseValue()) + ", " +
+                "总值=" + attributeInstance.getValue());
+            return value; // 直接返回属性值
         }
         
+        DebugLogger.debug("玩家未拥有特定枪械属性 - 枪械类型: " + gunType);
         return 1.0; // 返回基础值1.0
     }
     
@@ -138,8 +162,15 @@ public class BulletGunDamageReward {
     private static double getGenericDamageMultiplier(LivingEntity throwerIn) {
         AttributeInstance generalDamageAttr = throwerIn.getAttribute(ModAttributes.BULLET_GUNDAMAGE.get());
         if (generalDamageAttr != null) {
-            return generalDamageAttr.getValue(); // 直接返回属性值
+            double value = generalDamageAttr.getValue();
+            DebugLogger.debug("属性详细值 [" + ModAttributes.BULLET_GUNDAMAGE.get().getDescriptionId() + "]: " +
+                "基础=" + generalDamageAttr.getBaseValue() + ", " +
+                "加成=" + (generalDamageAttr.getValue() - generalDamageAttr.getBaseValue()) + ", " +
+                "总值=" + generalDamageAttr.getValue());
+            return value; // 直接返回属性值
         }
+        
+        DebugLogger.debug("玩家未拥有通用枪械属性");
         return 1.0; // 返回基础值1.0
     }
     

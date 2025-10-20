@@ -21,7 +21,7 @@ public class ModAttributes {
     // 通用枪械伤害加成
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE = registerAttribute("tacz.bullet_gundamage", "通用枪械伤害加成");
 
-    // 具体枪械类型伤害加成（根据配置决定是否注册）
+    // 具体枪械类型伤害加成
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_PISTOL = registerSpecificAttribute("tacz.bullet_gundamage_pistol", "手枪伤害加成");
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_RIFLE = registerSpecificAttribute("tacz.bullet_gundamage_rifle", "步枪伤害加成");
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SHOTGUN = registerSpecificAttribute("tacz.bullet_gundamage_shotgun", "霰弹枪伤害加成");
@@ -45,14 +45,10 @@ public class ModAttributes {
     }
     
     /**
-     * 注册特定枪械类型属性（根据配置决定）
+     * 注册特定枪械类型属性
      */
     private static RegistryObject<Attribute> registerSpecificAttribute(String attributeName, String description) {
-        if (ModConfig.ENABLE_SPECIFIC_GUN_TYPES.get()) {
-            return registerAttribute(attributeName, description);
-        }
-        DebugLogger.info("跳过注册特定枪械属性: " + description + " (配置已禁用)");
-        return null;
+        return registerAttribute(attributeName, description);
     }
     
     /**

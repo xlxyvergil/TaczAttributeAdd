@@ -50,35 +50,21 @@ public class TaczAttributeAdd {
             DebugLogger.info("已为玩家实体类添加枪械伤害属性");
         }
         
-        // 为其他特定枪械类型属性添加（如果启用）
-        if (ModAttributes.BULLET_GUNDAMAGE_PISTOL != null && ModAttributes.BULLET_GUNDAMAGE_PISTOL.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_PISTOL.get());
-            DebugLogger.info("已为玩家实体类添加手枪伤害属性");
-        }
-        if (ModAttributes.BULLET_GUNDAMAGE_RIFLE != null && ModAttributes.BULLET_GUNDAMAGE_RIFLE.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_RIFLE.get());
-            DebugLogger.info("已为玩家实体类添加步枪伤害属性");
-        }
-        if (ModAttributes.BULLET_GUNDAMAGE_SHOTGUN != null && ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get());
-            DebugLogger.info("已为玩家实体类添加霰弹枪伤害属性");
-        }
-        if (ModAttributes.BULLET_GUNDAMAGE_SNIPER != null && ModAttributes.BULLET_GUNDAMAGE_SNIPER.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_SNIPER.get());
-            DebugLogger.info("已为玩家实体类添加狙击枪伤害属性");
-        }
-        if (ModAttributes.BULLET_GUNDAMAGE_SMG != null && ModAttributes.BULLET_GUNDAMAGE_SMG.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_SMG.get());
-            DebugLogger.info("已为玩家实体类添加冲锋枪伤害属性");
-        }
-        if (ModAttributes.BULLET_GUNDAMAGE_LMG != null && ModAttributes.BULLET_GUNDAMAGE_LMG.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_LMG.get());
-            DebugLogger.info("已为玩家实体类添加轻机枪伤害属性");
-        }
-        if (ModAttributes.BULLET_GUNDAMAGE_LAUNCHER != null && ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get() != null) {
-            event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get());
-            DebugLogger.info("已为玩家实体类添加发射器伤害属性");
-        }
+        // 为其他特定枪械类型属性添加
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_PISTOL.get());
+        DebugLogger.info("已为玩家实体类添加手枪伤害属性");
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_RIFLE.get());
+        DebugLogger.info("已为玩家实体类添加步枪伤害属性");
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get());
+        DebugLogger.info("已为玩家实体类添加霰弹枪伤害属性");
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_SNIPER.get());
+        DebugLogger.info("已为玩家实体类添加狙击枪伤害属性");
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_SMG.get());
+        DebugLogger.info("已为玩家实体类添加冲锋枪伤害属性");
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_LMG.get());
+        DebugLogger.info("已为玩家实体类添加轻机枪伤害属性");
+        event.add(EntityType.PLAYER, ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get());
+        DebugLogger.info("已为玩家实体类添加发射器伤害属性");
         
         DebugLogger.info("玩家实体属性添加完成");
     }

@@ -3,10 +3,8 @@ package com.xlxyvergil.attributeadd.mixin;
 import com.tacz.guns.entity.EntityKineticBullet;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
-import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
-import com.tacz.guns.api.item.gun.FireMode;
-import com.tacz.guns.api.item.IGun;
-import com.tacz.guns.config.sync.SyncConfig;
+import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
+import com.xlxyvergil.attributeadd.rewards.BulletGunDamageReward;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,153 +17,103 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 /**
- * Mixin用于完全接管Tacz的基础伤害计算流程
- * 用我们自己的动态伤害属性计算替换Tacz原有的基础伤害计算
- * 伤害公式：基础伤害 = (开火模式调整伤害 + 子弹原始伤害) × 全局伤害系数 × (1 + 动态伤害数据)
+ * Mixin用于修改Tacz的伤害计算流程
+ * 在damageAmount中应用我们的被动属性加成
  */
 @Mixin(EntityKineticBullet.class)
 public class BulletDamageMixin {
     
     /**
-     * 在子弹初始化时注入，完全接管伤害计算流程
-     * 注入到Tacz实际使用的构造函数中，在构造函数结束之前
+     * 在子弹初始化时，在配件伤害计算完成后应用我们的被动属性加成
+     * 注入点：在构造函数执行完成后应用我们的加成
      */
     @Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLcom/tacz/guns/resource/pojo/data/gun/GunData;Lcom/tacz/guns/resource/pojo/data/gun/BulletData;)V", 
-            at = @At(value = "TAIL"))
+            at = @At("TAIL"))
     private void onBulletInit(EntityType<? extends Projectile> type, Level worldIn, LivingEntity throwerIn, ItemStack gunItem, ResourceLocation ammoId, 
                              ResourceLocation gunId, ResourceLocation gunDisplayId, boolean isTracerAmmo, 
                              GunData gunData, BulletData bulletData, CallbackInfo ci) {
         try {
-            // 获取子弹实体实例
+            // 获取EntityKineticBullet实例
             EntityKineticBullet bullet = (EntityKineticBullet) (Object) this;
             
-            // 完全接管伤害计算：使用我们的公式计算基础伤害
-            LinkedList<Object> newDamageAmount = calculateNewBaseDamage(throwerIn, gunItem, gunData, bulletData);
-            
-            // 替换Tacz原有的damageAmount，让我们的计算结果生效
-            replaceTaczDamageAmount(bullet, newDamageAmount);
-            
-            DebugLogger.debug("完全接管伤害计算完成 - 枪械ID: " + gunId + 
-                            ", 射击者: " + throwerIn.getName().getString() + 
-                            ", 新伤害列表大小: " + newDamageAmount.size());
-                            
-        } catch (Exception e) {
-            DebugLogger.error("接管伤害计算失败: " + e.getMessage());
-        }
-    }
-    
-    /**
-     * 使用我们的公式计算新的基础伤害
-     * 完全复制Tacz的计算逻辑，但加入我们的动态伤害属性
-     */
-    private LinkedList<Object> calculateNewBaseDamage(LivingEntity throwerIn, ItemStack gunItem, GunData gunData, BulletData bulletData) {
-        try {
-            // 获取动态伤害加成
-            double dynamicDamageMultiplier = calculateDynamicDamageMultiplier(throwerIn, gunItem);
-            
-            // 复制Tacz的基础伤害计算逻辑
-            IGun iGun = IGun.getIGunOrNull(gunItem);
-            if (iGun == null) {
-                DebugLogger.warn("无法获取枪械实例，使用默认伤害计算");
-                return createDefaultDamageList(bulletData, dynamicDamageMultiplier);
-            }
-            
-            FireMode fireMode = iGun.getFireMode(gunItem);
-            GunFireModeAdjustData fireModeAdjustData = gunData.getFireModeAdjustData(fireMode);
-            
-            // 获取子弹原始伤害
-            float rawDamage = bulletData.getDamageAmount();
-            
-            // 开火模式调整伤害
-            float fireAdjustDamageAmount = fireModeAdjustData != null ? fireModeAdjustData.getDamageAmount() : 0f;
-            
-            // 获取全局伤害系数
-            float globalMultiplier = SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
-            
-            // 详细调试信息
-            DebugLogger.debug("=== 伤害计算开始 ===");
-            DebugLogger.debug("子弹原始伤害: " + rawDamage);
-            DebugLogger.debug("开火模式调整伤害: " + fireAdjustDamageAmount);
-            DebugLogger.debug("全局伤害系数: " + globalMultiplier);
-            DebugLogger.debug("动态伤害倍率: " + dynamicDamageMultiplier);
-            
-            // 应用我们的伤害公式：基础伤害 = (开火模式调整伤害 + 子弹原始伤害) × 全局伤害系数 × 动态伤害数据
-            float baseDamage = (fireAdjustDamageAmount + rawDamage) * globalMultiplier;
-            float finalDamage = baseDamage * (float) dynamicDamageMultiplier;
-            
-            DebugLogger.debug("基础伤害计算: (" + fireAdjustDamageAmount + " + " + rawDamage + ") × " + globalMultiplier + " = " + baseDamage);
-            DebugLogger.debug("最终伤害计算: " + baseDamage + " × " + dynamicDamageMultiplier + " = " + finalDamage);
-            DebugLogger.debug("=== 伤害计算结束 ===");
-            
-            // 创建新的伤害列表（模仿Tacz的DistanceDamagePair结构）
-            return createDamageListWithDistance(finalDamage, Integer.MAX_VALUE);
-            
-        } catch (Exception e) {
-            DebugLogger.error("计算新基础伤害失败: " + e.getMessage());
-            return createDefaultDamageList(bulletData, 0.0);
-        }
-    }
-    
-    /**
-     * 计算动态伤害加成倍率
-     * 直接调用BulletGunDamageReward中的智能选择逻辑
-     */
-    private double calculateDynamicDamageMultiplier(LivingEntity throwerIn, ItemStack gunItem) {
-        return com.xlxyvergil.attributeadd.rewards.BulletGunDamageReward.getSmartDamageMultiplier(throwerIn, gunItem);
-    }
-    
-    /**
-     * 创建包含距离的伤害列表（模仿Tacz的DistanceDamagePair结构）
-     */
-    private LinkedList<Object> createDamageListWithDistance(float damage, int distance) {
-        try {
-            LinkedList<Object> damageList = new LinkedList<>();
-            
-            // 使用反射创建DistanceDamagePair实例
-            Class<?> distanceDamagePairClass = Class.forName("com.tacz.guns.resource.pojo.data.gun.ExtraDamage$DistanceDamagePair");
-            Object damagePair = distanceDamagePairClass.getConstructor(float.class, float.class).newInstance((float)distance, damage);
-            
-            damageList.add(damagePair);
-            return damageList;
-            
-        } catch (Exception e) {
-            DebugLogger.error("创建伤害列表失败: " + e.getMessage());
-            return new LinkedList<>();
-        }
-    }
-    
-    /**
-     * 创建默认伤害列表（备用方案）
-     */
-    private LinkedList<Object> createDefaultDamageList(BulletData bulletData, double dynamicMultiplier) {
-        try {
-            float baseDamage = bulletData.getDamageAmount() * SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
-            float finalDamage = baseDamage * (float) (dynamicMultiplier);
-            return createDamageListWithDistance(finalDamage, Integer.MAX_VALUE);
-        } catch (Exception e) {
-            DebugLogger.error("创建默认伤害列表失败: " + e.getMessage());
-            return new LinkedList<>();
-        }
-    }
-    
-    /**
-     * 替换Tacz原有的damageAmount字段
-     */
-    private void replaceTaczDamageAmount(EntityKineticBullet bullet, LinkedList<Object> newDamageAmount) {
-        try {
-            // 使用反射获取damageAmount字段
+            // 使用反射获取私有的damageAmount字段
             Field damageAmountField = EntityKineticBullet.class.getDeclaredField("damageAmount");
             damageAmountField.setAccessible(true);
             
-            // 替换为我们的计算结果
-            damageAmountField.set(bullet, newDamageAmount);
+            // 获取damageAmount（已经包含配件加成）并进行安全的类型转换
+            Object damageAmountObj = damageAmountField.get(bullet);
+            if (!(damageAmountObj instanceof LinkedList)) {
+                DebugLogger.debug("damageAmount不是LinkedList类型，跳过被动属性加成");
+                return;
+            }
+            
+            @SuppressWarnings("unchecked")
+            LinkedList<DistanceDamagePair> damageAmount = (LinkedList<DistanceDamagePair>) damageAmountObj;
+            
+            if (damageAmount == null || damageAmount.isEmpty()) {
+                DebugLogger.debug("damageAmount为空，跳过被动属性加成");
+                return;
+            }
+            
+            // 计算玩家的被动属性加成
+            double passiveMultiplier = calculatePassiveAttributeMultiplier(throwerIn, gunItem);
+            
+            // 如果被动属性加成不为1.0，则应用加成
+            if (passiveMultiplier != 1.0) {
+                DebugLogger.debug("=== 被动属性伤害加成应用 ===");
+                DebugLogger.debug("发射者: " + throwerIn.getName().getString());
+                DebugLogger.debug("枪械ID: " + gunId);
+                DebugLogger.debug("被动属性倍率: " + passiveMultiplier);
+                
+                // 创建新的伤害列表来存储应用被动属性加成后的伤害数据
+                LinkedList<DistanceDamagePair> modifiedDamageAmount = new LinkedList<>();
+                
+                // 应用被动属性加成到每个距离伤害对
+                for (DistanceDamagePair pair : damageAmount) {
+                    float originalDamage = pair.getDamage();
+                    float newDamage = originalDamage * (float) passiveMultiplier;
+                    
+                    DebugLogger.debug("距离: " + pair.getDistance() + ", 原始伤害: " + originalDamage + ", 加成后伤害: " + newDamage);
+                    
+                    // 创建新的DistanceDamagePair对象（因为原对象不可修改）
+                    DistanceDamagePair newPair = new DistanceDamagePair(pair.getDistance(), newDamage);
+                    modifiedDamageAmount.add(newPair);
+                }
+                
+                // 使用反射替换原有的damageAmount列表
+                damageAmountField.set(bullet, modifiedDamageAmount);
+                
+                DebugLogger.debug("被动属性伤害加成应用完成");
+            } else {
+                DebugLogger.debug("被动属性倍率为1.0，不应用加成");
+            }
             
         } catch (Exception e) {
-            throw new RuntimeException("替换Tacz伤害值失败: " + e.getMessage(), e);
+            DebugLogger.error("应用被动属性伤害加成失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * 计算被动属性加成倍率
+     * 调用BulletGunDamageReward类来获取智能伤害加成
+     */
+    private double calculatePassiveAttributeMultiplier(LivingEntity throwerIn, ItemStack gunItem) {
+        try {
+            // 调用BulletGunDamageReward的智能伤害加成计算
+            double multiplier = BulletGunDamageReward.getSmartDamageMultiplier(throwerIn, gunItem);
+            
+            // 确保倍率不小于1.0（基础值）
+            return Math.max(multiplier, 1.0);
+            
+        } catch (Exception e) {
+            DebugLogger.error("计算被动属性倍率失败: " + e.getMessage());
+            return 1.0;
         }
     }
 }

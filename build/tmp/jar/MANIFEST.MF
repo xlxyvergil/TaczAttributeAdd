@@ -3,8 +3,8 @@ Specification-Title: taa
 Specification-Vendor: xlxyvergil
 Specification-Version: 1
 Implementation-Title: taa
-Implementation-Version: 1.0.1
+Implementation-Version: 1.0.2-1020-191904
 Implementation-Vendor: xlxyvergil
-Implementation-Timestamp: 2025-10-20T21:33:40+0800
+Implementation-Timestamp: 2025-10-21T03:19:05+0800
 MixinConfigs: taa.mixins.json
 
