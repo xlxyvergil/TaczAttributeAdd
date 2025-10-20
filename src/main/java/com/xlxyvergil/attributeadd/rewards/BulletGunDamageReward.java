@@ -110,6 +110,7 @@ public class BulletGunDamageReward {
     
     /**
      * 根据枪械类型获取对应的属性
+     * Tacz API只会返回已知的枪械类型，无需处理未知类型
      */
     private static Attribute getSpecificGunAttribute(String gunType) {
         switch (gunType.toLowerCase()) {
@@ -128,7 +129,7 @@ public class BulletGunDamageReward {
             case "launcher":
                 return ModAttributes.BULLET_GUNDAMAGE_LAUNCHER != null ? ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get() : null;
             default:
-                DebugLogger.debug("未知枪械类型: " + gunType);
+                // Tacz API不会返回未知类型，这里理论上不会执行
                 return null;
         }
     }
