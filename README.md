@@ -1,4 +1,4 @@
-# TaczAttributeAdd MOD 属性说明
+# TAA MOD 属性说明
 
 ## 1. 属性参与的计算公式
 

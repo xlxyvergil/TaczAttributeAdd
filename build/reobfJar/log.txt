@@ -1,8 +1,8 @@
 Java Launcher: C:\Program Files\Java\jdk-17\bin\java.exe
-Arguments: '--in-jar, G:\TaczAttributeAdd\build\libs\taczattributeadd-1.0.0.jar, --out-jar, G:\TaczAttributeAdd\build\reobfJar\output.jar, --srg-in, G:\TaczAttributeAdd\build\createMcpToSrg\output.tsrg, --srg-in, G:\TaczAttributeAdd\build\tmp\compileJava\compileJava-mappings.tsrg, --live'
+Arguments: '--in-jar, G:\fog\TaczAttributeAdd 1.20.1\TaczAttributeAdd\build\libs\taa-1.0.0.jar, --out-jar, G:\fog\TaczAttributeAdd 1.20.1\TaczAttributeAdd\build\reobfJar\output.jar, --srg-in, G:\fog\TaczAttributeAdd 1.20.1\TaczAttributeAdd\build\createMcpToSrg\output.tsrg, --srg-in, G:\fog\TaczAttributeAdd 1.20.1\TaczAttributeAdd\build\tmp\compileJava\compileJava-mappings.tsrg, --live'
 Classpath:
  - C:\Users\xlxyvergil\.gradle\caches\forge_gradle\maven_downloader\net\md-5\SpecialSource\1.11.0\SpecialSource-1.11.0-shaded.jar
- - G:\TaczAttributeAdd\libs\tacz-1.20.1-1.1.6-hotfix.jar
+ - G:\fog\TaczAttributeAdd 1.20.1\TaczAttributeAdd\libs\tacz-1.20.1-1.1.6-hotfix.jar
  - C:\Users\xlxyvergil\.gradle\caches\forge_gradle\minecraft_user_repo\net\minecraftforge\forge\1.20.1-47.1.3_mapped_parchment_2023.08.20-1.20.1\forge-1.20.1-47.1.3_mapped_parchment_2023.08.20-1.20.1-recomp.jar
  - C:\Users\xlxyvergil\.gradle\caches\forge_gradle\minecraft_repo\versions\1.20.1\client-extra.jar
  - C:\Users\xlxyvergil\.gradle\caches\modules-2\files-2.1\net.minecraftforge\fmlloader\1.20.1-47.1.3\8f209e526afd27a6abea960bbc3cd46e3e6dc051\fmlloader-1.20.1-47.1.3.jar
@@ -116,7 +116,7 @@ Classpath:
  - C:\Users\xlxyvergil\.gradle\caches\modules-2\files-2.1\org.antlr\antlr-runtime\3.5.2\cd9cd41361c155f3af0f653009dcecb08d8b4afd\antlr-runtime-3.5.2.jar
  - C:\Users\xlxyvergil\.gradle\caches\modules-2\files-2.1\org.abego.treelayout\org.abego.treelayout.core\1.0.3\457216e8e6578099ae63667bb1e4439235892028\org.abego.treelayout.core-1.0.3.jar
  - C:\Users\xlxyvergil\.gradle\caches\modules-2\files-2.1\org.glassfish\javax.json\1.0.4\3178f73569fd7a1e5ffc464e680f7a8cc784b85a\javax.json-1.0.4.jar
-Working directory: G:\TaczAttributeAdd\build\reobfJar
+Working directory: G:\fog\TaczAttributeAdd 1.20.1\TaczAttributeAdd\build\reobfJar
 Main class: net.md_5.specialsource.SpecialSource
 ====================================
 Loading mappings
