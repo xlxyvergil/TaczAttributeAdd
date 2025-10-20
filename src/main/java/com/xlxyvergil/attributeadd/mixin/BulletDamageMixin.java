@@ -144,7 +144,7 @@ public class BulletDamageMixin {
     private LinkedList<Object> createDefaultDamageList(BulletData bulletData, double dynamicMultiplier) {
         try {
             float baseDamage = bulletData.getDamageAmount() * SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
-            float finalDamage = baseDamage * (float) (1.0 + dynamicMultiplier);
+            float finalDamage = baseDamage * (float) (dynamicMultiplier);
             return createDamageListWithDistance(finalDamage, Integer.MAX_VALUE);
         } catch (Exception e) {
             DebugLogger.error("创建默认伤害列表失败: " + e.getMessage());
