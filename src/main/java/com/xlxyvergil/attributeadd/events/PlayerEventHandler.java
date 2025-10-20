@@ -6,20 +6,18 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 /**
  * 玩家事件处理器
  * 处理玩家登录、重生等事件，确保属性正确应用
  */
-@Mod.EventBusSubscriber
 public class PlayerEventHandler {
     
     /**
      * 玩家登录时确保属性正确同步
      */
     @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = (Player) event.getPlayer();
         syncPlayerAttributes(player);
         DebugLogger.debug("玩家登录属性同步: " + player.getName().getString());
@@ -29,7 +27,7 @@ public class PlayerEventHandler {
      * 玩家重生时确保属性正确同步
      */
     @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         Player player = (Player) event.getPlayer();
         syncPlayerAttributes(player);
         DebugLogger.debug("玩家重生属性同步: " + player.getName().getString());
@@ -39,7 +37,7 @@ public class PlayerEventHandler {
      * 玩家维度切换时确保属性正确同步
      */
     @SubscribeEvent
-    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = (Player) event.getPlayer();
         syncPlayerAttributes(player);
         DebugLogger.debug("玩家维度切换属性同步: " + player.getName().getString());
