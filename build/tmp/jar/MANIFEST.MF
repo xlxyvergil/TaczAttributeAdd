@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Specification-Title: taa
+Specification-Vendor: xlxyvergil
+Specification-Version: 1
+Implementation-Title: taa
+Implementation-Version: 1.0.0
+Implementation-Vendor: xlxyvergil
+Implementation-Timestamp: 2025-10-19T22:04:38+0800
+MixinConfigs: taa.mixins.json
+
