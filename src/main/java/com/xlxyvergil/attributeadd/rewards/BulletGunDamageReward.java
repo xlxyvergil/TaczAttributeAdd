@@ -2,6 +2,7 @@ package com.xlxyvergil.attributeadd.rewards;
 
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
+import com.xlxyvergil.attributeadd.config.ModConfig;
 import com.xlxyvergil.attributeadd.init.ModAttributes;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraft.resources.ResourceLocation;
@@ -46,12 +47,13 @@ public class BulletGunDamageReward {
         // 4. 检查玩家是否有通用枪械属性
         double genericMultiplier = getGenericDamageMultiplier(throwerIn);
         
-        // 5. 选择最大的属性值作为动态伤害数据
-        double finalMultiplier = Math.max(specificMultiplier, genericMultiplier);
+        // 5. 根据配置选择属性组合方式
+        double finalMultiplier = calculateTotalMultiplier(specificMultiplier, genericMultiplier);
         
         DebugLogger.debug("智能伤害加成选择 - 枪械类型: " + gunType + 
                         ", 专属加成: " + specificMultiplier + 
                         ", 通用加成: " + genericMultiplier + 
+                        ", 计算方式: " + ModConfig.DAMAGE_CALCULATION_MODE.get() + 
                         ", 最终加成: " + finalMultiplier);
         
         return Math.max(finalMultiplier, 0.0); // 确保倍率不小于0
@@ -140,5 +142,33 @@ public class BulletGunDamageReward {
             return generalDamageAttr.getValue() - 1.0; // 减去基础值1.0
         }
         return 0.0;
+    }
+    
+    /**
+     * 根据配置计算总伤害倍率
+     */
+    private static double calculateTotalMultiplier(double specificMultiplier, double genericMultiplier) {
+        ModConfig.DamageCalculationMode mode = ModConfig.DAMAGE_CALCULATION_MODE.get();
+        
+        switch (mode) {
+            case MAX:
+                // 取最大值
+                return Math.max(specificMultiplier, genericMultiplier);
+                
+            case ADD:
+                // 相加
+                return specificMultiplier + genericMultiplier;
+                
+            case MULTIPLY:
+                // 相乘：专属属性和通用属性相乘
+                // 例如：通用加成0.2，特定加成0.3，相乘结果为 (1+0.2)*(1+0.3) = 1.56
+                double generalFactor = 1.0 + specificMultiplier;
+                double specificFactor = 1.0 + genericMultiplier;
+                return generalFactor * specificFactor;
+                
+            default:
+                // 默认取最大值
+                return Math.max(specificMultiplier, genericMultiplier);
+        }
     }
 }

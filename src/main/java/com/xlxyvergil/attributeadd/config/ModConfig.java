@@ -2,6 +2,7 @@ package com.xlxyvergil.attributeadd.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
+
 public class ModConfig {
     public static final ForgeConfigSpec SPEC;
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -16,6 +17,9 @@ public class ModConfig {
     
     // 技能配置
     public static final ForgeConfigSpec.BooleanValue ENABLE_PUFFISH_SKILLS_INTEGRATION;
+    
+    // 伤害计算模式配置
+    public static final ForgeConfigSpec.EnumValue<DamageCalculationMode> DAMAGE_CALCULATION_MODE;
     
     static {
         BUILDER.push("debug");
@@ -42,10 +46,25 @@ public class ModConfig {
                 .define("enablePuffishSkillsIntegration", true);
         BUILDER.pop();
         
+        BUILDER.push("damage_calculation");
+        DAMAGE_CALCULATION_MODE = BUILDER
+                .comment("伤害计算模式: MAX(取最大值)、ADD(相加)、MULTIPLY(相乘)")
+                .defineEnum("damageCalculationMode", DamageCalculationMode.MAX);
+        BUILDER.pop();
+        
         SPEC = BUILDER.build();
     }
     
     public static void register() {
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, SPEC);
+    }
+    
+    /**
+     * 伤害计算模式枚举
+     */
+    public enum DamageCalculationMode {
+        MAX,    // 取最大值
+        ADD,    // 相加
+        MULTIPLY // 相乘
     }
 }
