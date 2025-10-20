@@ -83,15 +83,23 @@ public class BulletDamageMixin {
             // 开火模式调整伤害
             float fireAdjustDamageAmount = fireModeAdjustData != null ? fireModeAdjustData.getDamageAmount() : 0f;
             
+            // 获取全局伤害系数
+            float globalMultiplier = SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
+            
+            // 详细调试信息
+            DebugLogger.debug("=== 伤害计算开始 ===");
+            DebugLogger.debug("子弹原始伤害: " + rawDamage);
+            DebugLogger.debug("开火模式调整伤害: " + fireAdjustDamageAmount);
+            DebugLogger.debug("全局伤害系数: " + globalMultiplier);
+            DebugLogger.debug("动态伤害倍率: " + dynamicDamageMultiplier);
+            
             // 应用我们的伤害公式：基础伤害 = (开火模式调整伤害 + 子弹原始伤害) × 全局伤害系数 × 动态伤害数据
-            float baseDamage = (fireAdjustDamageAmount + rawDamage) * SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
+            float baseDamage = (fireAdjustDamageAmount + rawDamage) * globalMultiplier;
             float finalDamage = baseDamage * (float) dynamicDamageMultiplier;
             
-            DebugLogger.debug("伤害计算详情 - 原始伤害: " + rawDamage + 
-                            ", 开火调整: " + fireAdjustDamageAmount + 
-                            ", 基础伤害: " + baseDamage + 
-                            ", 动态倍率: " + dynamicDamageMultiplier + 
-                            ", 最终伤害: " + finalDamage);
+            DebugLogger.debug("基础伤害计算: (" + fireAdjustDamageAmount + " + " + rawDamage + ") × " + globalMultiplier + " = " + baseDamage);
+            DebugLogger.debug("最终伤害计算: " + baseDamage + " × " + dynamicDamageMultiplier + " = " + finalDamage);
+            DebugLogger.debug("=== 伤害计算结束 ===");
             
             // 创建新的伤害列表（模仿Tacz的DistanceDamagePair结构）
             return createDamageListWithDistance(finalDamage, Integer.MAX_VALUE);
