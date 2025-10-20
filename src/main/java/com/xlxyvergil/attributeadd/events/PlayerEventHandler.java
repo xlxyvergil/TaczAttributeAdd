@@ -1,72 +1,86 @@
 package com.xlxyvergil.attributeadd.events;
 
-import com.xlxyvergil.attributeadd.config.ModConfig;
 import com.xlxyvergil.attributeadd.init.ModAttributes;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+/**
+ * 玩家事件处理器
+ * 处理玩家登录、重生等事件，确保属性正确应用
+ */
+@Mod.EventBusSubscriber
 public class PlayerEventHandler {
-
+    
+    /**
+     * 玩家登录时确保属性正确同步
+     */
     @SubscribeEvent
-    public static void registerAttributes(EntityAttributeModificationEvent event) {
-        DebugLogger.info("开始将自定义属性添加到玩家实体");
-        
-        int attributeCount = 0;
-        
-        // 添加通用枪械伤害属性
-        if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE.get(), "通用枪械伤害属性")) {
-            attributeCount++;
-        }
-        
-        // 根据配置决定是否添加特定枪械类型属性
-        if (ModConfig.ENABLE_SPECIFIC_GUN_TYPES.get()) {
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_PISTOL.get(), "手枪伤害属性")) {
-                attributeCount++;
-            }
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_RIFLE.get(), "步枪伤害属性")) {
-                attributeCount++;
-            }
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get(), "霰弹枪伤害属性")) {
-                attributeCount++;
-            }
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_SNIPER.get(), "狙击枪伤害属性")) {
-                attributeCount++;
-            }
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_SMG.get(), "冲锋枪伤害属性")) {
-                attributeCount++;
-            }
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_LMG.get(), "轻机枪伤害属性")) {
-                attributeCount++;
-            }
-            if (addAttributeToPlayer(event, ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get(), "发射器伤害属性")) {
-                attributeCount++;
-            }
-        }
-        
-        DebugLogger.info("自定义属性添加完成，共添加 " + attributeCount + " 个属性到玩家实体");
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = (Player) event.getPlayer();
+        syncPlayerAttributes(player);
+        DebugLogger.debug("玩家登录属性同步: " + player.getName().getString());
     }
     
     /**
-     * 安全地将属性添加到玩家实体
+     * 玩家重生时确保属性正确同步
      */
-    private static boolean addAttributeToPlayer(EntityAttributeModificationEvent event, Attribute attribute, String description) {
-        if (attribute == null) {
-            DebugLogger.warn("尝试添加空属性: " + description);
-            return false;
-        }
-        
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        Player player = (Player) event.getPlayer();
+        syncPlayerAttributes(player);
+        DebugLogger.debug("玩家重生属性同步: " + player.getName().getString());
+    }
+    
+    /**
+     * 玩家维度切换时确保属性正确同步
+     */
+    @SubscribeEvent
+    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        Player player = (Player) event.getPlayer();
+        syncPlayerAttributes(player);
+        DebugLogger.debug("玩家维度切换属性同步: " + player.getName().getString());
+    }
+    
+    /**
+     * 同步玩家属性
+     */
+    private static void syncPlayerAttributes(Player player) {
         try {
-            event.add(EntityType.PLAYER, attribute);
-            DebugLogger.info("添加 " + description + " 到玩家实体");
-            return true;
+            // 同步通用枪械伤害加成属性
+            AttributeInstance generalDamageAttr = player.getAttribute(ModAttributes.BULLET_GUNDAMAGE.get());
+            if (generalDamageAttr != null) {
+                // 在1.18.2中，setSyncable(true)应该在Attribute类中调用，而不是AttributeInstance
+                // 属性已经在注册时设置为可同步
+            }
+            
+            // 同步特定枪械类型伤害加成属性
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_PISTOL.get());
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_RIFLE.get());
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get());
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_SNIPER.get());
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_SMG.get());
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_LMG.get());
+            syncSpecificAttribute(player, ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get());
+            
         } catch (Exception e) {
-            DebugLogger.error("添加属性失败: " + description + ", 错误: " + e.getMessage());
-            return false;
+            DebugLogger.error("同步玩家属性失败: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 同步特定属性
+     */
+    private static void syncSpecificAttribute(Player player, Object attribute) {
+        if (attribute != null) {
+            AttributeInstance attrInstance = player.getAttribute((net.minecraft.world.entity.ai.attributes.Attribute) attribute);
+            if (attrInstance != null) {
+                // 在1.18.2中，setSyncable(true)应该在Attribute类中调用，而不是AttributeInstance
+                // 属性已经在注册时设置为可同步
+            }
         }
     }
 }

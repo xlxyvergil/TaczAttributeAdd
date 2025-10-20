@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.xlxyvergil.attributeadd.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "taa.refmap.json",
+  "client": [
+  ],
+  "server": [
+  ],
+  "mixins": [
+    "BulletDamageMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

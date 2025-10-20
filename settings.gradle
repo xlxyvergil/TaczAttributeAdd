@@ -5,18 +5,5 @@ pluginManagement {
             name = 'MinecraftForge'
             url = 'https://maven.minecraftforge.net/'
         }
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org'
-        }
-        maven {
-            name = 'SpongePowered'
-            url = 'https://repo.spongepowered.org/repository/maven-public/'
-        }
-        maven {
-            // 阿里云镜像，方便国内开发
-            url = uri("https://maven.aliyun.com/repository/public/")
-        }
     }
 }
-

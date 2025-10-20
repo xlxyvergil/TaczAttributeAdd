@@ -6,139 +6,146 @@ import com.xlxyvergil.attributeadd.init.ModAttributes;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * 枪械伤害工具类 - 提供智能伤害加成计算功能
- * 注意：Puffish Skills集成已通过内置的attribute奖励实现，无需自定义奖励类
+ * 子弹枪械伤害奖励计算器
+ * 智能选择最合适的伤害加成属性
  */
 public class BulletGunDamageReward {
     
-
-    
     /**
-     * 智能选择动态伤害加成倍率
-     * 1. 检查玩家是否手持枪械
-     * 2. 获取手持枪械的类型
-     * 3. 检查玩家是否有该枪械类型的专属属性
-     * 4. 检查玩家是否有通用枪械属性
-     * 5. 选择最大的属性值作为动态伤害数据
+     * 获取智能伤害倍率
+     * 根据枪械类型和玩家属性智能选择最合适的伤害加成
      */
     public static double getSmartDamageMultiplier(LivingEntity throwerIn, ItemStack gunItem) {
-        // 1. 检查玩家是否手持枪械
-        if (gunItem == null || gunItem.isEmpty()) {
-            DebugLogger.debug("玩家未手持枪械，不应用动态伤害加成");
-            return 0.0;
+        try {
+            // 获取通用枪械伤害加成
+            double generalMultiplier = getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE.get());
+            
+            // 获取枪械类型并计算特定类型加成
+            String gunType = getGunType(gunItem);
+            double specificMultiplier = getSpecificGunTypeMultiplier(throwerIn, gunType);
+            
+            // 选择最大的加成值（通用或特定类型）
+            double finalMultiplier = Math.max(generalMultiplier, specificMultiplier);
+            
+            DebugLogger.debug("伤害倍率计算 - 通用: " + generalMultiplier + 
+                            ", 特定类型(" + gunType + "): " + specificMultiplier + 
+                            ", 最终: " + finalMultiplier);
+            
+            return finalMultiplier;
+            
+        } catch (Exception e) {
+            DebugLogger.error("计算伤害倍率失败: " + e.getMessage());
+            return 1.0; // 默认无加成
         }
-        
-        // 2. 获取手持枪械的类型
-        String gunType = getGunType(gunItem);
-        if (gunType == null || gunType.isEmpty()) {
-            DebugLogger.debug("无法获取枪械类型，使用通用伤害加成");
-            return getGenericDamageMultiplier(throwerIn);
-        }
-        
-        // 3. 检查玩家是否有该枪械类型的专属属性
-        double specificMultiplier = getSpecificGunDamageMultiplier(throwerIn, gunType);
-        
-        // 4. 检查玩家是否有通用枪械属性
-        double genericMultiplier = getGenericDamageMultiplier(throwerIn);
-        
-        // 5. 选择最大的属性值作为动态伤害数据
-        double finalMultiplier = Math.max(specificMultiplier, genericMultiplier);
-        
-        DebugLogger.debug("智能伤害加成选择 - 枪械类型: " + gunType + 
-                        ", 专属加成: " + specificMultiplier + 
-                        ", 通用加成: " + genericMultiplier + 
-                        ", 最终加成: " + finalMultiplier);
-        
-        return Math.max(finalMultiplier, 0.0); // 确保倍率不小于0
     }
     
     /**
      * 获取枪械类型
+     * 使用Tacz 1.18.2的官方API获取枪械类型
      */
     private static String getGunType(ItemStack gunItem) {
         try {
-            // 通过IGun接口获取枪械数据
             IGun iGun = IGun.getIGunOrNull(gunItem);
             if (iGun == null) {
-                return null;
+                return "unknown";
             }
             
             // 获取枪械ID
             ResourceLocation gunId = iGun.getGunId(gunItem);
             if (gunId == null) {
-                return null;
+                return "unknown";
             }
             
-            // 通过枪械ID获取枪械索引数据
-            var gunIndexOptional = TimelessAPI.getCommonGunIndex(gunId);
-            if (gunIndexOptional.isEmpty()) {
-                return null;
+            // 使用Tacz官方API获取枪械类型
+            var gunIndexOpt = TimelessAPI.getCommonGunIndex(gunId);
+            if (gunIndexOpt.isPresent()) {
+                String gunType = gunIndexOpt.get().getType();
+                
+                DebugLogger.debug("获取到枪械类型: " + gunType + " (枪械ID: " + gunId + ")");
+                
+                // 将Tacz的枪械类型映射到我们的属性类型
+                switch (gunType.toLowerCase()) {
+                    case "pistol":
+                    case "handgun":
+                        return "pistol";
+                    case "rifle":
+                    case "assault_rifle":
+                        return "rifle";
+                    case "shotgun":
+                        return "shotgun";
+                    case "sniper":
+                    case "sniper_rifle":
+                        return "sniper";
+                    case "smg":
+                    case "submachine_gun":
+                        return "smg";
+                    case "lmg":
+                    case "light_machine_gun":
+                    case "machine_gun":
+                        return "lmg";
+                    case "launcher":
+                    case "rocket_launcher":
+                    case "grenade_launcher":
+                        return "launcher";
+                    default:
+                        DebugLogger.debug("未知枪械类型: " + gunType + " (枪械ID: " + gunId + ")");
+                        return "unknown";
+                }
             }
             
-            var gunIndex = gunIndexOptional.get();
-            return gunIndex.getType();
+            return "unknown";
             
         } catch (Exception e) {
             DebugLogger.error("获取枪械类型失败: " + e.getMessage());
-            return null;
+            return "unknown";
         }
     }
     
     /**
      * 获取特定枪械类型的伤害加成
      */
-    private static double getSpecificGunDamageMultiplier(LivingEntity throwerIn, String gunType) {
-        Attribute specificAttribute = getSpecificGunAttribute(gunType);
-        if (specificAttribute == null) {
-            return 0.0;
-        }
-        
-        AttributeInstance attributeInstance = throwerIn.getAttribute(specificAttribute);
-        if (attributeInstance != null) {
-            return attributeInstance.getValue() - 1.0; // 减去基础值1.0
-        }
-        
-        return 0.0;
-    }
-    
-    /**
-     * 根据枪械类型获取对应的属性
-     */
-    private static Attribute getSpecificGunAttribute(String gunType) {
-        switch (gunType.toLowerCase()) {
+    private static double getSpecificGunTypeMultiplier(LivingEntity throwerIn, String gunType) {
+        switch (gunType) {
             case "pistol":
-                return ModAttributes.BULLET_GUNDAMAGE_PISTOL != null ? ModAttributes.BULLET_GUNDAMAGE_PISTOL.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_PISTOL.get());
             case "rifle":
-                return ModAttributes.BULLET_GUNDAMAGE_RIFLE != null ? ModAttributes.BULLET_GUNDAMAGE_RIFLE.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_RIFLE.get());
             case "shotgun":
-                return ModAttributes.BULLET_GUNDAMAGE_SHOTGUN != null ? ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get());
             case "sniper":
-                return ModAttributes.BULLET_GUNDAMAGE_SNIPER != null ? ModAttributes.BULLET_GUNDAMAGE_SNIPER.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_SNIPER.get());
             case "smg":
-                return ModAttributes.BULLET_GUNDAMAGE_SMG != null ? ModAttributes.BULLET_GUNDAMAGE_SMG.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_SMG.get());
             case "lmg":
-                return ModAttributes.BULLET_GUNDAMAGE_LMG != null ? ModAttributes.BULLET_GUNDAMAGE_LMG.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_LMG.get());
             case "launcher":
-                return ModAttributes.BULLET_GUNDAMAGE_LAUNCHER != null ? ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get() : null;
+                return getAttributeValue(throwerIn, ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get());
             default:
-                DebugLogger.debug("未知枪械类型: " + gunType);
-                return null;
+                return 1.0; // 未知类型无加成
         }
     }
     
     /**
-     * 获取通用枪械伤害加成
+     * 获取属性值，如果属性不存在则返回默认值1.0
      */
-    private static double getGenericDamageMultiplier(LivingEntity throwerIn) {
-        AttributeInstance generalDamageAttr = throwerIn.getAttribute(ModAttributes.BULLET_GUNDAMAGE.get());
-        if (generalDamageAttr != null) {
-            return generalDamageAttr.getValue() - 1.0; // 减去基础值1.0
+    private static double getAttributeValue(LivingEntity entity, net.minecraft.world.entity.ai.attributes.Attribute attribute) {
+        if (attribute == null) {
+            return 1.0;
         }
-        return 0.0;
+        
+        try {
+            AttributeInstance attributeInstance = entity.getAttribute(attribute);
+            if (attributeInstance != null) {
+                return attributeInstance.getValue();
+            }
+        } catch (Exception e) {
+            DebugLogger.error("获取属性值失败: " + e.getMessage());
+        }
+        
+        return 1.0;
     }
 }

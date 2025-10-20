@@ -1,7 +1,7 @@
 package com.xlxyvergil.attributeadd.init;
 
 import com.xlxyvergil.attributeadd.TaczAttributeAdd;
-import com.xlxyvergil.attributeadd.config.ModConfig;
+import com.xlxyvergil.attributeadd.config.AttributeConfig;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -34,7 +34,7 @@ public class ModAttributes {
      * 注册通用属性
      */
     private static RegistryObject<Attribute> registerAttribute(String attributeName, String description) {
-        double maxMultiplier = ModConfig.MAX_DAMAGE_MULTIPLIER.get();
+        double maxMultiplier = AttributeConfig.MAX_DAMAGE_MULTIPLIER.get();
         RegistryObject<Attribute> attribute = ATTRIBUTES.register(attributeName,
                 () -> new RangedAttribute("attribute.name." + attributeName, 1.0D, 0.0D, maxMultiplier).setSyncable(true));
         
@@ -48,7 +48,7 @@ public class ModAttributes {
      * 注册特定枪械类型属性（根据配置决定）
      */
     private static RegistryObject<Attribute> registerSpecificAttribute(String attributeName, String description) {
-        if (ModConfig.ENABLE_SPECIFIC_GUN_TYPES.get()) {
+        if (AttributeConfig.ENABLE_SPECIFIC_GUN_TYPES.get()) {
             return registerAttribute(attributeName, description);
         }
         DebugLogger.info("跳过注册特定枪械属性: " + description + " (配置已禁用)");
