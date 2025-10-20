@@ -253,37 +253,5 @@ public class BulletGunDamageReward {
         return 1.0; // 返回基础值1.0
     }
     
-    /**
-     * 检查是否支持Puffish Skills集成
-     */
-    public static boolean isPuffishSkillsAvailable() {
-        try {
-            // 检查Puffish Skills是否可用
-            Class.forName("dev.puffish.skillsmod.api.SkillsAPI");
-            return true;
-        } catch (ClassNotFoundException e) {
-            DebugLogger.debug("Puffish Skills未安装，使用内置属性系统");
-            return false;
-        }
-    }
-    
-    /**
-     * 获取Puffish Skills伤害加成（如果可用）
-     */
-    public static double getPuffishSkillsMultiplier(LivingEntity entity) {
-        if (!isPuffishSkillsAvailable()) {
-            return 0.0;
-        }
-        
-        try {
-            // 这里可以添加Puffish Skills集成的具体逻辑
-            // 通过SkillsAPI获取玩家的技能加成
-            DebugLogger.debug("Puffish Skills集成功能待实现");
-            return 0.0;
-            
-        } catch (Exception e) {
-            DebugLogger.error("获取Puffish Skills加成失败: " + e.getMessage());
-            return 0.0;
-        }
-    }
+
 }
