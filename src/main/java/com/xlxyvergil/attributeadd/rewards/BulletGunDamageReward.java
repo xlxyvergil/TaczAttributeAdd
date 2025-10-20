@@ -97,15 +97,15 @@ public class BulletGunDamageReward {
     private static double getSpecificGunDamageMultiplier(LivingEntity throwerIn, String gunType) {
         Attribute specificAttribute = getSpecificGunAttribute(gunType);
         if (specificAttribute == null) {
-            return 0.0;
+            return 1.0; // 返回基础值1.0
         }
         
         AttributeInstance attributeInstance = throwerIn.getAttribute(specificAttribute);
         if (attributeInstance != null) {
-            return attributeInstance.getValue() - 1.0; // 减去基础值1.0
+            return attributeInstance.getValue(); // 直接返回属性值
         }
         
-        return 0.0;
+        return 1.0; // 返回基础值1.0
     }
     
     /**
@@ -139,13 +139,14 @@ public class BulletGunDamageReward {
     private static double getGenericDamageMultiplier(LivingEntity throwerIn) {
         AttributeInstance generalDamageAttr = throwerIn.getAttribute(ModAttributes.BULLET_GUNDAMAGE.get());
         if (generalDamageAttr != null) {
-            return generalDamageAttr.getValue() - 1.0; // 减去基础值1.0
+            return generalDamageAttr.getValue(); // 直接返回属性值
         }
-        return 0.0;
+        return 1.0; // 返回基础值1.0
     }
     
     /**
-     * 根据配置计算总伤害倍率
+     * 根据配置计算总伤害倍率（包含+1部分）
+     * 返回的是最终倍率，可以直接用于乘法计算
      */
     private static double calculateTotalMultiplier(double specificMultiplier, double genericMultiplier) {
         ModConfig.DamageCalculationMode mode = ModConfig.DAMAGE_CALCULATION_MODE.get();
@@ -161,10 +162,7 @@ public class BulletGunDamageReward {
                 
             case MULTIPLY:
                 // 相乘：专属属性和通用属性相乘
-                // 例如：通用加成0.2，特定加成0.3，相乘结果为 (1+0.2)*(1+0.3) = 1.56
-                double generalFactor = 1.0 + specificMultiplier;
-                double specificFactor = 1.0 + genericMultiplier;
-                return generalFactor * specificFactor;
+                return genericMultiplier * specificMultiplier;
                 
             default:
                 // 默认取最大值

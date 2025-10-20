@@ -83,9 +83,9 @@ public class BulletDamageMixin {
             // 开火模式调整伤害
             float fireAdjustDamageAmount = fireModeAdjustData != null ? fireModeAdjustData.getDamageAmount() : 0f;
             
-            // 应用我们的伤害公式：基础伤害 = (开火模式调整伤害 + 子弹原始伤害) × 全局伤害系数 × (1 + 动态伤害数据)
+            // 应用我们的伤害公式：基础伤害 = (开火模式调整伤害 + 子弹原始伤害) × 全局伤害系数 × 动态伤害倍率
             float baseDamage = (fireAdjustDamageAmount + rawDamage) * SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
-            float finalDamage = baseDamage * (float) (1.0 + dynamicDamageMultiplier);
+            float finalDamage = baseDamage * (float) dynamicDamageMultiplier;
             
             DebugLogger.debug("伤害计算详情 - 原始伤害: " + rawDamage + 
                             ", 开火调整: " + fireAdjustDamageAmount + 
@@ -136,7 +136,7 @@ public class BulletDamageMixin {
     private LinkedList<Object> createDefaultDamageList(BulletData bulletData, double dynamicMultiplier) {
         try {
             float baseDamage = bulletData.getDamageAmount() * SyncConfig.DAMAGE_BASE_MULTIPLIER.get().floatValue();
-            float finalDamage = baseDamage * (float) (1.0 + dynamicMultiplier);
+            float finalDamage = baseDamage * (float) dynamicMultiplier;
             return createDamageListWithDistance(finalDamage, Integer.MAX_VALUE);
         } catch (Exception e) {
             DebugLogger.error("创建默认伤害列表失败: " + e.getMessage());
