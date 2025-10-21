@@ -6,23 +6,33 @@ import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
 
 @Mod(Taa.MOD_ID)
 public class Taa {
     public static final String MOD_ID = "taa";
     
     public Taa() {
-        DebugLogger.info("Taa mod constructor called");
+        // 初始化日志系统
+        DebugLogger.initialize();
+        
+        IEventBus modEventBus = net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus();
         
         // 注册配置系统
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AttributeConfig.SPEC);
+        ModLoadingContext.get().registerConfig(Type.COMMON, AttributeConfig.SPEC);
         
         // 注册属性系统
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModAttributes.ATTRIBUTES.register(bus);
+        ModAttributes.ATTRIBUTES.register(modEventBus);
         
-        DebugLogger.info("Taa mod initialization completed");
+        // 注册设置事件
+        modEventBus.addListener(this::setup);
+    }
+    
+    private void setup(final FMLCommonSetupEvent event) {
+        // 在设置阶段记录配置状态
+        DebugLogger.info("TAA mod setup completed. Debug mode: " + AttributeConfig.DEBUG_MODE.get());
     }
 }

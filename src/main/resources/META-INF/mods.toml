@@ -51,7 +51,3 @@ description='''Adds gun damage attributes to Tacz mod.'''
     versionRange="[1.1.4,)"
     # What sides does this dependency apply to
     side="BOTH"
-
-# Mixin Configurations
-[[mixinConfigs]]
-    mixinConfigs = ["mixins.taa.json"]

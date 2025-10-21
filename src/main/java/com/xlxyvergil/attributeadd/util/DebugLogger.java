@@ -1,442 +1,425 @@
 package com.xlxyvergil.attributeadd.util;
 
+import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.BulletData;
+import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
 import com.xlxyvergil.attributeadd.config.AttributeConfig;
+import com.xlxyvergil.attributeadd.init.ModAttributes;
+import com.xlxyvergil.attributeadd.rewards.BulletGunDamageReward;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.LinkedList;
 
 /**
- * 调试日志工具类，将调试日志输出到单独的txt文件中
- * 日志文件位于Minecraft的logs文件夹中，按照特定格式记录
+ * TAA调试日志系统 - 集中管理所有MOD流程的数据日志
+ * 日志文件存储在Minecraft的logs文件夹中
  */
 public class DebugLogger {
-    private static final String LOG_FILE_NAME = "taa_debug.log";
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private static final ReentrantLock lock = new ReentrantLock();
-    private static PrintWriter writer = null;
+    private static final Logger LOGGER = LogManager.getLogger("taa");
+    private static PrintWriter fileWriter = null;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static boolean initialized = false;
+    private static boolean initializing = false; // 防止递归初始化
     
-    /**
-     * 初始化文件日志系统
-     */
-    private static void initialize() {
-        if (initialized) return;
-        
-        lock.lock();
+    // 延迟初始化，确保配置已加载
+    public static void initialize() {
+        if (!initialized && !initializing) {
+            initializing = true;
+            initializeFileLogger();
+            initialized = true;
+            initializing = false;
+        }
+    }
+    
+    private static void initializeFileLogger() {
         try {
-            if (initialized) return;
-            
-            // 获取Minecraft运行目录
-            String mcDir = System.getProperty("user.dir");
-            Path logDir = Paths.get(mcDir, "logs");
-            
-            // 确保logs目录存在
-            if (!Files.exists(logDir)) {
-                Files.createDirectories(logDir);
+            // 获取 Minecraft 的 log 文件夹路径
+            File logDir = new File(FMLPaths.GAMEDIR.get().toFile(), "logs");
+            if (!logDir.exists()) {
+                logDir.mkdirs();
             }
             
-            Path logFile = logDir.resolve(LOG_FILE_NAME);
+            // 创建单独的日志文件
+            File logFile = new File(logDir, "taa.log");
+            fileWriter = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)), true);
             
-            // 创建文件写入器
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(logFile.toFile(), true)));
-            initialized = true;
-            
-            logToFile("INFO", "=== Tacz Attribute Add 调试日志系统启动 ===");
-            logToFile("INFO", "模组版本: 1.0.2");
-            logToFile("INFO", "调试模式: " + AttributeConfig.DEBUG_MODE.get());
-            logToFile("INFO", "");
-            
-        } catch (Exception e) {
-            System.err.println("Failed to initialize debug logger: " + e.getMessage());
-        } finally {
-            lock.unlock();
-        }
-    }
-    
-    /**
-     * 内部日志写入方法
-     */
-    private static void logToFile(String level, String message) {
-        if (writer == null) return;
-        
-        lock.lock();
-        try {
+            // 写入日志文件头（注意：这里不能调用writeToFile，会形成递归）
             String timestamp = DATE_FORMAT.format(new Date());
-            String threadName = Thread.currentThread().getName();
-            String logEntry = String.format("[%s] [%s] [%s] %s", timestamp, threadName, level, message.replace("\n", "\\n"));
-            
-            writer.println(logEntry);
-            writer.flush();
-            
-            // 同时输出到控制台，便于调试
-            System.out.println("[TAA-DEBUG] " + logEntry);
+            fileWriter.println("[" + timestamp + "] [INFO] === TAA Debug Log Started at " + timestamp + " ===");
+            fileWriter.flush();
             
         } catch (Exception e) {
-            System.err.println("Failed to write to debug log file: " + e.getMessage());
-        } finally {
-            lock.unlock();
+            LOGGER.error("Failed to initialize TAA debug log file", e);
         }
     }
     
-    /**
-     * 记录调试信息
-     */
-    public static void debug(String message) {
-        try {
-            // 强制启用调试模式，确保所有日志都能输出
+    private static void ensureInitialized() {
+        if (!initialized) {
             initialize();
-            logToFile("DEBUG", message);
-            
-            // 同时输出到控制台
-            System.out.println("[TAA-DEBUG] " + message);
-            
-        } catch (Exception e) {
-            // 如果日志系统有问题，直接输出到控制台
-            System.out.println("[TAA-DEBUG-FALLBACK] " + message);
         }
     }
+    
+    private static void writeToFile(String level, String message) {
+        if (initializing) {
+            // 初始化过程中不记录日志，防止递归
+            return;
+        }
+        
+        ensureInitialized();
+        if (fileWriter != null) {
+            String timestamp = DATE_FORMAT.format(new Date());
+            fileWriter.println("[" + timestamp + "] [" + level + "] " + message);
+            fileWriter.flush();
+        }
+    }
+    
+    // ==================== 基础日志方法 ====================
     
     public static void info(String message) {
-        initialize();
-        logToFile("INFO", message);
+        // 只写入文件，不输出到控制台
+        writeToFile("INFO", message);
+    }
+    
+    public static void debug(String message) {
+        ensureInitialized();
+        // 即使在初始化过程中也检查调试模式
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) {
+            return;
+        }
+        // 只写入文件，不输出到控制台
+        writeToFile("DEBUG", message);
     }
     
     public static void warn(String message) {
-        initialize();
-        logToFile("WARN", message);
+        // 只写入文件，不输出到控制台
+        writeToFile("WARN", message);
     }
     
     public static void error(String message) {
-        initialize();
-        logToFile("ERROR", message);
+        // 只写入文件，不输出到控制台
+        writeToFile("ERROR", message);
     }
     
     public static void error(String message, Throwable throwable) {
-        initialize();
-        logToFile("ERROR", message);
-        if (throwable != null && writer != null) {
-            throwable.printStackTrace(writer);
-            writer.flush();
+        // 只写入文件，不输出到控制台
+        writeToFile("ERROR", message + " - " + throwable.getMessage());
+        if (fileWriter != null) {
+            throwable.printStackTrace(fileWriter);
         }
     }
     
-    // 计时器功能已移除
-    
-    public static void logAttributeProcessing(String playerName, String attributeName, float originalValue, float modifiedValue, String context) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Attribute Processing - Player: %s, Attribute: %s, Original: %.2f, Modified: %.2f, Context: %s",
-                playerName, attributeName, originalValue, modifiedValue, context
-            );
-            debug(message);
-        }
-    }
-    
-    public static void logDamageCalculation(String playerName, String gunType, float originalDamage, float modifiedDamage, String targetType) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Damage Calculation - Player: %s, Gun: %s, Original: %.2f, Modified: %.2f, Target: %s",
-                playerName, gunType, originalDamage, modifiedDamage, targetType
-            );
-            info(message);
-        }
-    }
-    
-    public static void logEventHandling(String eventName, String handlerName, String details) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Event Handling - Event: %s, Handler: %s, Details: %s",
-                eventName, handlerName, details
-            );
-            debug(message);
-        }
-    }
+    // ==================== 枪械伤害系统日志 ====================
     
     /**
-     * 记录子弹初始化信息
+     * 记录枪械伤害加成计算详情
      */
-    public static void logBulletInit(String bulletEntityId, String gunId, String ammoId, 
-                                   String shooterName, String worldName, boolean isTracer) {
-        if (!AttributeConfig.DEBUG_MODE.get()) return;
+    public static void logDamageCalculation(LivingEntity throwerIn, ItemStack gunItem, 
+                                           String gunType, double specificMultiplier, 
+                                           double genericMultiplier, double finalMultiplier) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
         
-        initialize();
+        StringBuilder sb = new StringBuilder();
+        sb.append("智能伤害加成选择 - ");
+        sb.append("玩家: ").append(throwerIn.getName().getString()).append(", ");
+        sb.append("枪械类型: ").append(gunType != null ? gunType : "未知").append(", ");
+        sb.append("专属加成: ").append(specificMultiplier).append(", ");
+        sb.append("通用加成: ").append(genericMultiplier).append(", ");
+        sb.append("计算方式: ").append(AttributeConfig.DAMAGE_CALCULATION_MODE.get()).append(", ");
+        sb.append("最终加成: ").append(finalMultiplier);
         
-        StringBuilder message = new StringBuilder();
-        message.append("=== 子弹初始化开始 ===");
-        message.append("子弹实体: ").append(bulletEntityId).append("");
-        message.append("枪械ID: ").append(gunId).append("");
-        message.append("弹药ID: ").append(ammoId).append("");
-        message.append("射击者: ").append(shooterName).append("");
-        message.append("世界: ").append(worldName).append("");
-        message.append("曳光弹: ").append(isTracer).append("");
-        
-        logToFile("INFO", message.toString());
+        debug(sb.toString());
     }
     
     /**
-     * 记录子弹初始化结束
+     * 记录枪械类型获取详情
      */
-    public static void logBulletInitEnd() {
-        if (!AttributeConfig.DEBUG_MODE.get()) return;
+    public static void logGunTypeDetection(ItemStack gunItem, String gunType) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
         
-        initialize();
-        logToFile("INFO", "=== 子弹初始化结束 ===");
-    }
-    
-    /**
-     * 记录伤害加成来源分析
-     */
-    public static void logDamageBonusAnalysis(String gunType, String specificAttributeName, 
-                                            double specificValue, String genericAttributeName,
-                                            double genericValue, String calculationMode,
-                                            double finalMultiplier) {
-        if (!AttributeConfig.DEBUG_MODE.get()) return;
-        
-        initialize();
-        
-        StringBuilder message = new StringBuilder();
-        message.append("=== 伤害加成来源分析开始 ===");
-        message.append("枪械类型识别: ").append(gunType).append("");
-        message.append("特定枪械属性值 - 类型: ").append(gunType)
-               .append(", 属性: ").append(specificAttributeName)
-               .append(", 值: ").append(specificValue).append("");
-        message.append("通用枪械属性值 - 属性: ").append(genericAttributeName)
-               .append(", 值: ").append(genericValue).append("");
-        message.append("伤害加成来源详情:");
-        message.append("  - 专属属性加成: ").append(specificValue)
-               .append(" (枪械类型: ").append(gunType).append(")");
-        message.append("  - 通用属性加成: ").append(genericValue).append("");
-        message.append("  - 计算模式: ").append(calculationMode).append("");
-        message.append("  - 最终伤害倍率: ").append(finalMultiplier).append("");
-        
-        logToFile("INFO", message.toString());
-    }
-    
-    /**
-     * 记录伤害加成来源分析结束
-     */
-    public static void logDamageBonusAnalysisEnd() {
-        if (!AttributeConfig.DEBUG_MODE.get()) return;
-        
-        initialize();
-        logToFile("INFO", "=== 伤害加成来源分析结束 ===");
-    }
-    
-    /**
-     * 记录零伤害情况
-     */
-    public static void logZeroDamage(String gunType, String gunId, String reason, String context) {
-        initialize(); // 零伤害记录总是记录，即使调试模式关闭
-        
-        StringBuilder message = new StringBuilder();
-        message.append("=== 零伤害警告 ===");
-        message.append("枪械类型: ").append(gunType).append("");
-        message.append("枪械ID: ").append(gunId).append("");
-        message.append("原因: ").append(reason).append("");
-        message.append("上下文: ").append(context).append("");
-        
-        logToFile("WARN", message.toString());
-    }
-    
-    /**
-     * 记录详细的属性查询过程
-     */
-    public static void logAttributeQuery(String playerName, String attributeName, double value, String source, String context) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Attribute Query - Player: %s, Attribute: %s, Value: %.4f, Source: %s, Context: %s",
-                playerName, attributeName, value, source, context
-            );
-            debug(message);
+        if (gunType == null || gunType.isEmpty()) {
+            debug("无法获取枪械类型，使用通用伤害加成 - 枪械物品: " + gunItem);
+        } else {
+            debug("成功识别枪械类型: " + gunType + " - 枪械物品: " + gunItem);
         }
     }
     
     /**
-     * 记录枪械类型识别过程
+     * 记录特定枪械类型加成详情
      */
-    public static void logGunTypeIdentification(String gunId, String gunType, String method, boolean success, String details) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Gun Type Identification - GunID: %s, Type: %s, Method: %s, Success: %s, Details: %s",
-                gunId, gunType, method, success, details
-            );
-            debug(message);
-        }
-    }
-    
-    /**
-     * 记录伤害计算详细步骤
-     */
-    public static void logDamageCalculationSteps(String stepName, String gunId, String playerName, 
-                                               double inputValue, double outputValue, String calculation) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Damage Calculation Step - Step: %s, GunID: %s, Player: %s, Input: %.4f, Output: %.4f, Calculation: %s",
-                stepName, gunId, playerName, inputValue, outputValue, calculation
-            );
-            debug(message);
-        }
-    }
-    
-    /**
-     * 记录反射操作详细信息
-     */
-    public static void logReflectionOperation(String operation, String className, String fieldName, 
-                                            boolean success, String details) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Reflection Operation - Operation: %s, Class: %s, Field: %s, Success: %s, Details: %s",
-                operation, className, fieldName, success, details
-            );
-            debug(message);
-        }
-    }
-    
-    /**
-     * 记录性能监控信息
-     */
-    public static void logPerformance(String operation, long startTime, long endTime, String context) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            long duration = endTime - startTime;
-            String message = String.format(
-                "Performance - Operation: %s, Duration: %dms, Context: %s",
-                operation, duration, context
-            );
-            debug(message);
-        }
-    }
-    
-    /**
-     * 记录配置加载和变更
-     */
-    public static void logConfigChange(String configName, Object oldValue, Object newValue, String reason) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Config Change - Config: %s, Old: %s, New: %s, Reason: %s",
-                configName, oldValue, newValue, reason
-            );
-            info(message);
-        }
-    }
-    
-    /**
-     * 记录异常堆栈详细信息
-     */
-    public static void logExceptionDetails(String context, Throwable throwable, String additionalInfo) {
-        initialize(); // 异常记录总是记录，即使调试模式关闭
+    public static void logSpecificGunDamage(String gunType, Attribute specificAttribute, double multiplier) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
         
-        StringBuilder message = new StringBuilder();
-        message.append("=== 异常详细信息 ===");
-        message.append("上下文: ").append(context).append("");
-        message.append("异常类型: ").append(throwable.getClass().getName()).append("");
-        message.append("异常消息: ").append(throwable.getMessage()).append("");
-        message.append("附加信息: ").append(additionalInfo).append("");
+        if (specificAttribute == null) {
+            debug("特定枪械类型加成 - 枪械类型: " + gunType + ", 无对应属性，使用基础值1.0");
+        } else {
+            debug("特定枪械类型加成 - 枪械类型: " + gunType + 
+                  ", 属性: " + specificAttribute.getDescriptionId() + 
+                  ", 加成: " + multiplier);
+        }
+    }
+    
+    /**
+     * 记录通用枪械伤害加成详情
+     */
+    public static void logGenericDamage(double multiplier) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
         
-        logToFile("ERROR", message.toString());
+        debug("通用枪械伤害加成: " + multiplier);
+    }
+    
+    /**
+     * 记录枪械类型获取失败详情
+     */
+    public static void logGunTypeError(ItemStack gunItem, Exception e) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
         
-        // 记录堆栈跟踪
-        if (writer != null) {
-            throwable.printStackTrace(writer);
-            writer.flush();
-        }
+        error("获取枪械类型失败 - 枪械物品: " + gunItem + ", 错误: " + e.getMessage());
     }
     
     /**
-     * 记录内存使用情况
+     * 记录玩家未手持枪械
      */
-    public static void logMemoryUsage(String context) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            Runtime runtime = Runtime.getRuntime();
-            long maxMemory = runtime.maxMemory();
-            long totalMemory = runtime.totalMemory();
-            long freeMemory = runtime.freeMemory();
-            long usedMemory = totalMemory - freeMemory;
-            
-            String message = String.format(
-                "Memory Usage - Context: %s, Used: %dMB, Free: %dMB, Total: %dMB, Max: %dMB",
-                context, 
-                usedMemory / (1024 * 1024), 
-                freeMemory / (1024 * 1024),
-                totalMemory / (1024 * 1024),
-                maxMemory / (1024 * 1024)
-            );
-            debug(message);
-        }
+    public static void logNoGunHeld() {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        debug("玩家未手持枪械，不应用动态伤害加成");
+    }
+    
+    // ==================== 智能伤害计算日志记录 ====================
+    
+    /**
+     * 记录完整的伤害计算流程
+     * 
+     * @param throwerIn 投掷者实体
+     * @param gunItem 枪械物品
+     * @param gunType 枪械类型
+     * @param specificMultiplier 专属属性加成
+     * @param genericMultiplier 通用属性加成
+     * @param finalMultiplier 最终加成
+     */
+    public static void logCompleteDamageCalculation(LivingEntity throwerIn, ItemStack gunItem, 
+                                                   String gunType, double specificMultiplier, 
+                                                   double genericMultiplier, double finalMultiplier) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        // 记录枪械类型检测
+        logGunTypeDetection(gunItem, gunType);
+        
+        // 记录特定枪械类型加成
+        Attribute specificAttribute = getSpecificGunAttribute(gunType);
+        logSpecificGunDamage(gunType, specificAttribute, specificMultiplier);
+        
+        // 记录通用枪械伤害加成
+        logGenericDamage(genericMultiplier);
+        
+        // 记录最终伤害计算详情
+        logDamageCalculation(throwerIn, gunItem, gunType, specificMultiplier, genericMultiplier, finalMultiplier);
     }
     
     /**
-     * 记录线程信息
+     * 直接获取并记录完整的伤害计算流程
+     * 此方法直接调用BulletGunDamageReward获取数据，无需中间层
+     * 
+     * @param throwerIn 投掷者实体
+     * @param gunItem 枪械物品
      */
-    public static void logThreadInfo(String operation, String threadName, long threadId, String context) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Thread Info - Operation: %s, Thread: %s (ID: %d), Context: %s",
-                operation, threadName, threadId, context
-            );
-            debug(message);
-        }
-    }
-    
-    /**
-     * 记录详细的伤害加成应用过程
-     */
-    public static void logDamageBonusApplication(String gunId, String playerName, double originalDamage, 
-                                               double finalDamage, double multiplier, String calculationDetails) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            String message = String.format(
-                "Damage Bonus Application - GunID: %s, Player: %s, Original: %.4f, Final: %.4f, Multiplier: %.4f, Details: %s",
-                gunId, playerName, originalDamage, finalDamage, multiplier, calculationDetails
-            );
-            info(message);
-        }
-    }
-    
-    /**
-     * 记录详细的子弹初始化过程
-     */
-    public static void logDetailedBulletInit(String bulletId, String gunId, String ammoId, String playerName,
-                                           String worldName, boolean isTracer, double baseDamage, double finalDamage) {
-        if (AttributeConfig.DEBUG_MODE.get()) {
-            StringBuilder message = new StringBuilder();
-            message.append("=== 详细子弹初始化信息 ===");
-            message.append("子弹ID: ").append(bulletId).append("");
-            message.append("枪械ID: ").append(gunId).append("");
-            message.append("弹药ID: ").append(ammoId).append("");
-            message.append("射击者: ").append(playerName).append("");
-            message.append("世界: ").append(worldName).append("");
-            message.append("曳光弹: ").append(isTracer).append("");
-            message.append("基础伤害: ").append(baseDamage).append("");
-            message.append("最终伤害: ").append(finalDamage).append("");
-            
-            logToFile("INFO", message.toString());
-        }
-    }
-    
-
-    
-    /**
-     * 关闭日志系统
-     */
-    public static void shutdown() {
-        lock.lock();
+    public static void logCompleteDamageCalculationDirect(LivingEntity throwerIn, ItemStack gunItem) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
         try {
-            if (writer != null) {
-                logToFile("INFO", "=== Tacz Attribute Add 调试日志系统关闭 ===");
-                writer.close();
-                writer = null;
-                initialized = false;
-            }
+            // 直接调用BulletGunDamageReward的方法获取数据
+            String gunType = BulletGunDamageReward.getGunType(gunItem);
+            double specificMultiplier = BulletGunDamageReward.getSpecificGunDamageMultiplier(throwerIn, gunType);
+            double genericMultiplier = BulletGunDamageReward.getGenericDamageMultiplier(throwerIn);
+            double finalMultiplier = BulletGunDamageReward.calculateTotalMultiplier(specificMultiplier, genericMultiplier);
+            
+            // 记录完整的计算过程
+            logCompleteDamageCalculation(throwerIn, gunItem, gunType, specificMultiplier, genericMultiplier, finalMultiplier);
+            
         } catch (Exception e) {
-            System.err.println("Failed to shutdown debug logger: " + e.getMessage());
-        } finally {
-            lock.unlock();
+            error("直接获取伤害计算数据失败", e);
+        }
+    }
+    
+    // 事件监听方法 - 用于从BulletDamageMixin获取数据
+    
+    /**
+     * 伤害应用事件监听
+     * 当BulletDamageMixin应用伤害加成时调用此方法
+     */
+    public static void onDamageApplied(LivingEntity throwerIn, ItemStack gunItem, double passiveMultiplier, 
+                                      float originalDamage, float newDamage, String operationType) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        debug("伤害加成应用 - 玩家: " + throwerIn.getName().getString() + 
+              ", 枪械: " + gunItem.getDisplayName().getString() + 
+              ", 加成倍率: " + passiveMultiplier + 
+              ", 原伤害: " + originalDamage + 
+              ", 新伤害: " + newDamage);
+    }
+    
+    /**
+     * 记录子弹伤害数据的详细信息
+     */
+    public static void logBulletDamageDetails(LivingEntity throwerIn, ItemStack gunItem, 
+                                             LinkedList<DistanceDamagePair> originalDamageList,
+                                             LinkedList<DistanceDamagePair> modifiedDamageList,
+                                             double passiveMultiplier) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        debug("子弹伤害详细信息 - 玩家: " + throwerIn.getName().getString() +
+              ", 枪械: " + gunItem.getDisplayName().getString() +
+              ", 被动倍率: " + passiveMultiplier);
+        
+        // 记录每个距离的伤害数据
+        for (int i = 0; i < Math.min(originalDamageList.size(), modifiedDamageList.size()); i++) {
+            DistanceDamagePair originalPair = originalDamageList.get(i);
+            DistanceDamagePair modifiedPair = modifiedDamageList.get(i);
+            
+            debug("距离伤害对[" + i + "] - 距离: " + originalPair.getDistance() +
+                  ", 原始伤害: " + originalPair.getDamage() +
+                  ", 修改后伤害: " + modifiedPair.getDamage() +
+                  ", 计算公式: " + originalPair.getDamage() + " * " + passiveMultiplier + " = " + modifiedPair.getDamage());
+        }
+    }
+    
+    /**
+     * 记录子弹构成参数的详细信息
+     * 
+     * @param throwerIn 投掷者实体
+     * @param gunItem 枪械物品
+     * @param gunId 枪械资源ID
+     * @param ammoId 弹药资源ID
+     * @param gunData 枪械数据
+     * @param bulletData 子弹数据
+     */
+    public static void logBulletCompositionDetails(LivingEntity throwerIn, ItemStack gunItem,
+                                                  net.minecraft.resources.ResourceLocation gunId, net.minecraft.resources.ResourceLocation ammoId,
+                                                  GunData gunData, BulletData bulletData) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        debug("子弹构成参数详情 - 玩家: " + throwerIn.getName().getString() +
+              ", 枪械: " + gunItem.getDisplayName().getString() +
+              ", 枪械ID: " + gunId +
+              ", 弹药ID: " + ammoId);
+              
+        // 记录枪械数据
+        if (gunData != null) {
+            debug("枪械数据 - 射程: " + gunData.getBulletData().getLifeSecond() +
+                  ", 射速: " + gunData.getRoundsPerMinute() +
+                  ", 弹药数量: " + gunData.getAmmoAmount());
+                  
+            // 记录枪械额外伤害数据
+            if (gunData.getBulletData().getExtraDamage() != null && gunData.getBulletData().getExtraDamage().getDamageAdjust() != null) {
+                LinkedList<DistanceDamagePair> pairs = gunData.getBulletData().getExtraDamage().getDamageAdjust();
+                for (int i = 0; i < pairs.size(); i++) {
+                    DistanceDamagePair pair = pairs.get(i);
+                    debug("枪械额外伤害[" + i + "] - 距离: " + pair.getDistance() + ", 伤害: " + pair.getDamage());
+                }
+            }
+        }
+        
+        // 记录子弹数据
+        if (bulletData != null) {
+            debug("子弹数据 - 伤害: " + bulletData.getDamageAmount() +
+                  ", 速度: " + bulletData.getSpeed() +
+                  ", 穿透: " + bulletData.getPierce() +
+                  ", 破甲系数: " + (bulletData.getExtraDamage() != null ? bulletData.getExtraDamage().getArmorIgnore() : 0.0f));
+                  
+            // 记录子弹额外伤害数据
+            if (bulletData.getExtraDamage() != null && bulletData.getExtraDamage().getDamageAdjust() != null) {
+                LinkedList<DistanceDamagePair> pairs = bulletData.getExtraDamage().getDamageAdjust();
+                for (int i = 0; i < pairs.size(); i++) {
+                    DistanceDamagePair pair = pairs.get(i);
+                    debug("子弹额外伤害[" + i + "] - 距离: " + pair.getDistance() + ", 伤害: " + pair.getDamage());
+                }
+            }
+        }
+    }
+    
+    /**
+     * 反射操作事件监听
+     * 当BulletDamageMixin执行反射操作时调用此方法
+     */
+    public static void onReflectionOperation(String operation, boolean success) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        debug("反射操作 - " + operation + ": " + (success ? "成功" : "失败"));
+    }
+    
+    /**
+     * 获取BulletDamageMixin的伤害计算数据
+     * 通过事件监听机制获取Mixin的操作数据
+     */
+    public static void logBulletDamageMixinData(LivingEntity throwerIn, ItemStack gunItem) {
+        ensureInitialized();
+        if (AttributeConfig.DEBUG_MODE == null || !AttributeConfig.DEBUG_MODE.get()) return;
+        
+        try {
+            // 记录BulletDamageMixin开始处理
+            debug("BulletDamageMixin开始处理伤害计算");
+            
+            // 获取并记录伤害计算详情
+            logCompleteDamageCalculationDirect(throwerIn, gunItem);
+            
+        } catch (Exception e) {
+            error("获取BulletDamageMixin数据失败", e);
+        }
+    }
+    
+    /**
+     * 根据枪械类型获取对应的属性（仅用于日志记录）
+     */
+    private static Attribute getSpecificGunAttribute(String gunType) {
+        if (gunType == null || gunType.isEmpty()) return null;
+        
+        return switch (gunType.toLowerCase()) {
+            case "pistol" -> ModAttributes.BULLET_GUNDAMAGE_PISTOL != null ? ModAttributes.BULLET_GUNDAMAGE_PISTOL.get() : null;
+            case "rifle" -> ModAttributes.BULLET_GUNDAMAGE_RIFLE != null ? ModAttributes.BULLET_GUNDAMAGE_RIFLE.get() : null;
+            case "shotgun" -> ModAttributes.BULLET_GUNDAMAGE_SHOTGUN != null ? ModAttributes.BULLET_GUNDAMAGE_SHOTGUN.get() : null;
+            case "sniper" -> ModAttributes.BULLET_GUNDAMAGE_SNIPER != null ? ModAttributes.BULLET_GUNDAMAGE_SNIPER.get() : null;
+            case "smg" -> ModAttributes.BULLET_GUNDAMAGE_SMG != null ? ModAttributes.BULLET_GUNDAMAGE_SMG.get() : null;
+            case "lmg" -> ModAttributes.BULLET_GUNDAMAGE_LMG != null ? ModAttributes.BULLET_GUNDAMAGE_LMG.get() : null;
+            case "launcher" -> ModAttributes.BULLET_GUNDAMAGE_LAUNCHER != null ? ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get() : null;
+            default -> null; // Tacz API保证不会返回未知类型
+        };
+    }
+    
+    // ==================== 系统清理方法 ====================
+    
+    public static void shutdown() {
+        if (fileWriter != null) {
+            String timestamp = DATE_FORMAT.format(new Date());
+            fileWriter.println("[" + timestamp + "] [INFO] === TAA Debug Log Ended at " + timestamp + " ===");
+            fileWriter.flush();
+            fileWriter.close();
+            fileWriter = null;
+            initialized = false;
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.xlxyvergil.attributeadd.config;
 
-import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AttributeConfig {
@@ -33,8 +32,6 @@ public class AttributeConfig {
         
         BUILDER.pop();
         SPEC = BUILDER.build();
-        
-        DebugLogger.info("Mod configuration initialized");
     }
     
     /**
