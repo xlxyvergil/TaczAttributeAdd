@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,8 +46,10 @@ public class DebugLogger {
             fileWriter.println("=== TAA Debug Log Started at " + DATE_FORMAT.format(new Date()) + " ===");
             fileWriter.flush();
             
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error("Failed to initialize TAA debug log file", e);
+        } catch (Throwable t) {
+            LOGGER.error("Failed to initialize TAA debug log file due to unexpected error", t);
         }
     }
     
@@ -287,6 +288,113 @@ public class DebugLogger {
             case "launcher" -> ModAttributes.BULLET_GUNDAMAGE_LAUNCHER != null ? ModAttributes.BULLET_GUNDAMAGE_LAUNCHER.get() : null;
             default -> null; // Tacz API保证不会返回未知类型
         };
+    }
+    
+    // ==================== 子弹伤害构成详细记录 ====================
+    
+    /**
+     * 记录子弹伤害构成的完整计算过程
+     * 包括从子弹参数、属性获取到计算方式的全过程
+     *
+     * @param throwerIn 投掷者实体
+     * @param gunItem 枪械物品
+     * @param originalDamage 原始伤害
+     * @param newDamage 新伤害
+     * @param passiveMultiplier 应用的被动倍率
+     */
+    public static void logDetailedBulletDamageComposition(LivingEntity throwerIn, ItemStack gunItem,
+                                                         float originalDamage, float newDamage, 
+                                                         double passiveMultiplier) {
+        if (!AttributeConfig.DEBUG_MODE.get()) return;
+        
+        try {
+            debug("=== 子弹伤害构成详细记录 开始 ===");
+            
+            // 1. 记录基本参数
+            debug("基础信息:");
+            debug("  - 玩家: " + throwerIn.getName().getString());
+            debug("  - 玩家UUID: " + throwerIn.getStringUUID());
+            debug("  - 枪械: " + (gunItem.hasCustomHoverName() ? gunItem.getDisplayName().getString() : "无名称"));
+            debug("  - 枪械物品类: " + gunItem.getItem().getClass().getName());
+            
+            // 2. 获取枪械类型
+            String gunType = BulletGunDamageReward.getGunType(gunItem);
+            debug("枪械类型获取:");
+            debug("  - 枪械类型: " + (gunType != null ? gunType : "无法识别"));
+            
+            // 3. 记录属性获取过程
+            debug("属性获取过程:");
+            
+            // 获取特定枪械类型属性
+            double specificMultiplier = 1.0;
+            if (gunType != null && !gunType.isEmpty()) {
+                debug("  特定枪械类型属性 (" + gunType + "):");
+                Attribute specificAttribute = getSpecificGunAttribute(gunType);
+                if (specificAttribute != null) {
+                    debug("    - 属性类名: " + specificAttribute.getClass().getName());
+                    debug("    - 属性注册名: " + specificAttribute.getDescriptionId());
+                    
+                    var attributeInstance = throwerIn.getAttribute(specificAttribute);
+                    if (attributeInstance != null) {
+                        specificMultiplier = attributeInstance.getValue();
+                        debug("    - 属性实例存在: 是");
+                        debug("    - 属性值: " + specificMultiplier);
+                        debug("    - 基础值: " + attributeInstance.getBaseValue());
+                        debug("    - 修饰符数量: " + attributeInstance.getModifiers().size());
+                    } else {
+                        debug("    - 属性实例存在: 否");
+                    }
+                } else {
+                    debug("    - 未找到对应属性");
+                }
+            } else {
+                debug("  特定枪械类型属性: 无(枪械类型为空)");
+            }
+            
+            // 获取通用枪械伤害属性
+            double genericMultiplier = 1.0;
+            debug("  通用枪械伤害属性:");
+            Attribute generalAttribute = ModAttributes.BULLET_GUNDAMAGE.get();
+            if (generalAttribute != null) {
+                debug("    - 属性类名: " + generalAttribute.getClass().getName());
+                debug("    - 属性注册名: " + generalAttribute.getDescriptionId());
+                
+                var generalAttributeInstance = throwerIn.getAttribute(generalAttribute);
+                if (generalAttributeInstance != null) {
+                    genericMultiplier = generalAttributeInstance.getValue();
+                    debug("    - 属性实例存在: 是");
+                    debug("    - 属性值: " + genericMultiplier);
+                    debug("    - 基础值: " + generalAttributeInstance.getBaseValue());
+                    debug("    - 修饰符数量: " + generalAttributeInstance.getModifiers().size());
+                } else {
+                    debug("    - 属性实例存在: 否");
+                }
+            } else {
+                debug("    - 通用属性不存在");
+            }
+            
+            // 4. 记录计算方式
+            debug("伤害计算过程:");
+            debug("  - 原始伤害: " + originalDamage);
+            debug("  - 特定枪械加成: " + specificMultiplier);
+            debug("  - 通用枪械加成: " + genericMultiplier);
+            debug("  - 计算模式: " + AttributeConfig.DAMAGE_CALCULATION_MODE.get());
+            
+            double calculatedMultiplier = BulletGunDamageReward.calculateTotalMultiplier(specificMultiplier, genericMultiplier);
+            debug("  - 计算后倍率: " + calculatedMultiplier);
+            debug("  - 实际应用倍率: " + passiveMultiplier);
+            debug("  - 最终伤害: " + newDamage);
+            
+            // 5. 验证计算结果
+            if (Math.abs(calculatedMultiplier - passiveMultiplier) > 0.001) {
+                warn("计算倍率与实际应用倍率存在差异: 计算=" + calculatedMultiplier + ", 实际=" + passiveMultiplier);
+            }
+            
+            debug("=== 子弹伤害构成详细记录 结束 ===");
+            
+        } catch (Exception e) {
+            error("记录子弹伤害构成详细信息时发生错误", e);
+        }
     }
     
     // ==================== 系统清理方法 ====================
