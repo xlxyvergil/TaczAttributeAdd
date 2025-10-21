@@ -30,11 +30,10 @@ apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
-version = "1.0.2" + "-" + FORMAT.format(new Date())
-// 版本号，正式发布需要修改这一行
-//version = FORMAT.format(new Date())
+version = mod_version + "-" + FORMAT.format(new Date())
+// 版本号，从gradle.properties中获取，并添加时间戳
 group = mod_group_id
-archivesBaseName = "${mod_id}-${minecraft_version}"
+archivesBaseName = "${mod_id}-${minecraft_version}-${mod_version}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 

@@ -1,9 +1,8 @@
 package com.xlxyvergil.attributeadd.config;
 
-import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ModConfig {
+public class AttributeConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
@@ -20,8 +19,8 @@ public class ModConfig {
         BUILDER.push("Tacz Attribute Add Configuration");
         
         MAX_DAMAGE_MULTIPLIER = BUILDER
-                .comment("最大伤害倍率限制", "设置属性可以提供的最大伤害倍率上限")
-                .defineInRange("maxDamageMultiplier", 10.0D, 1.0D, 100.0D);
+                .comment("最大伤害倍率限制", "设置属性可以提供的最大伤害倍率上限，支持热重载")
+                .defineInRange("maxDamageMultiplier", 1024.0D, 1.0D, 10000.0D);
         
         DEBUG_MODE = BUILDER
                 .comment("调试模式", "启用调试日志输出")
@@ -34,7 +33,6 @@ public class ModConfig {
         BUILDER.pop();
         SPEC = BUILDER.build();
         
-        DebugLogger.info("Mod configuration initialized");
     }
     
     /**

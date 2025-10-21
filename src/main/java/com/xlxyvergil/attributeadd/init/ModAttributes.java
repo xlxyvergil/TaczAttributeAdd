@@ -1,75 +1,65 @@
 package com.xlxyvergil.attributeadd.init;
 
-import com.xlxyvergil.attributeadd.TaczAttributeAdd;
-import com.xlxyvergil.attributeadd.config.ModConfig;
-import com.xlxyvergil.attributeadd.util.DebugLogger;
+import com.xlxyvergil.attributeadd.Taa;
+import com.xlxyvergil.attributeadd.config.AttributeConfig;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModAttributes {
-    public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, TaczAttributeAdd.MOD_ID);
-    
-    // 属性映射表，便于动态访问
-    private static final Map<String, RegistryObject<Attribute>> ATTRIBUTE_MAP = new HashMap<>();
+    public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, Taa.MOD_ID);
 
     // 通用枪械伤害加成
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE = registerAttribute("tacz.bullet_gundamage", "通用枪械伤害加成");
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE = ATTRIBUTES.register("tacz.bullet_gundamage",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
 
     // 具体枪械类型伤害加成
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_PISTOL = registerSpecificAttribute("tacz.bullet_gundamage_pistol", "手枪伤害加成");
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_RIFLE = registerSpecificAttribute("tacz.bullet_gundamage_rifle", "步枪伤害加成");
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SHOTGUN = registerSpecificAttribute("tacz.bullet_gundamage_shotgun", "霰弹枪伤害加成");
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SNIPER = registerSpecificAttribute("tacz.bullet_gundamage_sniper", "狙击枪伤害加成");
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SMG = registerSpecificAttribute("tacz.bullet_gundamage_smg", "冲锋枪伤害加成");
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_LMG = registerSpecificAttribute("tacz.bullet_gundamage_lmg", "轻机枪伤害加成");
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_LAUNCHER = registerSpecificAttribute("tacz.bullet_gundamage_launcher", "发射器伤害加成");
-    
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_PISTOL = ATTRIBUTES.register("tacz.bullet_gundamage_pistol",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_pistol", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_RIFLE = ATTRIBUTES.register("tacz.bullet_gundamage_rifle",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_rifle", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SHOTGUN = ATTRIBUTES.register("tacz.bullet_gundamage_shotgun",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_shotgun", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SNIPER = ATTRIBUTES.register("tacz.bullet_gundamage_sniper",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_sniper", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_SMG = ATTRIBUTES.register("tacz.bullet_gundamage_smg",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_smg", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_LMG = ATTRIBUTES.register("tacz.bullet_gundamage_lmg",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_lmg", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_LAUNCHER = ATTRIBUTES.register("tacz.bullet_gundamage_launcher",
+            () -> new RangedAttribute("attribute.name.tacz.bullet_gundamage_launcher", 1.0D, 0.0D, AttributeConfig.MAX_DAMAGE_MULTIPLIER.get()).setSyncable(true));
+
     /**
-     * 注册通用属性
+     * 属性绑定事件处理器
+     * 将所有自定义属性绑定到所有实体类型
      */
-    private static RegistryObject<Attribute> registerAttribute(String attributeName, String description) {
-        double maxMultiplier = ModConfig.MAX_DAMAGE_MULTIPLIER.get();
-        RegistryObject<Attribute> attribute = ATTRIBUTES.register(attributeName,
-                () -> new RangedAttribute("attribute.name." + attributeName, 1.0D, 0.0D, maxMultiplier).setSyncable(true));
+    @SubscribeEvent
+    public static void registerAttributes(EntityAttributeModificationEvent event) {
         
-        ATTRIBUTE_MAP.put(attributeName, attribute);
-        DebugLogger.info("注册属性: " + description + " (" + attributeName + "), 最大倍率: " + maxMultiplier);
-        
-        return attribute;
-    }
-    
-    /**
-     * 注册特定枪械类型属性
-     */
-    private static RegistryObject<Attribute> registerSpecificAttribute(String attributeName, String description) {
-        return registerAttribute(attributeName, description);
-    }
-    
-    /**
-     * 根据属性名称获取属性实例
-     */
-    public static Attribute getAttributeByName(String attributeName) {
-        RegistryObject<Attribute> attribute = ATTRIBUTE_MAP.get(attributeName);
-        return attribute != null ? attribute.get() : null;
-    }
-    
-    /**
-     * 获取所有已注册的属性名称
-     */
-    public static String[] getRegisteredAttributeNames() {
-        return ATTRIBUTE_MAP.keySet().toArray(new String[0]);
-    }
-    
-    /**
-     * 检查属性是否已注册
-     */
-    public static boolean isAttributeRegistered(String attributeName) {
-        return ATTRIBUTE_MAP.containsKey(attributeName);
+        // 按照TACZ的方式：直接对所有实体类型添加属性
+        event.getTypes().forEach(type -> {
+            // 绑定通用枪械伤害属性
+            event.add(type, BULLET_GUNDAMAGE.get());
+            // 绑定特定枪械类型属性
+            event.add(type, BULLET_GUNDAMAGE_PISTOL.get());
+            event.add(type, BULLET_GUNDAMAGE_RIFLE.get());
+            event.add(type, BULLET_GUNDAMAGE_SHOTGUN.get());
+            event.add(type, BULLET_GUNDAMAGE_SNIPER.get());
+            event.add(type, BULLET_GUNDAMAGE_SMG.get());
+            event.add(type, BULLET_GUNDAMAGE_LMG.get());
+            event.add(type, BULLET_GUNDAMAGE_LAUNCHER.get());
+        });
     }
 }
