@@ -1,0 +1,57 @@
+# This is an example mods.toml file. It contains the data relating to the loading mods.
+# There are several mandatory fields (#mandatory), and many optional ones.
+# If you want, you can duplicate this file and use the values you want.
+
+# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+modLoader="javafml"
+# The version range of the mod loader that this mod supports. Do not edit this yourself, it is filled in by the gradle build
+loaderVersion="[40,)"
+
+# This is the license for the mod. Adjust to a valid license.
+license="All Rights Reserved"
+
+# A URL to refer people to when problems occur with this mod
+#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
+
+# If the mods defined in this file should show as separate resource packs
+#showAsResourcePack=false
+
+# Mod List
+[[mods]]
+# The modid of the mod
+modId="taa"
+# The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
+# ${file.jarVersion} will substitute the value from the implementation section of your build.gradle file
+# ${project.version} will substitute the value from the gradle.properties version field
+version="${file.jarVersion}"
+# The display name of the mod
+displayName="Tacz Attribute Add"
+# A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/1.18.x/misc/updatechecker/
+#updateJSONURL="https://change.me.example.invalid/updates.json"
+# A URL for the "homepage" for this mod, displayed in the mod UI
+displayURL=""
+# A file name (in the root of the mod jar) containing a logo for display
+logoFile="logo.png"
+# A text field displayed in the mod UI
+credits=""
+# A text field displayed in the mod UI
+authors="xlxyvergil"
+# The description text for the mod (multi line!)
+description='''Adds gun damage attributes to Tacz mod.'''
+
+# A dependency - use the . to indicate dependency for a specific modid
+[[dependencies.taa]]
+    # the modid of the dependency
+    modId="tacz"
+    # Does this affect the ordering of the mod load
+    ordering="AFTER"
+    # Is this dependency mandatory or not
+    mandatory=true
+    # The version range of the dependency
+    versionRange="[1.1.4,)"
+    # What sides does this dependency apply to
+    side="BOTH"
+
+# Mixin Configurations
+[[mixinConfigs]]
+    mixinConfigs = ["mixins.taa.json"]
