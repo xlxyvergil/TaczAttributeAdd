@@ -41,7 +41,7 @@ apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.0.2"+"-"+FORMAT.format(new Date())
+version = "1.0.3"+"-"+FORMAT.format(new Date())
 // 版本号，正式发布需要修改这一行
 //version = FORMAT.format(new Date())
 group = "com.xlxyvergil"
@@ -55,14 +55,6 @@ minecraft {
     // 使用 access transformer 来修改原版的一些方法访问修饰符
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
-    // Mixin 配置
-    runs {
-        configureEach {
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-        }
-    }
-    
     // 运行参数
     runs {
         client {
@@ -73,9 +65,6 @@ minecraft {
             workingDirectory project.file('run/client_a')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            // Mixin 配置
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 taa {
                     source sourceSets.main
@@ -122,8 +111,13 @@ minecraft {
 
 // Mixin 配置
 mixin {
-    // 禁用注解处理器检查
-    disableAnnotationProcessorCheck()
+    // 启用注解处理器
+    add sourceSets.main, "mixins.taa.refmap.json"
+    config "mixins.taa.json"
+    
+    // 调试选项
+    debug.verbose = true
+    debug.export = true
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
@@ -182,9 +176,8 @@ dependencies {
     testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     
     // Mixin Extras 依赖 - 使用官方推荐配置
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    // 由于jarJar插件不存在，使用标准依赖方式
-    implementation "io.github.llamalad7:mixinextras-forge:0.4.1"
+    implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
+    annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
     
     // 确保 Mixin 在运行时可用
     implementation('org.spongepowered:mixin:0.8.5') {
