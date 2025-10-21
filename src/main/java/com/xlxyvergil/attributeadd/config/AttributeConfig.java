@@ -3,7 +3,7 @@ package com.xlxyvergil.attributeadd.config;
 import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ModConfig {
+public class AttributeConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
