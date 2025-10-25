@@ -4,6 +4,7 @@ import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.xlxyvergil.attributeadd.config.AttributeConfig;
 import com.xlxyvergil.attributeadd.init.ModAttributes;
+import com.xlxyvergil.attributeadd.util.DebugLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -30,23 +31,37 @@ public class BulletGunDamageReward {
      * @return 伤害加成倍率（不小于0）
      */
     public static double getSmartDamageMultiplier(LivingEntity throwerIn, ItemStack gunItem) {
+        DebugLogger.debug("[BulletGunDamageReward] 开始计算智能伤害倍率 - 玩家: " + throwerIn.getName().getString() + ", 枪械: " + gunItem.getDisplayName().getString());
+        
         // 前置检查：确保玩家手持有效枪械
         if (!isValidGunItem(gunItem)) {
+            DebugLogger.debug("[BulletGunDamageReward] 无效的枪械物品，返回倍率: 0.0");
             return 0.0;
         }
         
         // 获取枪械类型，若无法识别则使用通用加成
         String gunType = getGunType(gunItem);
         if (gunType == null || gunType.isEmpty()) {
-            return getGenericDamageMultiplier(throwerIn);
+            DebugLogger.debug("[BulletGunDamageReward] 无法获取枪械类型，使用通用加成");
+            double genericMultiplier = getGenericDamageMultiplier(throwerIn);
+            DebugLogger.debug("[BulletGunDamageReward] 通用伤害倍率: " + genericMultiplier);
+            return genericMultiplier;
         }
+        
+        DebugLogger.debug("[BulletGunDamageReward] 获取到枪械类型: " + gunType);
         
         // 计算专属和通用属性加成
         double specificMultiplier = getSpecificGunDamageMultiplier(throwerIn, gunType);
         double genericMultiplier = getGenericDamageMultiplier(throwerIn);
         
+        DebugLogger.debug("[BulletGunDamageReward] 特定枪械伤害倍率: " + specificMultiplier);
+        DebugLogger.debug("[BulletGunDamageReward] 通用伤害倍率: " + genericMultiplier);
+        
         // 根据配置模式计算最终加成
-        return calculateTotalMultiplier(specificMultiplier, genericMultiplier);
+        double finalMultiplier = calculateTotalMultiplier(specificMultiplier, genericMultiplier);
+        DebugLogger.debug("[BulletGunDamageReward] 最终伤害倍率: " + finalMultiplier);
+        
+        return finalMultiplier;
     }
     
     /**
@@ -92,7 +107,12 @@ public class BulletGunDamageReward {
             AttributeInstance attributeInstance = throwerIn.getAttribute(specificAttribute);
             if (attributeInstance != null) {
                 multiplier = attributeInstance.getValue();
+                DebugLogger.debug("[BulletGunDamageReward] 特定枪械属性值: " + multiplier + ", 属性: " + specificAttribute.getDescriptionId());
+            } else {
+                DebugLogger.debug("[BulletGunDamageReward] 特定枪械属性实例为空: " + specificAttribute.getDescriptionId());
             }
+        } else {
+            DebugLogger.debug("[BulletGunDamageReward] 未找到特定枪械属性: " + gunType);
         }
         
         return multiplier;
@@ -128,6 +148,9 @@ public class BulletGunDamageReward {
         
         if (generalDamageAttr != null) {
             multiplier = generalDamageAttr.getValue();
+            DebugLogger.debug("[BulletGunDamageReward] 通用枪械属性值: " + multiplier + ", 属性: " + ModAttributes.BULLET_GUNDAMAGE.get().getDescriptionId());
+        } else {
+            DebugLogger.debug("[BulletGunDamageReward] 通用枪械属性实例为空: " + ModAttributes.BULLET_GUNDAMAGE.get().getDescriptionId());
         }
         
         return multiplier;
