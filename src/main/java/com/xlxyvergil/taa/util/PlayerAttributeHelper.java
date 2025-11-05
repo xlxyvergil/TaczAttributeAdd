@@ -114,10 +114,16 @@ public class PlayerAttributeHelper {
         Player player = (Player) this.shooter;
         AttributeInstance instance = player.getAttribute(attribute);
         if (instance != null) {
-            // 将double值转换为布尔值（0.0D表示false，1.0D表示true）
-            // 玩家属性值已经+1处理过，所以对比前要-1
-            int intValue = (int) instance.getValue() - 1;
-            return intValue == 1;
+            // 对于特定的布尔属性，根据值判断true/false
+            // EXPLOSION_KNOCKBACK、EXPLOSION_DESTROY_BLOCK和IGNITE属性
+            if (attribute == PlayerAttributeRegistry.EXPLOSION_KNOCKBACK.get() ||
+                attribute == PlayerAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get() ||
+                attribute == PlayerAttributeRegistry.IGNITE.get()) {
+                // 将double值转换为布尔值（根据规范，大于1.0D表示true，否则为false）
+                return instance.getValue() > 1.0D;
+            }
+            // 对于其他属性，直接返回默认值逻辑或其他处理
+            return defaultValue;
         }
         
         return defaultValue;

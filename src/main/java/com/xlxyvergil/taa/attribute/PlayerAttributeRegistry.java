@@ -50,11 +50,11 @@ public class PlayerAttributeRegistry {
     
     /** 爆炸击退属性 - 影响爆炸是否产生击退效果 (布尔属性) */
     public static final RegistryObject<Attribute> EXPLOSION_KNOCKBACK = ATTRIBUTES.register("explosion_knockback", 
-        () -> new RangedAttribute("attribute.name.taa.explosion_knockback", 0.0D, 0.0D, 1.0D).setSyncable(true));
+        () -> new RangedAttribute("attribute.name.taa.explosion_knockback", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
     
     /** 破坏方块属性 - 影响爆炸是否能够破坏方块 (布尔属性) */
     public static final RegistryObject<Attribute> EXPLOSION_DESTROY_BLOCK = ATTRIBUTES.register("explosion_destroy_block", 
-        () -> new RangedAttribute("attribute.name.taa.explosion_destroy_block", 0.0D, 0.0D, 1.0D).setSyncable(true));
+        () -> new RangedAttribute("attribute.name.taa.explosion_destroy_block", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
     
     /** 爆炸延迟属性 - 影响从子弹命中到爆炸发生的时间间隔 */
     public static final RegistryObject<Attribute> EXPLOSION_DELAY = ATTRIBUTES.register("explosion_delay", 
@@ -70,7 +70,7 @@ public class PlayerAttributeRegistry {
     
     /** 点燃效果属性 - 影响子弹是否能点燃实体或方块 (布尔属性) */
     public static final RegistryObject<Attribute> IGNITE = ATTRIBUTES.register("ignite", 
-        () -> new RangedAttribute("attribute.name.taa.ignite", 0.0D, 0.0D, 1.0D).setSyncable(true));
+        () -> new RangedAttribute("attribute.name.taa.ignite", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
     
     /** 不准确度属性 - 影响射击时的散布程度 */
     public static final RegistryObject<Attribute> INACCURACY = ATTRIBUTES.register("inaccuracy", 

@@ -1,7 +1,9 @@
 package com.xlxyvergil.taa.util;
 
+import com.google.common.collect.Lists;
 import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.Ignite;
@@ -9,6 +11,7 @@ import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
 import it.unimi.dsi.fastutil.Pair;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
@@ -189,25 +192,38 @@ public class PropertyCalculator {
             return Pair.of(0, false);
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getSilence();
-        Integer level = originalSilence.left() != null ? Math.round(originalSilence.left() * playerAttributeFactor) : 0;
-        boolean enabled = originalSilence.right() != null ? Boolean.TRUE.equals(originalSilence.right()) : false;
+        // SILENCE属性特殊处理，使用布尔值判断方式
+        boolean playerAttributeEnabled = playerAttribute.getSilence() > 1.0D;
+        Integer level = originalSilence.left() != null ? originalSilence.left() : 0;
+        boolean enabled = (originalSilence.right() != null ? originalSilence.right() : false) && playerAttributeEnabled;
         
-        return Pair.of(level, Boolean.TRUE.equals(enabled));
+        return Pair.of(level, enabled);
     }
     
     public Ignite calculateIgnite(AttachmentCacheProperty cacheProperty) {
         Ignite originalIgnite = cacheProperty.getCache(GunProperties.IGNITE);
         if (originalIgnite == null) {
-            return new Ignite(false, false);
+            originalIgnite = new Ignite(false, false);
         }
         
         boolean playerAttributeValue = playerAttribute.getIgnite();
-        // 根据TACZ的IgniteModifier.eval()逻辑，使用逻辑或运算
-        return new Ignite(
-            originalIgnite.isIgniteEntity() || playerAttributeValue,
-            originalIgnite.isIgniteBlock() || playerAttributeValue
-        );
+        
+        // 添加调试日志
+        try {
+            DebugLogger.logIgniteCalculation(originalIgnite, playerAttributeValue);
+        } catch (Exception e) {
+            // 忽略日志错误
+        }
+        
+        // 如果玩家没有相关的属性增强，则直接返回原始值
+        if (!playerAttributeValue) {
+            return originalIgnite;
+        }
+        
+        // 玩家有属性增强，在原有基础上进一步增强点燃效果
+        // entity保持原有值（如果配件已提供则为true，否则为false）或增强为true
+        // block从原有值增强为true
+        return new Ignite(originalIgnite.isIgniteEntity() || playerAttributeValue, true);
     }
     
     // 爆炸相关属性计算
@@ -239,7 +255,8 @@ public class PropertyCalculator {
         }
         
         boolean playerAttributeValue = playerAttribute.getExplosionKnockback();
-        return originalExplosion.isKnockback() || playerAttributeValue;
+        List<Boolean> knockbackValues = List.of(originalExplosion.isKnockback(), playerAttributeValue);
+        return AttachmentPropertyManager.eval(knockbackValues, false);
     }
     
     public boolean calculateExplosionDestroyBlock(AttachmentCacheProperty cacheProperty) {
@@ -249,7 +266,8 @@ public class PropertyCalculator {
         }
         
         boolean playerAttributeValue = playerAttribute.getExplosionDestroyBlock();
-        return originalExplosion.isDestroyBlock() || playerAttributeValue;
+        List<Boolean> destroyBlockValues = List.of(originalExplosion.isDestroyBlock(), playerAttributeValue);
+        return AttachmentPropertyManager.eval(destroyBlockValues, false);
     }
     
     public int calculateExplosionDelay(AttachmentCacheProperty cacheProperty) {
