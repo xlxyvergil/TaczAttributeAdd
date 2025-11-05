@@ -1,5 +1,7 @@
 package com.xlxyvergil.taa;
 
+import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
+import com.xlxyvergil.taa.config.AttributeConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,6 +20,12 @@ public class TaczAttributeAdd {
         
         // 注册模组事件处理器
         modEventBus.addListener(this::commonSetup);
+        
+        // 注册属性
+        PlayerAttributeRegistry.ATTRIBUTES.register(modEventBus);
+        
+        // 注册配置
+        AttributeConfig.register();
         
         // 使用静态方法注册事件处理器，避免this泄漏
         registerForgeEventHandlers();

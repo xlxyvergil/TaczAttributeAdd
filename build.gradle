@@ -31,7 +31,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 // 版本号，正式发布需要修改这一行
-version = "1.0.1-" + FORMAT.format(new Date())
+version = "1.0.5-" + FORMAT.format(new Date())
 group = mod_group_id
 archivesBaseName = "${mod_id}-${minecraft_version}"
 

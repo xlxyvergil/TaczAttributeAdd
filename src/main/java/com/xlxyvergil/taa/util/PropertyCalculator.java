@@ -1,146 +1,280 @@
 package com.xlxyvergil.taa.util;
 
-import com.tacz.guns.api.modifier.CacheValue;
-import com.xlxyvergil.taa.data.GunPropertiesInitializer;
+import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
+import com.tacz.guns.resource.pojo.data.gun.Ignite;
+import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
+import it.unimi.dsi.fastutil.Pair;
+
+import java.util.LinkedList;
+import java.util.Map;
+
+import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
+import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 
 /**
  * 属性计算器
- * 用于处理所有枪械属性的计算，包括浮点型、整型和布尔型属性
+ * 纯计算类，基于cacheProperty原始数据和playerAttribute进行计算
  */
 public class PropertyCalculator {
     
-    // 瞄准时间属性计算
-    public static float calculateAdsTime(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.ADS_TIME;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    private final PlayerAttributeHelper playerAttribute;
+    
+    /**
+     * 构造函数
+     * @param playerAttribute 玩家属性助手
+     */
+    public PropertyCalculator(PlayerAttributeHelper playerAttribute) {
+        this.playerAttribute = playerAttribute;
     }
     
-    // 弹药速度属性计算
-    public static float calculateAmmoSpeed(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.AMMO_SPEED;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    /**
+     * 计算所有属性（包含爆炸相关属性）
+     * @param cacheProperty 原始缓存属性数据
+     */
+    public PropertyCalculationResults calculateAllProperties(AttachmentCacheProperty cacheProperty) {
+        PropertyCalculationResults results = new PropertyCalculationResults();
+        
+        // 基于原始数据和playerAttribute计算所有属性
+        results.setAdsTime(calculateAdsTime(cacheProperty));
+        results.setAmmoSpeed(calculateAmmoSpeed(cacheProperty));
+        results.setArmorIgnore(calculateArmorIgnore(cacheProperty));
+        results.setEffectiveRange(calculateEffectiveRange(cacheProperty));
+        results.setHeadshotMultiplier(calculateHeadshotMultiplier(cacheProperty));
+        results.setKnockback(calculateKnockback(cacheProperty));
+        results.setWeight(calculateWeight(cacheProperty));
+        results.setPierce(calculatePierce(cacheProperty));
+        results.setRoundsPerMinute(calculateRoundsPerMinute(cacheProperty));
+        results.setMoveSpeed(calculateMoveSpeed(cacheProperty));
+        results.setDamage(calculateDamage(cacheProperty));
+        results.setInaccuracy(calculateInaccuracy(cacheProperty));
+        results.setRecoil(calculateRecoil(cacheProperty));
+        results.setSilence(calculateSilence(cacheProperty));
+        results.setIgnite(calculateIgnite(cacheProperty));
+        
+        // 统一计算爆炸属性
+        results.setExplosionData(createExplosionData(cacheProperty));
+        
+        return results;
     }
     
-    // 护甲穿透属性计算
-    public static float calculateArmorIgnore(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.ARMOR_IGNORE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    // 基本属性计算方法 - 基于cacheProperty原始数据和playerAttribute
+    
+    public float calculateAdsTime(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.ADS_TIME);
+        float playerAttributeFactor = (float) playerAttribute.getAdsTime();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 伤害值属性计算
-    public static float calculateDamage(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.DAMAGE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.AMMO_SPEED);
+        float playerAttributeFactor = (float) playerAttribute.getAmmoSpeed();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 有效射程属性计算
-    public static float calculateEffectiveRange(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.EFFECTIVE_RANGE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public float calculateArmorIgnore(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.ARMOR_IGNORE);
+        float playerAttributeFactor = (float) playerAttribute.getArmorIgnore();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 移动速度属性计算
-    public static float calculateMoveSpeed(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.MOVE_SPEED;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public float calculateEffectiveRange(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.EFFECTIVE_RANGE);
+        float playerAttributeFactor = (float) playerAttribute.getEffectiveRange();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 爆头倍数属性计算
-    public static float calculateHeadshotMultiplier(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.HEADSHOT_MULTIPLIER;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public float calculateHeadshotMultiplier(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER);
+        float playerAttributeFactor = (float) playerAttribute.getHeadshotMultiplier();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 点燃效果属性计算（布尔值覆盖）
-    public static boolean calculateIgnite(CacheValue<Boolean> cacheValue) {
-        boolean defaultValue = GunPropertiesInitializer.IGNITE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue(); // 布尔值直接覆盖
-        }
-        return defaultValue;
+    public float calculateKnockback(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.KNOCKBACK);
+        float playerAttributeFactor = (float) playerAttribute.getKnockback();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 不准确度属性计算
-    public static float calculateInaccuracy(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.INACCURACY;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public float calculateWeight(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(GunProperties.WEIGHT);
+        float playerAttributeFactor = (float) playerAttribute.getWeight();
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
-    // 击退效果属性计算
-    public static float calculateKnockback(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.KNOCKBACK;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public int calculatePierce(AttachmentCacheProperty cacheProperty) {
+        Integer originalValue = cacheProperty.getCache(GunProperties.PIERCE);
+        float playerAttributeFactor = (float) playerAttribute.getPierce();
+        return originalValue != null ? Math.round(originalValue * playerAttributeFactor) : 0;
     }
     
-    // 穿透能力属性计算
-    public static int calculatePierce(CacheValue<Integer> cacheValue) {
-        int defaultValue = GunPropertiesInitializer.PIERCE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
-        }
-        return defaultValue;
+    public int calculateRoundsPerMinute(AttachmentCacheProperty cacheProperty) {
+        Integer originalValue = cacheProperty.getCache(GunProperties.ROUNDS_PER_MINUTE);
+        float playerAttributeFactor = (float) playerAttribute.getRoundsPerMinute();
+        return originalValue != null ? Math.round(originalValue * playerAttributeFactor) : 0;
     }
     
-    // 后坐力属性计算
-    public static float calculateRecoil(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.RECOIL;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
+    // 复杂属性计算方法
+    
+    public MoveSpeed calculateMoveSpeed(AttachmentCacheProperty cacheProperty) {
+        MoveSpeed originalMoveSpeed = cacheProperty.getCache(GunProperties.MOVE_SPEED);
+        if (originalMoveSpeed == null) {
+            return new MoveSpeed(0.0f, 0.0f, 0.0f);
         }
-        return defaultValue;
+        
+        float playerAttributeFactor = (float) playerAttribute.getMoveSpeed();
+        return new MoveSpeed(
+            originalMoveSpeed.getBaseMultiplier() * playerAttributeFactor,
+            originalMoveSpeed.getAimMultiplier() * playerAttributeFactor,
+            originalMoveSpeed.getReloadMultiplier() * playerAttributeFactor
+        );
     }
     
-    // 射速属性计算
-    public static int calculateRoundsPerMinute(CacheValue<Integer> cacheValue) {
-        int defaultValue = GunPropertiesInitializer.ROUNDS_PER_MINUTE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
+    public LinkedList<ExtraDamage.DistanceDamagePair> calculateDamage(AttachmentCacheProperty cacheProperty) {
+        LinkedList<ExtraDamage.DistanceDamagePair> originalDamage = cacheProperty.getCache(GunProperties.DAMAGE);
+        if (originalDamage == null || originalDamage.isEmpty()) {
+            return new LinkedList<>();
         }
-        return defaultValue;
+        
+        float playerAttributeFactor = (float) playerAttribute.getGunDamageBonus();
+        LinkedList<ExtraDamage.DistanceDamagePair> calculatedDamage = new LinkedList<>();
+        
+        for (ExtraDamage.DistanceDamagePair pair : originalDamage) {
+            calculatedDamage.add(new ExtraDamage.DistanceDamagePair(
+                pair.getDistance(),
+                pair.getDamage() * playerAttributeFactor
+            ));
+        }
+        
+        return calculatedDamage;
     }
     
-    // 消音效果属性计算
-    public static float calculateSilence(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.SILENCE;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
+    public Map<InaccuracyType, Float> calculateInaccuracy(AttachmentCacheProperty cacheProperty) {
+        Map<InaccuracyType, Float> originalInaccuracy = cacheProperty.getCache(GunProperties.INACCURACY);
+        if (originalInaccuracy == null || originalInaccuracy.isEmpty()) {
+            return Map.of();
         }
-        return defaultValue;
+        
+        float playerAttributeFactor = (float) playerAttribute.getInaccuracy();
+        // 创建新的Map来存储计算结果，包含所有5种InaccuracyType
+        return Map.of(
+            InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) * playerAttributeFactor,
+            InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) * playerAttributeFactor,
+            InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) * playerAttributeFactor,
+            InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) * playerAttributeFactor,
+            InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) * playerAttributeFactor
+        );
     }
     
-    // 重量属性计算
-    public static float calculateWeight(CacheValue<Float> cacheValue) {
-        float defaultValue = GunPropertiesInitializer.WEIGHT;
-        if (cacheValue != null && cacheValue.getValue() != null) {
-            return cacheValue.getValue() * defaultValue;
+    public ParameterizedCachePair<Float, Float> calculateRecoil(AttachmentCacheProperty cacheProperty) {
+        ParameterizedCachePair<Float, Float> originalRecoil = cacheProperty.getCache(GunProperties.RECOIL);
+        if (originalRecoil == null) {
+            return ParameterizedCachePair.of(0.0f, 0.0f);
         }
-        return defaultValue;
+        
+        float playerAttributeFactor = (float) playerAttribute.getRecoil();
+        // 正确获取ParameterizedCachePair中的默认值，并使用乘法因子
+        Float pitch = originalRecoil.left() != null ? originalRecoil.left().getDefaultValue() * playerAttributeFactor : 0.0f;
+        Float yaw = originalRecoil.right() != null ? originalRecoil.right().getDefaultValue() * playerAttributeFactor : 0.0f;
+        
+        // 根据TACZ的RecoilModifier.eval()方法，创建包含空modifier列表的ParameterizedCachePair
+        return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), pitch, yaw);
+    }
+    
+    public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
+        Pair<Integer, Boolean> originalSilence = cacheProperty.getCache(GunProperties.SILENCE);
+        if (originalSilence == null) {
+            return Pair.of(0, false);
+        }
+        
+        float playerAttributeFactor = (float) playerAttribute.getSilence();
+        Integer level = originalSilence.left() != null ? Math.round(originalSilence.left() * playerAttributeFactor) : 0;
+        boolean enabled = originalSilence.right() != null ? Boolean.TRUE.equals(originalSilence.right()) : false;
+        
+        return Pair.of(level, Boolean.TRUE.equals(enabled));
+    }
+    
+    public Ignite calculateIgnite(AttachmentCacheProperty cacheProperty) {
+        Ignite originalIgnite = cacheProperty.getCache(GunProperties.IGNITE);
+        if (originalIgnite == null) {
+            return new Ignite(false, false);
+        }
+        
+        boolean playerAttributeValue = playerAttribute.getIgnite();
+        // 根据TACZ的IgniteModifier.eval()逻辑，使用逻辑或运算
+        return new Ignite(
+            originalIgnite.isIgniteEntity() || playerAttributeValue,
+            originalIgnite.isIgniteBlock() || playerAttributeValue
+        );
+    }
+    
+    // 爆炸相关属性计算
+    
+    public float calculateExplosionRadius(AttachmentCacheProperty cacheProperty) {
+        ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
+        if (originalExplosion == null) {
+            return 0.0f;
+        }
+        
+        float playerAttributeFactor = (float) playerAttribute.getExplosionRadius();
+        return originalExplosion.getRadius() * playerAttributeFactor;
+    }
+    
+    public float calculateExplosionDamage(AttachmentCacheProperty cacheProperty) {
+        ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
+        if (originalExplosion == null) {
+            return 0.0f;
+        }
+        
+        float playerAttributeFactor = (float) playerAttribute.getExplosionDamage();
+        return originalExplosion.getDamage() * playerAttributeFactor;
+    }
+    
+    public boolean calculateExplosionKnockback(AttachmentCacheProperty cacheProperty) {
+        ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
+        if (originalExplosion == null) {
+            return false;
+        }
+        
+        boolean playerAttributeValue = playerAttribute.getExplosionKnockback();
+        return originalExplosion.isKnockback() || playerAttributeValue;
+    }
+    
+    public boolean calculateExplosionDestroyBlock(AttachmentCacheProperty cacheProperty) {
+        ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
+        if (originalExplosion == null) {
+            return false;
+        }
+        
+        boolean playerAttributeValue = playerAttribute.getExplosionDestroyBlock();
+        return originalExplosion.isDestroyBlock() || playerAttributeValue;
+    }
+    
+    public int calculateExplosionDelay(AttachmentCacheProperty cacheProperty) {
+        ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
+        if (originalExplosion == null) {
+            return 0;
+        }
+        
+        float playerAttributeFactor = (float) playerAttribute.getExplosionDelay();
+        return Math.round(originalExplosion.getDelay() * playerAttributeFactor);
+    }
+    
+    public ExplosionData createExplosionData(AttachmentCacheProperty cacheProperty) {
+        ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
+        if (originalExplosion == null) {
+            return new ExplosionData(false, 0.0f, 0.0f, false, 0, false);
+        }
+        
+        boolean explode = originalExplosion.isExplode();
+        float radius = calculateExplosionRadius(cacheProperty);
+        float damage = calculateExplosionDamage(cacheProperty);
+        boolean knockback = calculateExplosionKnockback(cacheProperty);
+        boolean destroyBlock = calculateExplosionDestroyBlock(cacheProperty);
+        int delay = calculateExplosionDelay(cacheProperty);
+        
+        return new ExplosionData(explode, radius, damage, knockback, delay, destroyBlock);
     }
 }
