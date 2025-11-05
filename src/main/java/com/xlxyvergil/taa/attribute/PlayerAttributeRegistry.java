@@ -93,8 +93,8 @@ public class PlayerAttributeRegistry {
         () -> new RangedAttribute("attribute.name.taa.rounds_per_minute", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
     
     /** 消音效果属性 - 影响开火音效的消音系数 */
-    public static final RegistryObject<Attribute> SILENCE = ATTRIBUTES.register("silence", 
-        () -> new RangedAttribute("attribute.name.taa.silence", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
+    public static final RegistryObject<Attribute> SILENCE = ATTRIBUTES.register("silencenew", 
+        () -> new RangedAttribute("attribute.name.taa.silencenew", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
     
     /** 重量属性 - 影响枪支的重量值 */
     public static final RegistryObject<Attribute> WEIGHT = ATTRIBUTES.register("weight", 

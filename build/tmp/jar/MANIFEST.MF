@@ -3,8 +3,8 @@ Specification-Title: taa
 Specification-Vendor: xlxyvergil
 Specification-Version: 1
 Implementation-Title: TaczAttributeAdd
-Implementation-Version: 1.0.5-1106-011025
+Implementation-Version: 1.0.5-1106-012356
 Implementation-Vendor: xlxyvergil
-Implementation-Timestamp: 2025-11-06T01:10:26+0800
+Implementation-Timestamp: 2025-11-06T01:23:56+0800
 MixinConfigs: taa.mixins.json
 

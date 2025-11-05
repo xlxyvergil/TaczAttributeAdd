@@ -188,14 +188,23 @@ public class PropertyCalculator {
     
     public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
         Pair<Integer, Boolean> originalSilence = cacheProperty.getCache(GunProperties.SILENCE);
+        
+        // 如果原始值为null，直接返回默认值（不进行属性计算）
         if (originalSilence == null) {
             return Pair.of(0, false);
         }
         
-        // SILENCE属性特殊处理，使用布尔值判断方式
-        boolean playerAttributeEnabled = playerAttribute.getSilence() > 1.0D;
-        Integer level = originalSilence.left() != null ? originalSilence.left() : 0;
-        boolean enabled = (originalSilence.right() != null ? originalSilence.right() : false) && playerAttributeEnabled;
+        // 使用数值乘法因子计算声音距离
+        double playerAttributeFactor = playerAttribute.getSilence();
+        Integer originalLevel = originalSilence.left() != null ? originalSilence.left() : 0;
+        Integer level = (int) Math.round(originalLevel * playerAttributeFactor);
+        
+        // 被动消音效果：当玩家silence属性值 < 1.0时，自动开启消音效果
+        boolean originalEnabled = originalSilence.right() != null ? originalSilence.right() : false;
+        boolean passiveSilenceEnabled = playerAttributeFactor < 1.0D;
+        
+        // 合并效果：原配件消音效果 或 被动属性消音效果
+        boolean enabled = originalEnabled || passiveSilenceEnabled;
         
         return Pair.of(level, enabled);
     }
