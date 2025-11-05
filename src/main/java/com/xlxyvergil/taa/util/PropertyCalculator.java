@@ -206,7 +206,7 @@ public class PropertyCalculator {
             originalIgnite = new Ignite(false, false);
         }
         
-        boolean playerAttributeValue = playerAttribute.getIgnite();
+        boolean playerAttributeValue = playerAttribute.isIgniteEnabled();
         
         // 添加调试日志
         try {
@@ -254,7 +254,7 @@ public class PropertyCalculator {
             return false;
         }
         
-        boolean playerAttributeValue = playerAttribute.getExplosionKnockback();
+        boolean playerAttributeValue = playerAttribute.isExplosionKnockbackEnabled();
         List<Boolean> knockbackValues = List.of(originalExplosion.isKnockback(), playerAttributeValue);
         return AttachmentPropertyManager.eval(knockbackValues, false);
     }
@@ -265,7 +265,7 @@ public class PropertyCalculator {
             return false;
         }
         
-        boolean playerAttributeValue = playerAttribute.getExplosionDestroyBlock();
+        boolean playerAttributeValue = playerAttribute.isExplosionDestroyBlockEnabled();
         List<Boolean> destroyBlockValues = List.of(originalExplosion.isDestroyBlock(), playerAttributeValue);
         return AttachmentPropertyManager.eval(destroyBlockValues, false);
     }

@@ -147,9 +147,9 @@ taa:tacz.bullet_gundamage_lmg
 
 
 taa:ignite  点燃
+
 taa:silence  消音效果
 taa:explosion_radius 爆炸范围
 taa:explosion_damage
 taa:explosion_delay
 taa:explosion_destroy_block
-taa:explosion_knockback 爆炸击退

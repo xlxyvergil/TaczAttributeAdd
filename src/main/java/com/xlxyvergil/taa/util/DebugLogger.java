@@ -1,14 +1,5 @@
 package com.xlxyvergil.taa.util;
 
-import com.tacz.guns.api.GunProperties;
-import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.pojo.data.gun.Ignite;
-import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +7,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import com.tacz.guns.resource.pojo.data.gun.Ignite;
+import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
+
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * 调试日志工具类

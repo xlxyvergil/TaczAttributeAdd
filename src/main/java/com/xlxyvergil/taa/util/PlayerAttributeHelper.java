@@ -23,12 +23,12 @@ public class PlayerAttributeHelper {
     private final double effectiveRange;
     private final double explosionRadius;
     private final double explosionDamage;
-    private final boolean explosionKnockback;
-    private final boolean explosionDestroyBlock;
+    private final double explosionKnockback;
+    private final double explosionDestroyBlock;
     private final double explosionDelay;
     private final double moveSpeed;
     private final double headshotMultiplier;
-    private final boolean ignite;
+    private final double ignite;
     private final double inaccuracy;
     private final double knockback;
     private final double pierce;
@@ -54,12 +54,12 @@ public class PlayerAttributeHelper {
         this.effectiveRange = getAttributeValue(PlayerAttributeRegistry.EFFECTIVE_RANGE.get(), 1.0D);
         this.explosionRadius = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_RADIUS.get(), 1.0D);
         this.explosionDamage = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DAMAGE.get(), 1.0D);
-        this.explosionKnockback = getAttributeBooleanValue(PlayerAttributeRegistry.EXPLOSION_KNOCKBACK.get(), false);
-        this.explosionDestroyBlock = getAttributeBooleanValue(PlayerAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get(), false);
+        this.explosionKnockback = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_KNOCKBACK.get(), 1.0D);
+        this.explosionDestroyBlock = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get(), 1.0D);
         this.explosionDelay = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DELAY.get(), 1.0D);
         this.moveSpeed = getAttributeValue(PlayerAttributeRegistry.MOVE_SPEED.get(), 1.0D);
         this.headshotMultiplier = getAttributeValue(PlayerAttributeRegistry.HEADSHOT_MULTIPLIER.get(), 1.0D);
-        this.ignite = getAttributeBooleanValue(PlayerAttributeRegistry.IGNITE.get(), false);
+        this.ignite = getAttributeValue(PlayerAttributeRegistry.IGNITE.get(), 1.0D);
         this.inaccuracy = getAttributeValue(PlayerAttributeRegistry.INACCURACY.get(), 1.0D);
         this.knockback = getAttributeValue(PlayerAttributeRegistry.KNOCKBACK.get(), 1.0D);
         this.pierce = getAttributeValue(PlayerAttributeRegistry.PIERCE.get(), 1.0D);
@@ -96,37 +96,12 @@ public class PlayerAttributeHelper {
     }
     
     /**
-     * 获取指定布尔属性值
-     * @param attribute 要获取的属性
-     * @param defaultValue 默认值
-     * @return 属性值，如果无法获取则返回默认值
+     * 将double值转换为布尔值
+     * @param value double值
+     * @return 转换后的布尔值（1.0D表示true，0.0D表示false）
      */
-    private boolean getAttributeBooleanValue(Attribute attribute, boolean defaultValue) {
-        if (this.shooter == null) {
-            return defaultValue;
-        }
-        
-        // 检查是否为玩家实体
-        if (!(this.shooter instanceof Player)) {
-            return defaultValue;
-        }
-        
-        Player player = (Player) this.shooter;
-        AttributeInstance instance = player.getAttribute(attribute);
-        if (instance != null) {
-            // 对于特定的布尔属性，根据值判断true/false
-            // EXPLOSION_KNOCKBACK、EXPLOSION_DESTROY_BLOCK和IGNITE属性
-            if (attribute == PlayerAttributeRegistry.EXPLOSION_KNOCKBACK.get() ||
-                attribute == PlayerAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get() ||
-                attribute == PlayerAttributeRegistry.IGNITE.get()) {
-                // 将double值转换为布尔值（根据规范，大于1.0D表示true，否则为false）
-                return instance.getValue() > 1.0D;
-            }
-            // 对于其他属性，直接返回默认值逻辑或其他处理
-            return defaultValue;
-        }
-        
-        return defaultValue;
+    private boolean convertDoubleToBoolean(double value) {
+        return value >= 2.0D;
     }
     
     /**
@@ -211,12 +186,12 @@ public class PlayerAttributeHelper {
     public double getEffectiveRange() { return effectiveRange; }
     public double getExplosionRadius() { return explosionRadius; }
     public double getExplosionDamage() { return explosionDamage; }
-    public boolean getExplosionKnockback() { return explosionKnockback; }
-    public boolean getExplosionDestroyBlock() { return explosionDestroyBlock; }
+    public double getExplosionKnockback() { return explosionKnockback; }
+    public double getExplosionDestroyBlock() { return explosionDestroyBlock; }
     public double getExplosionDelay() { return explosionDelay; }
     public double getMoveSpeed() { return moveSpeed; }
     public double getHeadshotMultiplier() { return headshotMultiplier; }
-    public boolean getIgnite() { return ignite; }
+    public double getIgnite() { return ignite; }
     public double getInaccuracy() { return inaccuracy; }
     public double getKnockback() { return knockback; }
     public double getPierce() { return pierce; }
@@ -225,6 +200,21 @@ public class PlayerAttributeHelper {
     public double getSilence() { return silence; }
     public double getWeight() { return weight; }
     public double getGunDamageBonus() { return gunDamageBonus; }
+    
+    // 布尔属性专用的Getter方法
+    public boolean isIgniteEnabled() { return convertDoubleToBoolean(ignite); }
+    public boolean isExplosionKnockbackEnabled() { return convertDoubleToBoolean(explosionKnockback); }
+    public boolean isExplosionDestroyBlockEnabled() { return convertDoubleToBoolean(explosionDestroyBlock); }
+    
+    /**
+     * 获取布尔属性值，将double值转换为boolean
+     * @param doubleValue double值
+     * @return boolean值（1.0D表示true，0.0D表示false）
+     */
+    public boolean getBooleanValue(double doubleValue) {
+        return convertDoubleToBoolean(doubleValue);
+    }
+    
     public LivingEntity getShooter() { return shooter; }
     public String getGunType() { return gunType; }
 }
