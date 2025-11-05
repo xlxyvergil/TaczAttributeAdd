@@ -292,7 +292,7 @@ public class PropertyCalculator {
     public ExplosionData createExplosionData(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {
-            return new ExplosionData(false, 0.0f, 0.0f, false, 0, false);
+            return new ExplosionData(false, 0.0f, 0.0f, false, 0.0f, false);
         }
         
         boolean explode = originalExplosion.isExplode();
@@ -302,6 +302,6 @@ public class PropertyCalculator {
         boolean destroyBlock = calculateExplosionDestroyBlock(cacheProperty);
         int delay = calculateExplosionDelay(cacheProperty);
         
-        return new ExplosionData(explode, radius, damage, knockback, delay, destroyBlock);
+        return new ExplosionData(explode, radius, damage, knockback, (float)delay, destroyBlock);
     }
 }
