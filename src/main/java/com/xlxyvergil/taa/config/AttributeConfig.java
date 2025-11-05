@@ -16,6 +16,9 @@ public class AttributeConfig {
     // 枪械伤害计算模式配置
     public static final ForgeConfigSpec.EnumValue<DamageCalculationMode> DAMAGE_CALCULATION_MODE;
     
+    // 调试日志配置
+    public static final ForgeConfigSpec.BooleanValue ENABLE_DEBUG_LOGGING;
+    
     static {
         BUILDER.push("枪械伤害计算设置");
         
@@ -25,6 +28,16 @@ public class AttributeConfig {
                         "ADDITIVE: 通用+特定-1",
                         "MULTIPLICATIVE: 通用*特定")
                 .defineEnum("damageCalculationMode", DamageCalculationMode.MAX);
+                
+        BUILDER.pop();
+        
+        BUILDER.push("调试日志设置");
+        
+        ENABLE_DEBUG_LOGGING = BUILDER
+                .comment("是否启用调试日志记录",
+                        "true: 启用调试日志，将记录属性计算等详细信息",
+                        "false: 禁用调试日志，不记录任何调试信息（默认）")
+                .define("enableDebugLogging", false);
                 
         BUILDER.pop();
         SPEC = BUILDER.build();
@@ -61,5 +74,12 @@ public class AttributeConfig {
      */
     public static DamageCalculationMode getDamageCalculationMode() {
         return DAMAGE_CALCULATION_MODE.get();
+    }
+    
+    /**
+     * 检查是否启用调试日志
+     */
+    public static boolean isDebugLoggingEnabled() {
+        return ENABLE_DEBUG_LOGGING.get();
     }
 }

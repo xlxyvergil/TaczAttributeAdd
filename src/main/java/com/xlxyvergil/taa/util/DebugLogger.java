@@ -15,16 +15,26 @@ import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
+import com.xlxyvergil.taa.config.AttributeConfig;
 
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 
 /**
  * 调试日志工具类
+ * 默认不输出任何日志，只有在配置中启用调试日志时才会记录
  */
 public class DebugLogger {
     private static final Logger LOGGER = LogManager.getLogger(DebugLogger.class);
     private static final String LOG_FILE_PATH = "logs/taa_debug.log";
+    
+    /**
+     * 检查是否启用调试日志
+     * @return true如果启用调试日志，否则false
+     */
+    private static boolean isDebugLoggingEnabled() {
+        return AttributeConfig.isDebugLoggingEnabled();
+    }
     
     /**
      * 记录属性计算前后的缓存值
@@ -32,6 +42,11 @@ public class DebugLogger {
      * @param updatedCacheProperty 计算后的缓存属性 (可以为null)
      */
     public static void logCachePropertyChanges(AttachmentCacheProperty cacheProperty, AttachmentCacheProperty updatedCacheProperty) {
+        // 检查是否启用调试日志
+        if (!isDebugLoggingEnabled()) {
+            return;
+        }
+        
         try {
             // 确保日志目录存在
             Path logPath = Paths.get(LOG_FILE_PATH);
@@ -112,6 +127,11 @@ public class DebugLogger {
      * @param playerAttribute 玩家属性助手
      */
     public static void logPlayerAttributes(PlayerAttributeHelper playerAttribute) {
+        // 检查是否启用调试日志
+        if (!isDebugLoggingEnabled()) {
+            return;
+        }
+        
         try {
             // 确保日志目录存在
             Path logPath = Paths.get(LOG_FILE_PATH);
@@ -192,6 +212,11 @@ public class DebugLogger {
      * @param playerAttributeValue 玩家属性值
      */
     public static void logIgniteCalculation(Ignite originalIgnite, boolean playerAttributeValue) {
+        // 检查是否启用调试日志
+        if (!isDebugLoggingEnabled()) {
+            return;
+        }
+        
         try {
             // 确保日志目录存在
             Path logPath = Paths.get(LOG_FILE_PATH);

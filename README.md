@@ -5,9 +5,10 @@
 - **智能伤害计算** - 根据枪械类型自动选择对应的属性加成
 - **灵活配置** - 支持多种伤害计算模式，可根据配置项动态切换
 - **枪械分类** - 支持手枪、步枪、霰弹枪等7种枪械类型
-- **完整属性系统** - 全面覆盖16个核心枪械属性
+- **完整属性系统** - 全面覆盖20个核心枪械属性
 - **动态属性获取** - 从玩家身上实时获取属性值
 - **配置驱动** - 伤害计算模式可通过配置文件调整
+- **兼容性保障** - 兼容TACZ原版配件系统，不覆盖配件效果
 
 ## 属性系统
 
@@ -25,33 +26,40 @@
 - **轻机枪**: `taa:tacz.bullet_gundamage_lmg` - 轻机枪伤害加成
 - **发射器**: `taa:tacz.bullet_gundamage_launcher` - 发射器伤害加成
 
-### 16个核心枪械属性
+### 20个核心枪械属性
 
-- **瞄准时间**: `taa:tacz.ads_time` - 瞄准速度加成
+- **瞄准时间**: `taa:tacz.ads_time` - 瞄准速度加成（数值越小越好）
 - **弹药速度**: `taa:tacz.ammo_speed` - 子弹飞行速度加成
 - **护甲穿透**: `taa:tacz.armor_ignore` - 护甲穿透效果
 - **有效射程**: `taa:tacz.effective_range` - 射击距离加成
-- **爆炸半径**: `taa:tacz.explosion_radius` - 爆炸范围加成
-- **爆炸伤害**: `taa:tacz.explosion_damage` - 爆炸伤害加成
-- **爆炸击退**: `taa:tacz.explosion_knockback` - 爆炸击退效果
-- **破坏方块**: `taa:tacz.explosion_destroy_block` - 爆炸破坏方块
-- **爆炸延迟**: `taa:tacz.explosion_delay` - 爆炸延迟时间
 - **移动速度**: `taa:tacz.move_speed` - 持枪移动速度
 - **爆头倍数**: `taa:tacz.headshot_multiplier` - 爆头伤害倍率
-- **点燃效果**: `taa:tacz.ignite` - 子弹点燃效果
-- **不准确度**: `taa:tacz.inaccuracy` - 射击散布程度
 - **击退效果**: `taa:tacz.knockback` - 子弹击退力度
 - **穿透能力**: `taa:tacz.pierce` - 子弹穿透能力
-- **后坐力**: `taa:tacz.recoil` - 枪械后坐力
 - **射速**: `taa:tacz.rounds_per_minute` - 射击速度
-- **消音效果**: `taa:tacz.silence` - 消音效果
+- **后坐力**: `taa:tacz.recoil` - 枪械后坐力
+- **不准确度**: `taa:tacz.inaccuracy` - 射击散布程度（数值越小越好）
 - **重量**: `taa:tacz.weight` - 枪械重量
+
+### 特殊效果属性
+
+- **消音效果**: `taa:tacz.silence` - 消音效果（<1.0时自动开启被动消音）
+- **点燃效果**: `taa:tacz.ignitefire` - 子弹点燃效果
+
+### 爆炸系统属性
+
+- **爆炸半径**: `taa:tacz.explosion_radius` - 爆炸范围加成
+- **爆炸伤害**: `taa:tacz.explosion_damage` - 爆炸伤害加成
+- **爆炸击退**: `taa:tacz.explosion_knockbacknew` - 爆炸击退效果
+- **破坏方块**: `taa:tacz.explosion_destroy_blocknew` - 爆炸破坏方块
+- **爆炸延迟**: `taa:tacz.explosion_delay` - 爆炸延迟时间
 
 ### 属性值说明
 
 - **基础值**: 1.0 (100%效果)
 - **加成值**: 0.5 = 50%加成，1.0 = 100%加成
 - **布尔属性**: 0.0表示false，1.0表示true
+- **被动属性**: 某些属性在特定条件下自动触发（如消音效果<1.0时）
 
 ## 伤害计算规则
 
@@ -82,10 +90,28 @@
 
 ### 核心组件
 
+- **PropertyCalculator**: 属性计算器，负责所有属性的计算逻辑
 - **PlayerAttributeHelper**: 玩家属性助手类，负责从玩家身上获取属性值
+- **PropertyCacheUpdater**: 缓存更新器，将计算结果更新到附件缓存
 - **GunPropertiesInitializer**: 枪械属性初始化器，动态获取玩家属性值
 - **AttributeConfig**: 配置系统，管理伤害计算模式等配置项
 - **GunTypeContext**: 枪械类型上下文，跟踪当前处理的枪械类型
+
+### 属性计算特性
+
+#### 数值属性计算
+- 基于乘法因子模式：`原始值 × 玩家属性因子`
+- 兼容配件系统，不覆盖已有配件效果
+
+#### 特殊属性计算
+- **消音系统**: 支持被动消音（属性值<1.0时自动开启）
+- **爆炸系统**: 完全兼容TACZ的ExplosionData格式
+- **点燃效果**: 使用布尔逻辑判断
+
+#### 缓存处理
+- 正确处理枪械子弹数据中的爆炸字段
+- 兼容配件和枪械本身的爆炸效果
+- 智能判断属性生效条件
 
 ### 属性获取流程
 
@@ -93,7 +119,8 @@
 2. **类型识别** - 通过Tacz API获取当前枪械类型
 3. **上下文设置** - 设置当前枪械类型到GunTypeContext
 4. **属性计算** - 根据配置选择伤害计算规则
-5. **动态应用** - 将计算结果应用到枪械属性
+5. **缓存更新** - 将计算结果更新到附件缓存系统
+6. **动态应用** - TACZ系统自动应用更新后的属性
 
 ## 配置文件
 
@@ -108,6 +135,12 @@
 # ADDITIVE: 通用+特定-1
 # MULTIPLICATIVE: 通用*特定
 damageCalculationMode = "MAX"
+
+[调试日志设置]
+# 是否启用调试日志记录
+# true: 启用调试日志，将记录属性计算等详细信息
+# false: 禁用调试日志，不记录任何调试信息（默认）
+enableDebugLogging = false
 ```
 
 ## 版本信息
@@ -123,33 +156,9 @@ damageCalculationMode = "MAX"
 - **Tacz Guns Mod**: 1.1.6-hotfix或兼容版本
 - **Java**: 17或更高版本
 
-taa:tacz.bullet_gundamage_pistol
-taa:move_speed
-taa:headshot_multiplier
-taa:tacz.bullet_gundamage
-taa:ads_time 需要<1
-taa:rounds_per_minute
-taa:tacz.bullet_gundamage_rifle
-taa:tacz.bullet_gundamage_smg
-taa:weight
-taa:tacz.bullet_gundamage_sniper
-taa:recoil
-taa:effective_range
-taa:pierce
-taa:ammo_speed
-taa:tacz.bullet_gundamage_shotgun
-taa:armor_ignore
-taa:inaccuracy需要<1
-taa:knockback
-taa:tacz.bullet_gundamage_launcher
-taa:tacz.bullet_gundamage_lmg
+## 注意事项
 
-
-
-taa:ignite  点燃
-
-taa:silence  消音效果
-taa:explosion_radius 爆炸范围
-taa:explosion_damage
-taa:explosion_delay
-taa:explosion_destroy_block
+- 属性效果与TACZ原版配件系统完全兼容
+- 爆炸系统支持枪械本身子弹数据中的爆炸效果
+- 消音系统支持被动触发模式
+- 所有属性计算都基于乘法因子，保持数值平衡
