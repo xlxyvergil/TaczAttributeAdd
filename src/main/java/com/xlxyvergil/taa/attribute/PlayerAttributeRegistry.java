@@ -101,7 +101,7 @@ public class PlayerAttributeRegistry {
         () -> new RangedAttribute("attribute.name.taa.weight", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
     
     // 1个通用枪械伤害加成属性
-    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE = ATTRIBUTES.register("tacz.bullet_gundamage",
+    public static final RegistryObject<Attribute> BULLET_GUNDAMAGE = ATTRIBUTES.register("bullet_gundamage",
             () -> new RangedAttribute("attribute.name.taa.bullet_gundamage", 1.0D, 0.0D, Double.MAX_VALUE).setSyncable(true));
 
     // 7个具体枪械类型伤害加成属性
