@@ -33,16 +33,9 @@ apply plugin: 'java'
 version = mod_version + "-" + FORMAT.format(new Date())
 // 版本号，从gradle.properties中获取，并添加时间戳
 group = mod_group_id
-archivesBaseName = "${mod_id}-${minecraft_version}-${mod_version}"
+archivesBaseName = "${mod_id}-${minecraft_version}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-// 设置JVM参数，确保使用正确的Java版本
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
@@ -147,10 +140,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Tacz mod dependency
-    implementation fg.deobf(files("libs/tacz-1.19.2-1.1.4-hotfix-all.jar"))
-
-    // Puffish Skills dependency (required for attribute system)
-    implementation fg.deobf(files("libs/puffish_skills-0.15.1-1.19.2-forge.jar"))
+    implementation fg.deobf(files("libs/[永恒枪械工坊：零] tacz-1.19.2-1.1.4-hotfix-all.jar"))
 
     // Mixin annotation processor
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
