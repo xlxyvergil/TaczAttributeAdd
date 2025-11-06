@@ -5,3 +5,16 @@ build
 sou
 taa属性增加修改建议.txt
 ck
+build/tmp/jar/MANIFEST.MF
+build/resources/main/META-INF/mods.toml
+build/reobfJar/output.jar
+build/reobfJar/log.txt
+.gradle/nb-cache/subprojects.ser
+.gradle/file-system.probe
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/7.5.1/fileHashes/fileHashes.lock
+.gradle/7.5.1/fileHashes/fileHashes.bin
+.gradle/7.5.1/executionHistory/executionHistory.lock
+.gradle/7.5.1/executionHistory/executionHistory.bin
+.gradle/7.5.1/checksums/checksums.lock
