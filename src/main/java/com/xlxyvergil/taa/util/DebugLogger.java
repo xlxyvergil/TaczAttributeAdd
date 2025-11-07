@@ -120,6 +120,21 @@ public class DebugLogger {
         }
         
         logContent.append("  WEIGHT: ").append(cacheProperty.getCache(GunProperties.WEIGHT)).append("\n");
+        
+        // 记录MoveSpeed属性
+        Object moveSpeedObj = cacheProperty.getCache(GunProperties.MOVE_SPEED);
+        if (moveSpeedObj instanceof com.tacz.guns.resource.pojo.data.gun.MoveSpeed) {
+            com.tacz.guns.resource.pojo.data.gun.MoveSpeed moveSpeed = (com.tacz.guns.resource.pojo.data.gun.MoveSpeed) moveSpeedObj;
+            logContent.append("  MOVE_SPEED: base=")
+                     .append(moveSpeed.getBaseMultiplier())
+                     .append(", aim=")
+                     .append(moveSpeed.getAimMultiplier())
+                     .append(", reload=")
+                     .append(moveSpeed.getReloadMultiplier())
+                     .append("\n");
+        } else if (moveSpeedObj != null) {
+            logContent.append("  MOVE_SPEED: ").append(moveSpeedObj.toString()).append("\n");
+        }
     }
     
     /**

@@ -1,21 +1,20 @@
 package com.xlxyvergil.taa.util;
 
-import com.google.common.collect.Lists;
-import com.tacz.guns.api.GunProperties;
-import com.tacz.guns.api.modifier.ParameterizedCachePair;
-import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
-import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
-import com.tacz.guns.resource.pojo.data.gun.Ignite;
-import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
-import it.unimi.dsi.fastutil.Pair;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
+import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
+import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
+import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
+
+import it.unimi.dsi.fastutil.Pair;
 
 /**
  * 属性计算器
@@ -124,15 +123,26 @@ public class PropertyCalculator {
     public MoveSpeed calculateMoveSpeed(AttachmentCacheProperty cacheProperty) {
         MoveSpeed originalMoveSpeed = cacheProperty.getCache(GunProperties.MOVE_SPEED);
         if (originalMoveSpeed == null) {
-            return new MoveSpeed(0.0f, 0.0f, 0.0f);
+            originalMoveSpeed = new MoveSpeed(0.0f, 0.0f, 0.0f);
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getMoveSpeed();
-        return new MoveSpeed(
-            originalMoveSpeed.getBaseMultiplier() * playerAttributeFactor,
-            originalMoveSpeed.getAimMultiplier() * playerAttributeFactor,
-            originalMoveSpeed.getReloadMultiplier() * playerAttributeFactor
+        // 移动速度计算逻辑：玩家属性值转换为移动速度加成
+        // 属性值解释：1.0 = 基础值，大于1.0表示加速，小于1.0表示减速
+        double playerMoveSpeed = playerAttribute.getMoveSpeed();
+        
+        // 玩家属性值已经是计算后的倍率值，直接使用即可
+        // 例如：玩家属性1.02 -> 加成比例 = 1.02 / 100 = 0.0102
+        float playerSpeedBonus = (float) (playerMoveSpeed / 10.0D);
+        
+        // 创建玩家属性带来的移动速度加成
+        MoveSpeed playerBonusMoveSpeed = new MoveSpeed(
+            playerSpeedBonus,  // base加成
+            playerSpeedBonus,  // aim加成
+            0.0f              // reload加成（保持原值）
         );
+        
+        // 使用TACZ的MoveSpeed.of方法合并加成
+        return MoveSpeed.of(originalMoveSpeed, java.util.List.of(playerBonusMoveSpeed));
     }
     
     public LinkedList<ExtraDamage.DistanceDamagePair> calculateDamage(AttachmentCacheProperty cacheProperty) {
