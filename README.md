@@ -14,45 +14,45 @@
 
 ### 伤害属性
 
-- **通用枪械伤害**: `taa:tacz.bullet_gundamage` - 所有枪械的基础伤害加成
+- **通用枪械伤害**: `taa:bullet_gundamage` - 所有枪械的基础伤害加成
 
 ### 特定枪械伤害属性
 
-- **手枪**: `taa:tacz.bullet_gundamage_pistol` - 手枪伤害加成
-- **步枪**: `taa:tacz.bullet_gundamage_rifle` - 步枪伤害加成
-- **霰弹枪**: `taa:tacz.bullet_gundamage_shotgun` - 霰弹枪伤害加成
-- **狙击枪**: `taa:tacz.bullet_gundamage_sniper` - 狙击枪伤害加成
-- **冲锋枪**: `taa:tacz.bullet_gundamage_smg` - 冲锋枪伤害加成
-- **轻机枪**: `taa:tacz.bullet_gundamage_lmg` - 轻机枪伤害加成
-- **发射器**: `taa:tacz.bullet_gundamage_launcher` - 发射器伤害加成
+- **手枪**: `taa:bullet_gundamage_pistol` - 手枪伤害加成
+- **步枪**: `taa:bullet_gundamage_rifle` - 步枪伤害加成
+- **霰弹枪**: `taa:bullet_gundamage_shotgun` - 霰弹枪伤害加成
+- **狙击枪**: `taa:bullet_gundamage_sniper` - 狙击枪伤害加成
+- **冲锋枪**: `taa:bullet_gundamage_smg` - 冲锋枪伤害加成
+- **轻机枪**: `taa:bullet_gundamage_lmg` - 轻机枪伤害加成
+- **发射器**: `taa:bullet_gundamage_launcher` - 发射器伤害加成
 
 ### 20个核心枪械属性
 
-- **瞄准时间**: `taa:tacz.ads_time` - 瞄准速度加成（数值越小越好）
-- **弹药速度**: `taa:tacz.ammo_speed` - 子弹飞行速度加成
-- **护甲穿透**: `taa:tacz.armor_ignore` - 护甲穿透效果
-- **有效射程**: `taa:tacz.effective_range` - 射击距离加成
-- **移动速度**: `taa:tacz.move_speed` - 持枪移动速度
-- **爆头倍数**: `taa:tacz.headshot_multiplier` - 爆头伤害倍率
-- **击退效果**: `taa:tacz.knockback` - 子弹击退力度
-- **穿透能力**: `taa:tacz.pierce` - 子弹穿透能力
-- **射速**: `taa:tacz.rounds_per_minute` - 射击速度
-- **后坐力**: `taa:tacz.recoil` - 枪械后坐力
-- **不准确度**: `taa:tacz.inaccuracy` - 射击散布程度（数值越小越好）
-- **重量**: `taa:tacz.weight` - 枪械重量
+- **瞄准时间**: `taa:ads_time` - 瞄准速度加成（数值越小越好）
+- **弹药速度**: `taa:ammo_speed` - 子弹飞行速度加成
+- **护甲穿透**: `taa:armor_ignore` - 护甲穿透效果
+- **有效射程**: `taa:effective_range` - 射击距离加成
+- **移动速度**: `taa:move_speed` - 持枪移动速度
+- **爆头倍数**: `taa:headshot_multiplier` - 爆头伤害倍率
+- **击退效果**: `taa:knockback` - 子弹击退力度
+- **穿透能力**: `taa:pierce` - 子弹穿透能力
+- **射速**: `taa:rounds_per_minute` - 射击速度
+- **后坐力**: `taa:recoil` - 枪械后坐力
+- **不准确度**: `taa:inaccuracy` - 射击散布程度（数值越小越好）
+- **重量**: `taa:weight` - 枪械重量
 
 ### 特殊效果属性
 
-- **消音效果**: `taa:tacz.silence` - 消音效果（<1.0时自动开启被动消音）
-- **点燃效果**: `taa:tacz.ignitefire` - 子弹点燃效果
+- **消音效果**: `taa:silence` - 消音效果（<1.0时自动开启被动消音）
+- **点燃效果**: `taa:ignitefire` - 子弹点燃效果
 
 ### 爆炸系统属性
 
-- **爆炸半径**: `taa:tacz.explosion_radius` - 爆炸范围加成
-- **爆炸伤害**: `taa:tacz.explosion_damage` - 爆炸伤害加成
-- **爆炸击退**: `taa:tacz.explosion_knockbacknew` - 爆炸击退效果
-- **破坏方块**: `taa:tacz.explosion_destroy_blocknew` - 爆炸破坏方块
-- **爆炸延迟**: `taa:tacz.explosion_delay` - 爆炸延迟时间
+- **爆炸半径**: `taa:explosion_radius` - 爆炸范围加成
+- **爆炸伤害**: `taa:explosion_damage` - 爆炸伤害加成
+- **爆炸击退**: `taa:explosion_knockbacknew` - 爆炸击退效果
+- **破坏方块**: `taa:explosion_destroy_blocknew` - 爆炸破坏方块
+- **爆炸延迟**: `taa:explosion_delay` - 爆炸延迟时间
 
 ### 属性值说明
 
