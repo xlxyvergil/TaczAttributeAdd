@@ -1,22 +1,21 @@
 package com.xlxyvergil.attributeadd.util;
 
-import com.google.common.collect.Lists;
-import com.tacz.guns.api.modifier.ParameterizedCachePair;
-import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
-import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
-import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
-import com.tacz.guns.resource.pojo.data.gun.Ignite;
-import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
-import it.unimi.dsi.fastutil.Pair;
-
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.tacz.guns.api.modifier.ParameterizedCachePair;
+import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
+import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
+import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
+import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
+
+import it.unimi.dsi.fastutil.Pair;
 
 /**
  * 属性计算器 - 适配TACZ 1.19.2架构
@@ -113,26 +112,46 @@ public class PropertyCalculator {
             return createDefaultMoveSpeed();
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getMoveSpeed();
+        double playerMoveSpeed = playerAttribute.getMoveSpeed();
+        
+        // 根据TACZ原版代码，移动速度计算应该是加法
+        // 玩家属性值0.1经过被动mod计算后变成1.1，这表示玩家属性加成是0.1（10%加成）
+        // 但实际的加成效果是1.1，所以正确的公式应该是：新倍率 = 原始倍率 + 玩家属性加成
+        // 这里playerMoveSpeed已经是最终加成值，不是百分比
+        float playerSpeedBonus = (float) playerMoveSpeed/10;
         
         try {
             MoveSpeed result = new MoveSpeed();
             
+            // 使用反射获取原始字段值
             Field baseField = MoveSpeed.class.getDeclaredField("baseMultiplier");
             baseField.setAccessible(true);
-            baseField.set(result, Float.valueOf(originalMoveSpeed.getBaseMultiplier() * playerAttributeFactor));
+            float originalBase = ((Float) baseField.get(originalMoveSpeed)).floatValue();
+            
+            // 应用加法公式：新倍率 = 原始倍率 + 玩家属性加成
+            float calculatedBase = originalBase + playerSpeedBonus;
+            baseField.set(result, Float.valueOf(calculatedBase));
             
             Field aimField = MoveSpeed.class.getDeclaredField("aimMultiplier");
             aimField.setAccessible(true);
-            aimField.set(result, Float.valueOf(originalMoveSpeed.getAimMultiplier() * playerAttributeFactor));
+            float originalAim = ((Float) aimField.get(originalMoveSpeed)).floatValue();
+            
+            // 瞄准移动速度同样应用加法
+            float calculatedAim = originalAim + playerSpeedBonus;
+            aimField.set(result, Float.valueOf(calculatedAim));
             
             Field reloadField = MoveSpeed.class.getDeclaredField("reloadMultiplier");
             reloadField.setAccessible(true);
-            reloadField.set(result, Float.valueOf(originalMoveSpeed.getReloadMultiplier() * playerAttributeFactor));
+            float originalReload = ((Float) reloadField.get(originalMoveSpeed)).floatValue();
+            
+            // 装弹移动速度同样应用加法
+            float calculatedReload = originalReload + playerSpeedBonus;
+            reloadField.set(result, Float.valueOf(calculatedReload));
             
             return result;
         } catch (Exception e) {
-            return createDefaultMoveSpeed();
+            // 如果反射失败，返回原始值而不是默认值
+            return originalMoveSpeed;
         }
     }
     
