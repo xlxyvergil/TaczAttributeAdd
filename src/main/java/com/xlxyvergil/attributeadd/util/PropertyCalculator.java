@@ -272,8 +272,13 @@ public class PropertyCalculator {
         
         boolean explode = originalExplosion.isExplode();
         
+        // 修改爆炸半径计算方式为加法
         float playerAttributeFactorRadius = (float) playerAttribute.getExplosionRadius();
-        float radius = originalExplosion.getRadius() * playerAttributeFactorRadius;
+        // 爆炸半径附加值，减去1.0是因为基础值是1.0，我们需要的是额外增加的部分
+        float radiusBonus = playerAttributeFactorRadius - 1.0f;
+        float radius = originalExplosion.getRadius() + radiusBonus;
+        // 确保半径不会小于0
+        radius = Math.max(0.0f, radius);
         
         float playerAttributeFactorDamage = (float) playerAttribute.getExplosionDamage();
         float damage = originalExplosion.getDamage() * playerAttributeFactorDamage;

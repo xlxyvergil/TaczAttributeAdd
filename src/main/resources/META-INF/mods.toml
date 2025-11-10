@@ -12,7 +12,7 @@ issueTrackerURL="https://github.com/xlxyvergil/TAA/issues"
 
 [[mods]]
 modId="taa"
-version="1.0.5"
+version="1.0.6"
 displayName="TaczAttributeAdd"
 updateJSONURL="https://github.com/xlxyvergil/TAA/releases/latest"
 displayURL="https://github.com/xlxyvergil/TAA"
