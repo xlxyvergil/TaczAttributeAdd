@@ -254,7 +254,7 @@ public class PropertyCalculator {
         }
         
         float playerAttributeFactor = (float) playerAttribute.getExplosionRadius();
-        return originalExplosion.getRadius() * playerAttributeFactor;
+        return originalExplosion.getRadius() + playerAttributeFactor;
     }
     
     public float calculateExplosionDamage(AttachmentCacheProperty cacheProperty) {
