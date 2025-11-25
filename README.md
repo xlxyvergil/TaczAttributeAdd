@@ -43,7 +43,7 @@
 - **后坐力**: `taa:recoil` - 枪械后坐力
 - **不准确度**: `taa:inaccuracy` - 射击散布程度（数值越小越好）
 - **重量**: `taa:weight` - 枪械重量
-- **弹药容量加成**: `taa:ammo_capacity` - 弹匣容量的额外加成
+- **弹药容量加成**: `taa:magazine_capacity` - 弹匣容量的额外加成
 - **装填速度加成**: `taa:reload_speed` - 装填速度的额外加成
 - **近战伤害加成**: `taa:melee_damage` - 枪械近战攻击伤害的额外加成
 - **近战距离加成**: `taa:melee_distance` - 枪械近战攻击距离的额外加成

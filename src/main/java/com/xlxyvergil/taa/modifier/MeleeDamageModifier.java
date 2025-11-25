@@ -1,5 +1,10 @@
 package com.xlxyvergil.taa.modifier;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
@@ -10,16 +15,12 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
-import com.tacz.guns.resource.pojo.data.gun.GunDefaultMeleeData;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 近战伤害 Modifier
@@ -84,9 +85,9 @@ public class MeleeDamageModifier implements IAttachmentModifier<Modifier, Float>
 
         String damageTitleKey = "gui.tacz.gun_refit.property_diagrams.melee_damage";
         // 显示为基础近战伤害，而不是增量
-        String damagePositivelyString = String.format("基础近战伤害: %.1f", modifiedDamage);
-        String damageNegativelyString = String.format("基础近战伤害: %.1f", modifiedDamage);
-        String damageDefaultString = String.format("基础近战伤害: %.1f", modifiedDamage);
+        String damagePositivelyString = String.format(" %.1f", modifiedDamage);
+        String damageNegativelyString = String.format(" %.1f", modifiedDamage);
+        String damageDefaultString = String.format(" %.1f", modifiedDamage);
         boolean damagePositivelyBetter = true; // 近战伤害越高越好
 
         DiagramsData damageDiagramsData = new DiagramsData(

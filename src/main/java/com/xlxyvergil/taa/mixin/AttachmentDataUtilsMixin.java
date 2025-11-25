@@ -1,5 +1,12 @@
 package com.xlxyvergil.taa.mixin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.item.IGun;
@@ -11,24 +18,17 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 @Mixin(value = AttachmentDataUtils.class, remap = false)
 public class AttachmentDataUtilsMixin {
     
     /**
      * 修改 getAmmoCountWithAttachment 的返回值
-     * 完全遵循GunsmithLib的实现模式
      */
     @ModifyReturnValue(method = "getAmmoCountWithAttachment", at = @At("RETURN"), require = 0)
     private static int ammoCapacity(int original, ItemStack gunItem, GunData gunData) {
@@ -79,7 +79,6 @@ public class AttachmentDataUtilsMixin {
     
     /**
      * 从配件数据中静态计算弹匣容量
-     * 参考GunsmithLib的MiscAttributeAdapter.ammoCapacity方法实现
      */
     private static int calculateAmmoCapacityFromAttachments(ItemStack gunItem, GunData gunData, int original) {
         IGun iGun = IGun.getIGunOrNull(gunItem);
