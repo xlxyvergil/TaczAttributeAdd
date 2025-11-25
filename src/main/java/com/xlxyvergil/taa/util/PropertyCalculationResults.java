@@ -35,6 +35,11 @@ public class PropertyCalculationResults {
     private Ignite ignite;
     private ExplosionData explosionData;
     
+    // 新增的属性
+    private Integer bulletCount;
+    private Integer magazineCapacity;
+    private Float reloadSpeed;
+    
     // Getter and Setter methods
     public Float getAdsTime() { return adsTime; }
     public void setAdsTime(Float adsTime) { this.adsTime = adsTime; }
@@ -83,4 +88,14 @@ public class PropertyCalculationResults {
     
     public ExplosionData getExplosionData() { return explosionData; }
     public void setExplosionData(ExplosionData explosionData) { this.explosionData = explosionData; }
+    
+    // 新增属性的Getter和Setter方法
+    public Integer getBulletCount() { return bulletCount; }
+    public void setBulletCount(Integer bulletCount) { this.bulletCount = bulletCount; }
+    
+    public Integer getMagazineCapacity() { return magazineCapacity; }
+    public void setMagazineCapacity(Integer magazineCapacity) { this.magazineCapacity = magazineCapacity; }
+    
+    public Float getReloadSpeed() { return reloadSpeed; }
+    public void setReloadSpeed(Float reloadSpeed) { this.reloadSpeed = reloadSpeed; }
 }

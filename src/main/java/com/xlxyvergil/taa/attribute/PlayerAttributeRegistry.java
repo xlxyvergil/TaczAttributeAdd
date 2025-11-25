@@ -103,6 +103,16 @@ public class PlayerAttributeRegistry {
     // 1个通用枪械伤害加成属性
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE = ATTRIBUTES.register("bullet_gundamage",
             () -> new RangedAttribute("attribute.name.taa.bullet_gundamage", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    // 添加弹头数量、弹匣容量和换弹速度属性
+    public static final RegistryObject<Attribute> BULLET_COUNT = ATTRIBUTES.register("bullet_count", 
+        () -> new RangedAttribute("attribute.name.taa.bullet_count", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+        
+    public static final RegistryObject<Attribute> MAGAZINE_CAPACITY = ATTRIBUTES.register("magazine_capacity", 
+        () -> new RangedAttribute("attribute.name.taa.magazine_capacity", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+        
+    public static final RegistryObject<Attribute> RELOAD_SPEED = ATTRIBUTES.register("reload_speed", 
+        () -> new RangedAttribute("attribute.name.taa.reload_speed", 1.0D, 0.0D, 1024.0D).setSyncable(true));
 
     // 7个具体枪械类型伤害加成属性
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_PISTOL = ATTRIBUTES.register("bullet_gundamage_pistol",
@@ -163,6 +173,11 @@ public class PlayerAttributeRegistry {
             event.add(type, BULLET_GUNDAMAGE_SMG.get());
             event.add(type, BULLET_GUNDAMAGE_LMG.get());
             event.add(type, BULLET_GUNDAMAGE_LAUNCHER.get());
+            
+            // 添加新属性
+            event.add(type, BULLET_COUNT.get());
+            event.add(type, MAGAZINE_CAPACITY.get());
+            event.add(type, RELOAD_SPEED.get());
         });
     }
 }

@@ -38,6 +38,11 @@ public class PlayerAttributeHelper {
     private final double weight;
     private final double gunDamageBonus;
     
+    // 新增的属性
+    private final double bulletCount;
+    private final double magazineCapacity;
+    private final double reloadSpeed;
+
     /**
      * 构造函数
      * @param shooter 射击者实体
@@ -68,6 +73,11 @@ public class PlayerAttributeHelper {
         this.silence = getAttributeValue(PlayerAttributeRegistry.SILENCE.get(), 1.0D);
         this.weight = getAttributeValue(PlayerAttributeRegistry.WEIGHT.get(), 1.0D);
         this.gunDamageBonus = calculateGunDamageBonus();
+        
+        // 新增属性的计算
+        this.bulletCount = getAttributeValue(PlayerAttributeRegistry.BULLET_COUNT.get(), 1.0D);
+        this.magazineCapacity = getAttributeValue(PlayerAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
+        this.reloadSpeed = getAttributeValue(PlayerAttributeRegistry.RELOAD_SPEED.get(), 1.0D);
     }
     
     /**
@@ -178,8 +188,7 @@ public class PlayerAttributeHelper {
         };
     }
     
-    // Getter方法用于获取存储的属性值
-    
+    // Getter方法
     public double getAdsTime() { return adsTime; }
     public double getAmmoSpeed() { return ammoSpeed; }
     public double getArmorIgnore() { return armorIgnore; }
@@ -200,6 +209,11 @@ public class PlayerAttributeHelper {
     public double getSilence() { return silence; }
     public double getWeight() { return weight; }
     public double getGunDamageBonus() { return gunDamageBonus; }
+    
+    // 新增属性的Getter方法
+    public double getBulletCount() { return bulletCount; }
+    public double getMagazineCapacity() { return magazineCapacity; }
+    public double getReloadSpeed() { return reloadSpeed; }
     
     // 布尔属性专用的Getter方法
     public boolean isIgniteEnabled() { return convertDoubleToBoolean(ignite); }

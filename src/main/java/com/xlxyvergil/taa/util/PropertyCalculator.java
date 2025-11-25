@@ -13,6 +13,7 @@ import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
 import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
 
 import it.unimi.dsi.fastutil.Pair;
 
@@ -55,6 +56,11 @@ public class PropertyCalculator {
         results.setRecoil(calculateRecoil(cacheProperty));
         results.setSilence(calculateSilence(cacheProperty));
         results.setIgnite(calculateIgnite(cacheProperty));
+        
+        // 新增属性的计算
+        results.setBulletCount(calculateBulletCount(cacheProperty));
+        results.setMagazineCapacity(calculateMagazineCapacity(cacheProperty));
+        results.setReloadSpeed(calculateReloadSpeed(cacheProperty));
         
         // 统一计算爆炸属性
         results.setExplosionData(createExplosionData(cacheProperty));
@@ -116,6 +122,37 @@ public class PropertyCalculator {
         Integer originalValue = cacheProperty.getCache(GunProperties.ROUNDS_PER_MINUTE);
         float playerAttributeFactor = (float) playerAttribute.getRoundsPerMinute();
         return originalValue != null ? Math.round(originalValue * playerAttributeFactor) : 0;
+    }
+    
+    // 新增属性计算方法
+    
+    public int calculateBulletCount(AttachmentCacheProperty cacheProperty) {
+        Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.BULLET_COUNT);
+        if (originalValue == null) {
+            originalValue = 1; // 默认值
+        }
+        double playerAttributeFactor = playerAttribute.getBulletCount();
+        return (int) Math.round(originalValue * playerAttributeFactor);
+    }
+    
+    public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {
+        Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.MAGAZINE_CAPACITY);
+        if (originalValue == null) {
+            // 如果没有缓存值，使用默认值30
+            originalValue = 30; // 默认弹匣容量
+        }
+        double playerAttributeFactor = playerAttribute.getMagazineCapacity();
+        return (int) Math.round(originalValue * playerAttributeFactor);
+    }
+    
+    public float calculateReloadSpeed(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(ExtendedGunProperties.RELOAD_TIME);
+        if (originalValue == null) {
+            originalValue = 2.0f; // 默认装填时间（秒）
+        }
+        double playerAttributeFactor = playerAttribute.getReloadSpeed();
+        // 装填速度与装填时间成反比，所以使用倒数
+        return (float) (originalValue / playerAttributeFactor);
     }
     
     // 复杂属性计算方法

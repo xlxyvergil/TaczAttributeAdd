@@ -2,6 +2,7 @@ package com.xlxyvergil.taa.util;
 
 import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
 
 /**
  * 属性缓存更新器
@@ -29,6 +30,11 @@ public class PropertyCacheUpdater {
         cacheProperty.setCache(GunProperties.WEIGHT, results.getWeight());
         cacheProperty.setCache(GunProperties.PIERCE, results.getPierce());
         cacheProperty.setCache(GunProperties.ROUNDS_PER_MINUTE, results.getRoundsPerMinute());
+        
+        // 更新新增的属性
+        cacheProperty.setCache(ExtendedGunProperties.BULLET_COUNT, results.getBulletCount());
+        cacheProperty.setCache(ExtendedGunProperties.MAGAZINE_CAPACITY, results.getMagazineCapacity());
+        cacheProperty.setCache(ExtendedGunProperties.RELOAD_TIME, results.getReloadSpeed());
         
         // 更新复杂属性
         cacheProperty.setCache(GunProperties.MOVE_SPEED, results.getMoveSpeed());
