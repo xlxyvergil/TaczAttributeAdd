@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 /**
  * 修改动画播放速度的 Mixin
  * 用于实现换弹时间缩放效果
- * 参考GunsmithLib的实现模式
  */
 @Mixin(value = ObjectAnimationRunner.class, remap = false)
 public class ObjectAnimationRunnerMixin {
