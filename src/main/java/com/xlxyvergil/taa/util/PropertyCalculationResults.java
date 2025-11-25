@@ -40,6 +40,10 @@ public class PropertyCalculationResults {
     private Integer magazineCapacity;
     private Float reloadSpeed;
     
+    // 近战相关属性
+    private Float meleeDamage;
+    private Float meleeDistance;
+    
     // Getter and Setter methods
     public Float getAdsTime() { return adsTime; }
     public void setAdsTime(Float adsTime) { this.adsTime = adsTime; }
@@ -98,4 +102,11 @@ public class PropertyCalculationResults {
     
     public Float getReloadSpeed() { return reloadSpeed; }
     public void setReloadSpeed(Float reloadSpeed) { this.reloadSpeed = reloadSpeed; }
+    
+    // 近战属性的Getter和Setter方法
+    public Float getMeleeDamage() { return meleeDamage; }
+    public void setMeleeDamage(Float meleeDamage) { this.meleeDamage = meleeDamage; }
+    
+    public Float getMeleeDistance() { return meleeDistance; }
+    public void setMeleeDistance(Float meleeDistance) { this.meleeDistance = meleeDistance; }
 }

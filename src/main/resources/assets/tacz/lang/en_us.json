@@ -1,6 +1,6 @@
 {
   "tooltip.tacz.attachment.reload_time.change": "Reload Time Change",
-  "tooltip.tacz.attachment.magazine_capacity.change": "Magazine Capacity Change",
+
   "tooltip.tacz.attachment.bullet_count.change": "Change bullet count",
   "tooltip.tacz.attachment.melee.distance": "Melee Distance",
   "tooltip.tacz.attachment.melee.damage": "Melee Damage",
@@ -38,5 +38,7 @@
   "attribute.name.taa.bullet_gundamage_launcher": "Launcher Damage",
   "attribute.name.taa.bullet_count": "Bullet Count",
   "attribute.name.taa.magazine_capacity": "Magazine Capacity",
-  "attribute.name.taa.reload_speed": "Reload Speed"
+  "attribute.name.taa.reload_speed": "Reload Speed",
+  "attribute.name.taa.melee_damage": "Melee Damage",
+  "attribute.name.taa.melee_distance": "Melee Distance"
 }

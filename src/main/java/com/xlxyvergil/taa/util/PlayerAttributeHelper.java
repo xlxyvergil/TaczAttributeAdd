@@ -42,6 +42,10 @@ public class PlayerAttributeHelper {
     private final double bulletCount;
     private final double magazineCapacity;
     private final double reloadSpeed;
+    
+    // 近战相关属性
+    private final double meleeDamage;
+    private final double meleeDistance;
 
     /**
      * 构造函数
@@ -78,6 +82,10 @@ public class PlayerAttributeHelper {
         this.bulletCount = getAttributeValue(PlayerAttributeRegistry.BULLET_COUNT.get(), 1.0D);
         this.magazineCapacity = getAttributeValue(PlayerAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
         this.reloadSpeed = getAttributeValue(PlayerAttributeRegistry.RELOAD_SPEED.get(), 1.0D);
+        
+        // 近战相关属性的计算
+        this.meleeDamage = getAttributeValue(PlayerAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
+        this.meleeDistance = getAttributeValue(PlayerAttributeRegistry.MELEE_DISTANCE.get(), 1.0D);
     }
     
     /**
@@ -214,6 +222,10 @@ public class PlayerAttributeHelper {
     public double getBulletCount() { return bulletCount; }
     public double getMagazineCapacity() { return magazineCapacity; }
     public double getReloadSpeed() { return reloadSpeed; }
+    
+    // 近战属性的Getter方法
+    public double getMeleeDamage() { return meleeDamage; }
+    public double getMeleeDistance() { return meleeDistance; }
     
     // 布尔属性专用的Getter方法
     public boolean isIgniteEnabled() { return convertDoubleToBoolean(ignite); }

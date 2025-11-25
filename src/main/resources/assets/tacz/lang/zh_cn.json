@@ -7,7 +7,7 @@
   "tooltip.tacz.attachment.bullet_count.change": "弹头数量",
   "tooltip.tacz.attachment.melee.distance": "近战距离",
   "tooltip.tacz.attachment.melee.damage": "近战伤害",
-  "tooltip.tacz.attachment.magazine_capacity.change": "弹匣容量",
+
   "attribute.name.taa.ads_time": "瞄准时间",
   "attribute.name.taa.ammo_speed": "弹药速度",
   "attribute.name.taa.armor_ignore": "护甲穿透",
@@ -38,10 +38,12 @@
   "attribute.name.taa.bullet_count": "子弹数量",
   "attribute.name.taa.magazine_capacity": "弹匣容量",
   "attribute.name.taa.reload_speed": "装填速度",
+  "attribute.name.taa.melee_damage": "近战伤害",
+  "attribute.name.taa.melee_distance": "近战距离",
   "gui.tacz.gun_refit.property_diagrams.bullet_count": "子弹数量",
   "gui.tacz.gun_refit.property_diagrams.ammo_capacity": "弹匣容量",
   "gui.tacz.gun_refit.property_diagrams.reload_time": "装填时间",
   "tooltip.tacz.attachment.bullet_count.change": "改变子弹数量",
-  "tooltip.tacz.attachment.magazine_capacity.change": "改变弹匣容量",
+
   "tooltip.tacz.attachment.reload_time.change": "改变装填时间"
 }

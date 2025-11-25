@@ -62,6 +62,10 @@ public class PropertyCalculator {
         results.setMagazineCapacity(calculateMagazineCapacity(cacheProperty));
         results.setReloadSpeed(calculateReloadSpeed(cacheProperty));
         
+        // 近战属性的计算
+        results.setMeleeDamage(calculateMeleeDamage(cacheProperty));
+        results.setMeleeDistance(calculateMeleeDistance(cacheProperty));
+        
         // 统一计算爆炸属性
         results.setExplosionData(createExplosionData(cacheProperty));
         
@@ -153,6 +157,26 @@ public class PropertyCalculator {
         double playerAttributeFactor = playerAttribute.getReloadSpeed();
         // 装填速度与装填时间成反比，所以使用倒数
         return (float) (originalValue / playerAttributeFactor);
+    }
+    
+    // 近战属性计算方法
+    
+    public float calculateMeleeDamage(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DAMAGE);
+        if (originalValue == null) {
+            originalValue = 5.0f; // 默认近战伤害值
+        }
+        double playerAttributeFactor = playerAttribute.getMeleeDamage();
+        return originalValue * (float) playerAttributeFactor;
+    }
+    
+    public float calculateMeleeDistance(AttachmentCacheProperty cacheProperty) {
+        Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DISTANCE);
+        if (originalValue == null) {
+            originalValue = 1.0f; // 默认近战距离值
+        }
+        double playerAttributeFactor = playerAttribute.getMeleeDistance();
+        return originalValue * (float) playerAttributeFactor;
     }
     
     // 复杂属性计算方法

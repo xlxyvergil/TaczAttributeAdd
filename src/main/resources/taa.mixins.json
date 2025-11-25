@@ -19,8 +19,8 @@
     "AttachmentPropertyManagerMixin",
     "AttachmentPropertyManagerRegisterMixin",
     "GunAnimationStateContextMixin",
-    "ModernKineticGunItemMeleeMixin",
     "ModernKineticGunItemMeleeDamageMixin",
+    "ModernKineticGunItemMeleeDistanceMixin",
     "ModernKineticGunItemMixin",
     "ModernKineticGunScriptAPIReloadMixin",
     "ModernKineticGunScriptAPIShootMixin"
