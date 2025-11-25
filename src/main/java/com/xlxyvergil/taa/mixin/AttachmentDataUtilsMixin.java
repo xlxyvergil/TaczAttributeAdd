@@ -28,7 +28,6 @@ public class AttachmentDataUtilsMixin {
     
     /**
      * 修改 getAmmoCountWithAttachment 的返回值
-     * 完全遵循GunsmithLib的实现模式
      */
     @ModifyReturnValue(method = "getAmmoCountWithAttachment", at = @At("RETURN"), require = 0)
     private static int ammoCapacity(int original, ItemStack gunItem, GunData gunData) {
@@ -79,7 +78,6 @@ public class AttachmentDataUtilsMixin {
     
     /**
      * 从配件数据中静态计算弹匣容量
-     * 参考GunsmithLib的MiscAttributeAdapter.ammoCapacity方法实现
      */
     private static int calculateAmmoCapacityFromAttachments(ItemStack gunItem, GunData gunData, int original) {
         IGun iGun = IGun.getIGunOrNull(gunItem);
