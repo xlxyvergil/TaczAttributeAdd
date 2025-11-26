@@ -4,8 +4,11 @@ import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ReloadState;
 import com.xlxyvergil.taa.modifier.ReloadModifier;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class AnimationSpeedScaler {
+    @OnlyIn(Dist.CLIENT)
     public static double getAnimationSpeedScale() {
         var player = Minecraft.getInstance().player;
         if (player == null) {

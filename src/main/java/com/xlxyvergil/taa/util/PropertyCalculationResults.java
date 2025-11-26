@@ -38,7 +38,7 @@ public class PropertyCalculationResults {
     // 新增的属性
     private Integer bulletCount;
     private Integer magazineCapacity;
-    private Float reloadSpeed;
+    private Float reloadTime;
     
     // 近战相关属性
     private Float meleeDamage;
@@ -100,8 +100,8 @@ public class PropertyCalculationResults {
     public Integer getMagazineCapacity() { return magazineCapacity; }
     public void setMagazineCapacity(Integer magazineCapacity) { this.magazineCapacity = magazineCapacity; }
     
-    public Float getReloadSpeed() { return reloadSpeed; }
-    public void setReloadSpeed(Float reloadSpeed) { this.reloadSpeed = reloadSpeed; }
+    public Float getReloadTime() { return reloadTime; }
+    public void setReloadTime(Float reloadTime) { this.reloadTime = reloadTime; }
     
     // 近战属性的Getter和Setter方法
     public Float getMeleeDamage() { return meleeDamage; }

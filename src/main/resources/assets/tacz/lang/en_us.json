@@ -38,7 +38,7 @@
   "attribute.name.taa.bullet_gundamage_launcher": "Launcher Damage",
   "attribute.name.taa.bullet_count": "Bullet Count",
   "attribute.name.taa.magazine_capacity": "Magazine Capacity",
-  "attribute.name.taa.reload_speed": "Reload Speed",
+  "attribute.name.taa.reload_time": "Reload Time",
   "attribute.name.taa.melee_damage": "Melee Damage",
   "attribute.name.taa.melee_distance": "Melee Distance"
 }

@@ -34,7 +34,7 @@ public class PropertyCacheUpdater {
         // 更新新增的属性
         cacheProperty.setCache(ExtendedGunProperties.BULLET_COUNT, results.getBulletCount());
         cacheProperty.setCache(ExtendedGunProperties.MAGAZINE_CAPACITY, results.getMagazineCapacity());
-        cacheProperty.setCache(ExtendedGunProperties.RELOAD_TIME, results.getReloadSpeed());
+        cacheProperty.setCache(ExtendedGunProperties.RELOAD_TIME, results.getReloadTime());
         
         // 更新近战属性
         cacheProperty.setCache(ExtendedGunProperties.MELEE_DAMAGE, results.getMeleeDamage());

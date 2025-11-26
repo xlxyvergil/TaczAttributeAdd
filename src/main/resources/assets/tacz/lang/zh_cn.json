@@ -36,7 +36,7 @@
   "attribute.name.taa.bullet_gundamage_launcher": "发射器伤害",
   "attribute.name.taa.bullet_count": "子弹数量",
   "attribute.name.taa.magazine_capacity": "弹匣容量",
-  "attribute.name.taa.reload_speed": "装填速度",
+  "attribute.name.taa.reload_time": "装填时间",
   "attribute.name.taa.melee_damage": "近战伤害",
   "attribute.name.taa.melee_distance": "近战距离"
 }

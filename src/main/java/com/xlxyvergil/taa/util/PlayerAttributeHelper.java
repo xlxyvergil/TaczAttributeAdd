@@ -41,7 +41,7 @@ public class PlayerAttributeHelper {
     // 新增的属性
     private final double bulletCount;
     private final double magazineCapacity;
-    private final double reloadSpeed;
+    private final double reloadTime;
     
     // 近战相关属性
     private final double meleeDamage;
@@ -81,7 +81,7 @@ public class PlayerAttributeHelper {
         // 新增属性的计算
         this.bulletCount = getAttributeValue(PlayerAttributeRegistry.BULLET_COUNT.get(), 1.0D);
         this.magazineCapacity = getAttributeValue(PlayerAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
-        this.reloadSpeed = getAttributeValue(PlayerAttributeRegistry.RELOAD_SPEED.get(), 1.0D);
+        this.reloadTime = getAttributeValue(PlayerAttributeRegistry.RELOAD_TIME.get(), 1.0D);
         
         // 近战相关属性的计算
         this.meleeDamage = getAttributeValue(PlayerAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
@@ -221,7 +221,7 @@ public class PlayerAttributeHelper {
     // 新增属性的Getter方法
     public double getBulletCount() { return bulletCount; }
     public double getMagazineCapacity() { return magazineCapacity; }
-    public double getReloadSpeed() { return reloadSpeed; }
+    public double getReloadTime() { return reloadTime; }
     
     // 近战属性的Getter方法
     public double getMeleeDamage() { return meleeDamage; }

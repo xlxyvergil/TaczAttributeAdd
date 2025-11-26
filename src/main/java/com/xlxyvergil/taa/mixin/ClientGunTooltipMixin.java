@@ -7,12 +7,15 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.index.CommonGunIndex;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = ClientGunTooltip.class, remap = false)
+@OnlyIn(Dist.CLIENT)
 public class ClientGunTooltipMixin {
     
     /**

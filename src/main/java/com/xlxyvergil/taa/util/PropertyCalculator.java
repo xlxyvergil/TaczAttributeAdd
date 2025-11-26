@@ -60,7 +60,7 @@ public class PropertyCalculator {
         // 新增属性的计算
         results.setBulletCount(calculateBulletCount(cacheProperty));
         results.setMagazineCapacity(calculateMagazineCapacity(cacheProperty));
-        results.setReloadSpeed(calculateReloadSpeed(cacheProperty));
+        results.setReloadTime(calculateReloadTime(cacheProperty));
         
         // 近战属性的计算
         results.setMeleeDamage(calculateMeleeDamage(cacheProperty));
@@ -149,12 +149,12 @@ public class PropertyCalculator {
         return (int) Math.round(originalValue * playerAttributeFactor);
     }
     
-    public float calculateReloadSpeed(AttachmentCacheProperty cacheProperty) {
+    public float calculateReloadTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(ExtendedGunProperties.RELOAD_TIME);
         if (originalValue == null) {
             originalValue = 2.0f; // 默认装填时间（秒）
         }
-        double playerAttributeFactor = playerAttribute.getReloadSpeed();
+        double playerAttributeFactor = playerAttribute.getReloadTime();
         // 装填速度与装填时间成反比，所以使用倒数
         return (float) (originalValue / playerAttributeFactor);
     }

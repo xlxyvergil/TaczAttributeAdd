@@ -19,7 +19,7 @@ import com.tacz.guns.util.AttachmentDataUtils;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 
-import net.minecraft.client.Minecraft;
+// Removed client import to avoid server-side loading issues
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,24 +54,7 @@ public class AttachmentDataUtilsMixin {
             }
         }
         
-        // 如果ShooterContext中没有，尝试从客户端玩家获取缓存数据（用于配件面板显示）
-        try {
-            Player player = Minecraft.getInstance().player;
-            if (player != null) {
-                IGunOperator operator = IGunOperator.fromLivingEntity(player);
-                if (operator != null) {
-                    AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
-                    if (cacheProperty != null) {
-                        Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
-                        if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                            return modifiedAmmoCount;
-                        }
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-            // 如果出现任何异常（例如在服务器端），忽略并继续
-        }
+        // 只依赖ShooterContext获取玩家信息，避免在服务端加载客户端类
         
         // 如果没有缓存数据，从配件数据中静态计算
         return calculateAmmoCapacityFromAttachments(gunItem, gunData, original);

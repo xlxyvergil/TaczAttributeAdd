@@ -111,8 +111,8 @@ public class PlayerAttributeRegistry {
     public static final RegistryObject<Attribute> MAGAZINE_CAPACITY = ATTRIBUTES.register("magazine_capacity", 
         () -> new RangedAttribute("attribute.name.taa.magazine_capacity", 1.0D, 0.0D, 1024.0D).setSyncable(true));
         
-    public static final RegistryObject<Attribute> RELOAD_SPEED = ATTRIBUTES.register("reload_speed", 
-        () -> new RangedAttribute("attribute.name.taa.reload_speed", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    public static final RegistryObject<Attribute> RELOAD_TIME = ATTRIBUTES.register("reload_time", 
+        () -> new RangedAttribute("attribute.name.taa.reload_time", 1.0D, 0.0D, 1024.0D).setSyncable(true));
 
     /** 近战伤害属性 - 影响枪械近战攻击的伤害值 */
     public static final RegistryObject<Attribute> MELEE_DAMAGE = ATTRIBUTES.register("melee_damage", 
@@ -185,7 +185,7 @@ public class PlayerAttributeRegistry {
             // 添加新属性
             event.add(type, BULLET_COUNT.get());
             event.add(type, MAGAZINE_CAPACITY.get());
-            event.add(type, RELOAD_SPEED.get());
+            event.add(type, RELOAD_TIME.get());
             
             // 添加近战相关属性
             event.add(type, MELEE_DAMAGE.get());
