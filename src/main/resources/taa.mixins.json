@@ -9,6 +9,7 @@
   },
   "client": [
     "ClientGunTooltipMixin",
+    "ClientGunPropertyDiagramsMixin",
     "ObjectAnimationRunnerMixin"
   ],
   "server": [
@@ -22,6 +23,7 @@
     "ModernKineticGunItemMeleeDamageMixin",
     "ModernKineticGunItemMeleeDistanceMixin",
     "ModernKineticGunItemMixin",
+    "ModernKineticGunScriptAPIMixin",
     "ModernKineticGunScriptAPIReloadMixin",
     "ModernKineticGunScriptAPIShootMixin"
   ],

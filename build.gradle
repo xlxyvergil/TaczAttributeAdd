@@ -26,7 +26,7 @@ SimpleDateFormat FORMAT = new SimpleDateFormat("MMdd-HHmmss")
 FORMAT.setTimeZone(TimeZone.getTimeZone("GMT+8"))
 
 def isRelease = "${mod_version}".split('\\.').last().matches("[0-9]*")
-mod_version = "${mod_version}+mc${minecraft_version}+tacz${tacz_version}"//+(isRelease ? "" : "-SNAPSHOT")
+mod_version = "${mod_version}+${minecraft_version}"//+(isRelease ? "" : "-SNAPSHOT")
 group = mod_group_id
 version = mod_version
 
