@@ -10,7 +10,7 @@
   "client": [
     "ClientGunTooltipMixin",
     "ClientGunPropertyDiagramsMixin",
-    "ObjectAnimationRunnerMixin"
+    "client.animation.ObjectAnimationRunnerMixin"
   ],
   "server": [
   ],
@@ -24,8 +24,8 @@
     "ModernKineticGunItemMeleeDistanceMixin",
     "ModernKineticGunItemMixin",
     "ModernKineticGunScriptAPIMixin",
-    "ModernKineticGunScriptAPIReloadMixin",
-    "ModernKineticGunScriptAPIShootMixin"
+    "ModernKineticGunScriptAPIShootMixin",
+    "ModernKineticGunScriptAPIReloadTimeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

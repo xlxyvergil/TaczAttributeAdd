@@ -9,10 +9,15 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.api.item.IGun;
+import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.item.ModernKineticGunItem;
+import com.tacz.guns.util.AllowAttachmentTagMatcher;
 import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -60,25 +65,29 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
     @Override
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
+        // 检测是否安装了独头弹
+        boolean hasSlugEffect = hasSlugEffect(gunItem);
+        
         // 获取原始子弹数量
         int originalBulletCount = gunData.getBulletData().getBulletAmount();
         if (originalBulletCount <= 0) {
             originalBulletCount = 1;
         }
         
-        // 获取修改后的子弹数量
-        int modifiedBulletCount = cacheProperty.<Integer>getCache(BulletCountModifier.ID);
+        // 如果有独头弹效果，强制显示1发
+        int displayBulletCount = hasSlugEffect ? 1 : cacheProperty.<Integer>getCache(BulletCountModifier.ID);
+        int effectiveOriginalCount = hasSlugEffect ? 1 : originalBulletCount;
         
-        int bulletCountDifference = modifiedBulletCount - originalBulletCount;
+        int bulletCountDifference = displayBulletCount - effectiveOriginalCount;
         
         // 计算显示数据
-        double bulletCountPercent = Math.min(originalBulletCount / 10.0, 1);
+        double bulletCountPercent = Math.min(effectiveOriginalCount / 10.0, 1);
         double bulletCountModifierPercent = Math.min(Math.abs(bulletCountDifference) / 10.0, 1);
 
         String bulletCountTitleKey = "gui.tacz.gun_refit.property_diagrams.bullet_count";
-        String bulletCountPositivelyString = String.format("%d §a(+%d)", modifiedBulletCount, bulletCountDifference);
-        String bulletCountNegativelyString = String.format("%d §c(%d)", modifiedBulletCount, bulletCountDifference);
-        String bulletCountDefaultString = String.format("%d", modifiedBulletCount);
+        String bulletCountPositivelyString = String.format("%d §a(+%d)", displayBulletCount, bulletCountDifference);
+        String bulletCountNegativelyString = String.format("%d §c(%d)", displayBulletCount, bulletCountDifference);
+        String bulletCountDefaultString = String.format("%d", displayBulletCount);
         boolean bulletCountPositivelyBetter = true; // 子弹数量越多越好
 
         DiagramsData bulletCountDiagramsData = new DiagramsData(
@@ -87,6 +96,28 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
                 bulletCountDefaultString, bulletCountPositivelyBetter);
 
         return List.of(bulletCountDiagramsData);
+    }
+    
+    /**
+     * 检测是否安装了独头弹效果
+     * 使用TACZ的标签检测机制，兼容所有使用intrinsic/slug标签的配件
+     */
+    private boolean hasSlugEffect(ItemStack gunItem) {
+        try {
+            IGun iGun = IGun.getIGunOrNull(gunItem);
+            if (iGun == null) return false;
+            
+            ResourceLocation extendedMagId = iGun.getAttachmentId(gunItem, AttachmentType.EXTENDED_MAG);
+            if (extendedMagId == null) return false;
+            
+            return AllowAttachmentTagMatcher.matchTag(
+                ModernKineticGunItem.DefaultPropertyModification.SLUGS, 
+                extendedMagId
+            );
+        } catch (Exception e) {
+            // 如果TACZ版本不兼容或其他异常，返回false
+            return false;
+        }
     }
 
     @Override

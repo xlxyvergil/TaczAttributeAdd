@@ -152,11 +152,15 @@ public class PropertyCalculator {
     public float calculateReloadTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(ExtendedGunProperties.RELOAD_TIME);
         if (originalValue == null) {
-            originalValue = 2.0f; // 默认装填时间（秒）
+            originalValue = 1.0f; // 默认倍率（无加速）
         }
         double playerAttributeFactor = playerAttribute.getReloadTime();
-        // 装填速度与装填时间成反比，所以使用倒数
-        return (float) (originalValue / playerAttributeFactor);
+        // 使用与配件相同的公式计算最终倍率
+        // playerAttributeFactor 是玩家属性值（例如1.6表示1.6倍装填速度）
+        // 我们需要将其转换为时间倍率（例如1.6倍速度 -> 1/1.6 = 0.625倍时间）
+        float playerTimeMultiplier = (float) (1.0f / playerAttributeFactor);
+        // 合并配件倍率和玩家属性倍率
+        return originalValue * playerTimeMultiplier;
     }
     
     // 近战属性计算方法
@@ -176,7 +180,8 @@ public class PropertyCalculator {
             originalValue = 1.0f; // 默认近战距离值
         }
         double playerAttributeFactor = playerAttribute.getMeleeDistance();
-        return originalValue * (float) playerAttributeFactor;
+        // 近战距离采用加法计算
+        return originalValue + (float) playerAttributeFactor;
     }
     
     // 复杂属性计算方法

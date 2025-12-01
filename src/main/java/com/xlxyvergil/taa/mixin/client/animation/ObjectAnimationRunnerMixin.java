@@ -1,31 +1,20 @@
-package com.xlxyvergil.taa.mixin;
+package com.xlxyvergil.taa.mixin.client.animation;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.api.client.animation.ObjectAnimationRunner;
-import com.xlxyvergil.taa.util.AnimationSpeedScaler;
+import com.xlxyvergil.taa.client.animation.AnimationSpeedScaler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * 修改动画播放速度的 Mixin
- * 用于实现换弹时间缩放效果
- */
 @Mixin(value = ObjectAnimationRunner.class, remap = false)
 public class ObjectAnimationRunnerMixin {
-    
     private final @Unique AnimationSpeedScaler.TimeTracker taa$timeTracker = AnimationSpeedScaler.TimeTracker.createNanosTracker();
-    
-    /**
-     * 修改时间流逝，实现动画速度缩放
-     */
+
     @ModifyExpressionValue(
-        method = {"update", "updateSoundOnly"},
-        at = @At(value = "INVOKE", target = "Ljava/lang/System;nanoTime()J"),
-        require = 0
-    )
+            method = {"update", "updateSoundOnly"},
+            at = @At(value = "INVOKE", target = "Ljava/lang/System;nanoTime()J"))
     private long timeScaler(long original) {
-        double scale = AnimationSpeedScaler.getAnimationSpeedScale();
-        return taa$timeTracker.updateAndGet(original, scale);
+        return taa$timeTracker.updateAndGet(original, AnimationSpeedScaler.getAnimationSpeedScale());
     }
 }

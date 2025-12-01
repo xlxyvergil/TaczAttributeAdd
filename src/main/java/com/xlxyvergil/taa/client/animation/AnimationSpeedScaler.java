@@ -1,4 +1,4 @@
-package com.xlxyvergil.taa.util;
+package com.xlxyvergil.taa.client.animation;
 
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.entity.ReloadState;
@@ -7,8 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class AnimationSpeedScaler {
-    @OnlyIn(Dist.CLIENT)
     public static double getAnimationSpeedScale() {
         var player = Minecraft.getInstance().player;
         if (player == null) {
@@ -26,10 +26,12 @@ public class AnimationSpeedScaler {
         // 从配件缓存中获取换弹时间修改器
         var cacheProperty = IGunOperator.fromLivingEntity(player).getCacheProperty();
         if (cacheProperty != null) {
-            Float reloadModifier = cacheProperty.getCache(ReloadModifier.ID);
-            if (reloadModifier != null && reloadModifier > 0 && reloadModifier != 1.0f) {
-                // 如果显示的时间是0.26秒，那么动画应该加速 1/0.26 ≈ 3.85倍
-                return 1.0 / reloadModifier;
+            Float reloadMultiplier = cacheProperty.getCache(ReloadModifier.ID);
+            if (reloadMultiplier != null && reloadMultiplier > 0 && reloadMultiplier != 1.0f) {
+                // 返回倒数，因为动画速度与时间成反比
+                // reloadMultiplier 0.625 表示时间变为原来的62.5%
+                // 所以动画速度应该是 1/0.625 = 1.6 倍
+                return 1.0 / reloadMultiplier;
             }
         }
         

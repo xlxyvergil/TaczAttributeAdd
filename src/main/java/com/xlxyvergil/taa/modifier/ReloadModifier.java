@@ -45,26 +45,21 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
 
     @Override
     public CacheValue<Float> initCache(ItemStack gunItem, GunData gunData) {
-        // 使用战术装填时间作为基础值，因为这是最常见的换弹情况
-        float tacticalTime = 0.0f; // 默认值
-        
-        // 添加空值检查，避免空指针异常
-        if (gunData.getReloadData() != null && gunData.getReloadData().getFeed() != null) {
-            tacticalTime = gunData.getReloadData().getFeed().getTacticalTime();
-        }
-        
-        return new CacheValue<>(tacticalTime);
+        // 初始化时存储默认乘数1.0f而不是具体的装填时间
+        return new CacheValue<>(1.0f);
     }
 
     @Override
     public void eval(List<ReloadModifierData> modifiers, CacheValue<Float> cache) {
-        // 计算装填时间加成
-        double reloadTimeEval = AttachmentPropertyManager.eval(
+        // 计算装填时间乘数（与玩家属性使用相同的计算公式）
+        // 从配件字段取值，然后加1操作，最后用1/(1+配件字段值)代表当前的倍率
+        double reloadTimeMultiplier = AttachmentPropertyManager.eval(
                 modifiers.stream().map(m -> m.reloadTime).filter(m -> m != null).toList(), 
                 cache.getValue()
         );
         
-        cache.setValue((float) reloadTimeEval);
+        // 使用 1/(1+value) 公式计算最终倍率
+        cache.setValue(1.0f / (1.0f + (float) reloadTimeMultiplier));
     }
 
     @Override
@@ -77,7 +72,11 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
             originalTacticalTime = gunData.getReloadData().getFeed().getTacticalTime();
         }
         
-        float modifiedValue = cacheProperty.<Float>getCache(ReloadModifier.ID);
+        float reloadMultiplier = cacheProperty.<Float>getCache(ReloadModifier.ID);
+        // 使用乘数的倒数计算修改后的装填时间，与逻辑层保持一致
+        // reloadMultiplier 0.625 表示时间变为原来的62.5%
+        // 所以显示的时间应该是 originalTacticalTime * 0.625
+        float modifiedValue = originalTacticalTime * reloadMultiplier;
         float timeDifference = modifiedValue - originalTacticalTime;
 
         // 使用枪械实际的装填时间来计算百分比，而不是硬编码的值
@@ -87,13 +86,20 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
         double modifierPercent = Math.min(Math.abs(timeDifference) / (maxReloadTime * 2), 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.reload_time";
-        String positivelyString = String.format("%.2fs §c(%.2fs)", modifiedValue, timeDifference);
-        String negativelyString = String.format("%.2fs §a(%.2fs)", modifiedValue, -timeDifference);
-        String defaultString = String.format("%.2fs", modifiedValue);
-        boolean positivelyBetter = false; // 装填时间越短越好
-
-        DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, positivelyString, negativelyString, defaultString, positivelyBetter);
-        return Collections.singletonList(diagramsData);
+        // 装填时间越短越好，所以时间减少用绿色，时间增加用红色
+        if (timeDifference <= 0) {
+            // 时间减少（装填加速）用绿色显示
+            String positivelyString = String.format("%.2fs §a(%.2fs)", modifiedValue, -timeDifference);
+            String defaultString = String.format("%.2fs", modifiedValue);
+            DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, positivelyString, positivelyString, defaultString, false);
+            return Collections.singletonList(diagramsData);
+        } else {
+            // 时间增加（装填减速）用红色显示
+            String negativelyString = String.format("%.2fs §c(%.2fs)", modifiedValue, timeDifference);
+            String defaultString = String.format("%.2fs", modifiedValue);
+            DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, negativelyString, negativelyString, defaultString, false);
+            return Collections.singletonList(diagramsData);
+        }
     }
 
     @Override

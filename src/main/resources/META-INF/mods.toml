@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="taa"
-version="1.0.7"
+version="1.0.8"
 displayName="Tacz Attribute Add"
 description="Adds additional attributes and functionality to TACZ guns"
 authors="xlxyvergil"
@@ -19,7 +19,7 @@ side="BOTH"
 [[dependencies.taa]]
 modId="tacz"
 mandatory=true
-versionRange="[1.1.6-hotfix,)"
+versionRange="[1.1.7,)"
 ordering="NONE"
 side="BOTH"
 
