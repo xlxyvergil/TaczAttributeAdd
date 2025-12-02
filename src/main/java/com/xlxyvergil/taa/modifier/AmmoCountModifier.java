@@ -45,9 +45,19 @@ public class AmmoCountModifier implements IAttachmentModifier<Modifier, Integer>
 
     @Override
     public void eval(@Nullable List<Modifier> modifiers, CacheValue<Integer> cache) {
-        // 使用标准的Modifier计算逻辑
-        double eval = AttachmentPropertyManager.eval(modifiers, cache.getValue());
-        cache.setValue((int) Math.round(eval));
+        // 只有当存在修饰符时才进行计算
+        if (modifiers != null && !modifiers.isEmpty()) {
+            // 使用标准的Modifier计算逻辑
+            double eval = AttachmentPropertyManager.eval(modifiers, cache.getValue());
+            // 修改为直接截断，不使用四舍五入
+            int result = (int) eval;
+            // 如果结果小于1，则设置为1
+            if (result < 1) {
+                result = 1;
+            }
+            cache.setValue(result);
+        }
+        // 如果没有修饰符，则保持原始值不变
     }
 
 

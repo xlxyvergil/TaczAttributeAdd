@@ -38,7 +38,7 @@ public class AttachmentDataUtilsMixin {
                 AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
-                    if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
+                    if (modifiedAmmoCount != null) {
                         return modifiedAmmoCount;
                     }
                 }

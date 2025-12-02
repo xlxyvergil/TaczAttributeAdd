@@ -136,7 +136,7 @@ public class PropertyCalculator {
             originalValue = 1; // 默认值
         }
         double playerAttributeFactor = playerAttribute.getBulletCount();
-        return (int) Math.round(originalValue * playerAttributeFactor);
+        return (int) (originalValue * playerAttributeFactor);
     }
     
     public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {
@@ -146,7 +146,13 @@ public class PropertyCalculator {
             originalValue = 30; // 默认弹匣容量
         }
         double playerAttributeFactor = playerAttribute.getMagazineCapacity();
-        return (int) Math.round(originalValue * playerAttributeFactor);
+        // 修改为直接截断，不使用四舍五入
+        int result = (int) (originalValue * playerAttributeFactor);
+        // 如果结果小于1，则设置为1
+        if (result < 1) {
+            result = 1;
+        }
+        return result;
     }
     
     public float calculateReloadTime(AttachmentCacheProperty cacheProperty) {
