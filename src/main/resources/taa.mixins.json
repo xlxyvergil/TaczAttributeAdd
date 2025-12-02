@@ -9,7 +9,8 @@
   },
   "client": [
     "ClientGunTooltipMixin",
-    "client.animation.ObjectAnimationRunnerMixin"
+    "client.animation.ObjectAnimationRunnerMixin",
+    "GunPropertyDiagramsMixin"
   ],
   "server": [
   ],
@@ -19,7 +20,6 @@
     "AttachmentPropertyManagerMixin",
     "AttachmentPropertyManagerRegisterMixin",
     "GunAnimationStateContextMixin",
-    "GunPropertyDiagramsMixin",
     "ModernKineticGunItemMeleeDamageMixin",
     "ModernKineticGunItemMeleeDistanceMixin",
     "ModernKineticGunItemMixin",
