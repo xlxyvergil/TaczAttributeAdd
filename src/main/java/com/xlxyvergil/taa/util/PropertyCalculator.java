@@ -83,7 +83,8 @@ public class PropertyCalculator {
     public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.AMMO_SPEED);
         float playerAttributeFactor = (float) playerAttribute.getAmmoSpeed();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        // 直接截断小数部分取整，不使用四舍五入
+        return originalValue != null ? (int) (originalValue * playerAttributeFactor) : 0.0f;
     }
     
     public float calculateArmorIgnore(AttachmentCacheProperty cacheProperty) {
@@ -101,7 +102,8 @@ public class PropertyCalculator {
     public float calculateHeadshotMultiplier(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER);
         float playerAttributeFactor = (float) playerAttribute.getHeadshotMultiplier();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        // 由于Forge会自动+1，所以计算时需要-1，然后使用加法
+        return originalValue != null ? originalValue + (playerAttributeFactor - 1.0f) : 0.0f;
     }
     
     public float calculateKnockback(AttachmentCacheProperty cacheProperty) {
@@ -119,14 +121,17 @@ public class PropertyCalculator {
     public int calculatePierce(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.PIERCE);
         float playerAttributeFactor = (float) playerAttribute.getPierce();
-        return originalValue != null ? Math.round(originalValue * playerAttributeFactor) : 0;
+        // 直接截断小数部分取整，不使用四舍五入
+        return originalValue != null ? (int) (originalValue * playerAttributeFactor) : 0;
     }
     
     public int calculateRoundsPerMinute(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.ROUNDS_PER_MINUTE);
         float playerAttributeFactor = (float) playerAttribute.getRoundsPerMinute();
-        return originalValue != null ? Math.round(originalValue * playerAttributeFactor) : 0;
+        // 直接截断小数部分取整，不使用四舍五入
+        return originalValue != null ? (int) (originalValue * playerAttributeFactor) : 0;
     }
+
     
     // 新增属性计算方法
     
@@ -136,7 +141,13 @@ public class PropertyCalculator {
             originalValue = 1; // 默认值
         }
         double playerAttributeFactor = playerAttribute.getBulletCount();
-        return (int) (originalValue * playerAttributeFactor);
+        double result = originalValue * playerAttributeFactor;
+        // 如果计算结果有小数部分，则向上取整
+        if (result > Math.floor(result)) {
+            return (int) Math.ceil(result);
+        } else {
+            return (int) result;
+        }
     }
     
     public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {
@@ -186,8 +197,8 @@ public class PropertyCalculator {
             originalValue = 1.0f; // 默认近战距离值
         }
         double playerAttributeFactor = playerAttribute.getMeleeDistance();
-        // 近战距离采用加法计算
-        return originalValue + (float) playerAttributeFactor;
+        // 近战距离采用加法计算，但需要考虑Forge默认+1
+        return originalValue + (float) (playerAttributeFactor - 1.0);
     }
     
     // 复杂属性计算方法
@@ -227,9 +238,10 @@ public class PropertyCalculator {
         LinkedList<ExtraDamage.DistanceDamagePair> calculatedDamage = new LinkedList<>();
         
         for (ExtraDamage.DistanceDamagePair pair : originalDamage) {
+            // 直接截断小数部分取整，不使用四舍五入
             calculatedDamage.add(new ExtraDamage.DistanceDamagePair(
                 pair.getDistance(),
-                pair.getDamage() * playerAttributeFactor
+                (int) (pair.getDamage() * playerAttributeFactor)
             ));
         }
         
@@ -326,7 +338,8 @@ public class PropertyCalculator {
         }
         
         float playerAttributeFactor = (float) playerAttribute.getExplosionRadius();
-        return originalExplosion.getRadius() + playerAttributeFactor;
+        // 考虑Forge默认+1
+        return originalExplosion.getRadius() + (playerAttributeFactor - 1.0f);
     }
     
     public float calculateExplosionDamage(AttachmentCacheProperty cacheProperty) {

@@ -89,6 +89,8 @@
 
 47.2
 ====
+ - 版本更新至1.0.9
+
  - 47.2.36 Bump gradle to 8.8
  - 47.2.35 Bump gradle and java runtime version on team city
  - 47.2.34 Fix LevelSettings ignoring data configuration. Close #9938

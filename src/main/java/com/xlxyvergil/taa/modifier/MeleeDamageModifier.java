@@ -113,11 +113,11 @@ public class MeleeDamageModifier implements IAttachmentModifier<Modifier, Float>
         public void initComponents() {
             Modifier value = getValue();
             if (value != null) {
-                double eval = AttachmentPropertyManager.eval(value, 5.0f);
+                double eval = AttachmentPropertyManager.eval(value, 0.0f);
                 float damage = (float) eval;
-                if (damage > 5.0f) {
+                if (damage > 0.0f) {
                     components.add(Component.translatable("tooltip.tacz.attachment.melee.damage.increase").withStyle(ChatFormatting.GREEN));
-                } else if (damage < 5.0f) {
+                } else if (damage < 0.0f) {
                     components.add(Component.translatable("tooltip.tacz.attachment.melee.damage.decrease").withStyle(ChatFormatting.RED));
                 }
             }

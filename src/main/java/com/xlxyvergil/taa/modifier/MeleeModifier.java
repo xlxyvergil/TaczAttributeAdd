@@ -44,7 +44,7 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
         // 获取枪械的近战数据
         GunMeleeData meleeData = gunData.getMeleeData();
         if (meleeData == null) {
-            return new CacheValue<>(1.0f);
+            return new CacheValue<>(0.0f);
         }
         // 返回基础的近战距离
         return new CacheValue<>(meleeData.getDistance());
@@ -64,7 +64,7 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
         // 获取原始近战距离
         GunMeleeData originalMeleeData = gunData.getMeleeData();
-        float originalDistance = originalMeleeData != null ? originalMeleeData.getDistance() : 1.0f;
+        float originalDistance = originalMeleeData != null ? originalMeleeData.getDistance() : 0.0f;
         
         // 获取修改后的距离
         Float modifiedDistance = cacheProperty.getCache(MeleeModifier.ID);
@@ -107,11 +107,11 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
         public void initComponents() {
             Modifier value = getValue();
             if (value != null) {
-                double eval = AttachmentPropertyManager.eval(value, 1.0f);
+                double eval = AttachmentPropertyManager.eval(value, 0.0f);
                 float distance = (float) eval;
-                if (distance > 1.0f) {
+                if (distance > 0.0f) {
                     components.add(Component.translatable("tooltip.tacz.attachment.melee.distance.increase").withStyle(ChatFormatting.GREEN));
-                } else if (distance < 1.0f) {
+                } else if (distance < 0.0f) {
                     components.add(Component.translatable("tooltip.tacz.attachment.melee.distance.decrease").withStyle(ChatFormatting.RED));
                 }
             }
