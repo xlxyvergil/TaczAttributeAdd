@@ -1,5 +1,8 @@
 package com.xlxyvergil.taa.mixin;
 
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.item.IGun;
@@ -10,6 +13,7 @@ import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,8 +24,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,11 +37,47 @@ public class GunPropertyDiagramsMixin {
     
     /**
      * @author xlxyvergil
+     * @reason 重写按钮位置计算，考虑爆炸属性
+     */
+    @Overwrite
+    public static int getHidePropertyButtonYOffset() {
+        int[] startYOffset = new int[]{49}; // 基础偏移
+        com.tacz.guns.resource.modifier.AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
+            startYOffset[0] += value.getDiagramsDataSize() * 10;
+        });
+        
+        // 检查是否有爆炸属性：配件属性里有爆炸 OR 枪械本身数据开启了爆炸
+        net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
+        if (minecraft != null && minecraft.player != null) {
+            net.minecraft.world.entity.player.Player player = minecraft.player;
+            net.minecraft.world.item.ItemStack gunItem = player.getMainHandItem();
+            com.tacz.guns.api.item.IGun iGun = com.tacz.guns.api.item.IGun.getIGunOrNull(gunItem);
+            if (iGun != null) {
+                com.tacz.guns.api.TimelessAPI.getCommonGunIndex(iGun.getGunId(gunItem)).ifPresent(index -> {
+                    boolean hasExplosionFromAttachments = com.tacz.guns.util.AttachmentDataUtils.isExplodeEnabled(gunItem, index.getGunData());
+                    boolean hasExplosionFromGun = index.getGunData().getBulletData().getExplosionData() != null && 
+                                                 index.getGunData().getBulletData().getExplosionData().isExplode();
+                    
+                    if (hasExplosionFromAttachments || hasExplosionFromGun) {
+                        // 加上我们的爆炸属性（爆炸范围+爆炸伤害=20像素）+ 额外间距（5像素）
+                        startYOffset[0] += 25;
+                    }
+                });
+            }
+        }
+        
+        return startYOffset[0];
+    }
+    
+    
+    /**
+     * @author xlxyvergil
      * @reason 完整复制功能并修改弹匣容量显示逻辑
      */
     @Overwrite
     public static void draw(GuiGraphics graphics, Font font, int x, int y) {
-        graphics.fill(x, y, x + 288, y + com.tacz.guns.client.gui.components.refit.GunPropertyDiagrams.getHidePropertyButtonYOffset() - 11, 0xAF222222);
+        // 使用重写后的方法计算背景高度，与原版保持一致（按钮位置-11）
+        graphics.fill(x, y, x + 288, y + com.tacz.guns.client.gui.components.refit.GunPropertyDiagrams.getHidePropertyButtonYOffset() - 11 , 0xAF222222);
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
@@ -176,7 +214,6 @@ public class GunPropertyDiagramsMixin {
 
             yOffset[0] += 10;
 
-
             // 跑射延迟
             float sprintTime = gunData.getSprintTime();
             double sprintTimePercent = Mth.clamp(sprintTime / 0.5, 0, 1);
@@ -220,6 +257,79 @@ public class GunPropertyDiagramsMixin {
                 }
                 yOffset[0] += 10;
             }));
+            
+            // 在所有属性后添加爆炸范围和爆炸伤害
+            // 检查：配件属性里有爆炸 OR 枪械本身数据开启了爆炸
+            boolean hasExplosionFromAttachments = com.tacz.guns.util.AttachmentDataUtils.isExplodeEnabled(gunItem, gunData);
+            boolean hasExplosionFromGun = gunData.getBulletData().getExplosionData() != null && 
+                                       gunData.getBulletData().getExplosionData().isExplode();
+            
+            if (hasExplosionFromAttachments || hasExplosionFromGun) {
+                // 获取原始爆炸数据
+                com.tacz.guns.resource.pojo.data.gun.ExplosionData originalExplosionData = gunData.getBulletData().getExplosionData();
+                if (originalExplosionData != null) {
+                    // 获取修改后的爆炸数据（如果没有配件修改，则使用原始数据）
+                    com.tacz.guns.resource.pojo.data.gun.ExplosionData modifiedExplosionData = cacheProperty.getCache(com.tacz.guns.api.GunProperties.EXPLOSION);
+                    if (modifiedExplosionData == null) {
+                        modifiedExplosionData = originalExplosionData;
+                    }
+                    if (modifiedExplosionData != null) {
+                        // 爆炸范围
+                        float originalExplosionRadius = originalExplosionData.getRadius();
+                        float modifiedExplosionRadius = modifiedExplosionData.getRadius();
+                        
+                        double explosionRadiusPercent = Mth.clamp(originalExplosionRadius / 5.0, 0, 1);
+                        int explosionRadiusLength = (int) (barStartX + barMaxWidth * explosionRadiusPercent);
+                        float addRadius = modifiedExplosionRadius - originalExplosionRadius;
+                        int addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
+
+                        graphics.drawString(font, Component.literal("爆炸范围"), nameTextStartX, yOffset[0], fontColor, false);
+                        graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                        graphics.fill(barStartX, yOffset[0] + 2, explosionRadiusLength, yOffset[0] + 6, barBaseColor);
+                        
+                        if (addRadius > 0) {
+                            int barRight = Math.min(explosionRadiusLength + addRadiusLength, barEndX);
+                            graphics.fill(explosionRadiusLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                            graphics.drawString(font, String.format("%.1f §a(+%.1f)m", modifiedExplosionRadius, addRadius), valueTextStartX, yOffset[0], fontColor, false);
+                        } else if (addRadius < 0) {
+                            int barLeft = Math.max(explosionRadiusLength + addRadiusLength, barStartX);
+                            graphics.fill(barLeft, yOffset[0] + 2, explosionRadiusLength, yOffset[0] + 6, barNegativeColor);
+                            graphics.drawString(font, String.format("%.1f §c(%.1f)m", modifiedExplosionRadius, addRadius), valueTextStartX, yOffset[0], fontColor, false);
+                        } else {
+                            graphics.drawString(font, String.format("%.1fm", modifiedExplosionRadius), valueTextStartX, yOffset[0], fontColor, false);
+                        }
+
+                        yOffset[0] += 10;
+
+                        // 爆炸伤害
+                        float originalExplosionDamage = originalExplosionData.getDamage();
+                        float modifiedExplosionDamage = modifiedExplosionData.getDamage();
+                        
+                        double explosionDamagePercent = Mth.clamp(originalExplosionDamage / 100.0, 0, 1);
+                        int explosionDamageLength = (int) (barStartX + barMaxWidth * explosionDamagePercent);
+                        float addDamage = modifiedExplosionDamage - originalExplosionDamage;
+                        int addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
+
+                        graphics.drawString(font, Component.literal("爆炸伤害"), nameTextStartX, yOffset[0], fontColor, false);
+                        graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                        graphics.fill(barStartX, yOffset[0] + 2, explosionDamageLength, yOffset[0] + 6, barBaseColor);
+                        
+                        if (addDamage > 0) {
+                            int barRight = Math.min(explosionDamageLength + addDamageLength, barEndX);
+                            graphics.fill(explosionDamageLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                            graphics.drawString(font, String.format("%.1f §a(+%.1f)", modifiedExplosionDamage, addDamage), valueTextStartX, yOffset[0], fontColor, false);
+                        } else if (addDamage < 0) {
+                            int barLeft = Math.max(explosionDamageLength + addDamageLength, barStartX);
+                            graphics.fill(barLeft, yOffset[0] + 2, explosionDamageLength, yOffset[0] + 6, barNegativeColor);
+                            graphics.drawString(font, String.format("%.1f §c(%.1f)", modifiedExplosionDamage, addDamage), valueTextStartX, yOffset[0], fontColor, false);
+                        } else {
+                            graphics.drawString(font, String.format("%.1f", modifiedExplosionDamage), valueTextStartX, yOffset[0], fontColor, false);
+                        }
+
+                        yOffset[0] += 10;
+                    }
+                }
+            }
         });
     }
 }
