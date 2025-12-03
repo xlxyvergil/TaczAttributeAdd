@@ -40,25 +40,35 @@ public class TaaAttributeMapMixin implements TaaIEntityOwned {
     public void taaOnAttributeModified(AttributeInstance inst, CallbackInfo ci) {
         if (taaOwner == null) return;
         
-        if (taaOwner instanceof Player player && !player.level().isClientSide) {
-            // Get player held items
-            ItemStack mainHandItem = player.getMainHandItem();
-            ItemStack offHandItem = player.getOffhandItem();
+        // Following Apothic Attributes pattern - only trigger on server side
+        if (!taaOwner.level().isClientSide) {
+            // Get the old and new values to compare
+            double oldValue = ((TaaAttributeInstanceAccessor) inst).taaGetCachedValue();
+            double newValue = inst.getValue(); // Calling getValue will compute the value once marked dirty.
             
-            // Check main hand item
-            if (mainHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
-                AttachmentPropertyManager.postChangeEvent(player, mainHandItem);
-                return;
+            // Only update if the value actually changed
+            if (oldValue != newValue) {
+                if (taaOwner instanceof Player player) {
+                    // Get player held items
+                    ItemStack mainHandItem = player.getMainHandItem();
+                    ItemStack offHandItem = player.getOffhandItem();
+                    
+                    // Check main hand item
+                    if (mainHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
+                        AttachmentPropertyManager.postChangeEvent(player, mainHandItem);
+                        return;
+                    }
+                    
+                    // Check off hand item
+                    if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
+                        AttachmentPropertyManager.postChangeEvent(player, offHandItem);
+                        return;
+                    }
+                    
+                    // Update with empty stack if no gun is held
+                    AttachmentPropertyManager.postChangeEvent(player, ItemStack.EMPTY);
+                }
             }
-            
-            // Check off hand item
-            if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
-                AttachmentPropertyManager.postChangeEvent(player, offHandItem);
-                return;
-            }
-            
-            // Update with empty stack if no gun is held
-            AttachmentPropertyManager.postChangeEvent(player, ItemStack.EMPTY);
         }
     }
 }

@@ -10,7 +10,8 @@
   "client": [
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
-    "GunPropertyDiagramsMixin"
+    "GunPropertyDiagramsMixin",
+    "client.TaaClientPacketListenerMixin"
   ],
   "server": [
   ],
