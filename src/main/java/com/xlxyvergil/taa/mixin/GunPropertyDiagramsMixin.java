@@ -46,7 +46,7 @@ public class GunPropertyDiagramsMixin {
             startYOffset[0] += value.getDiagramsDataSize() * 10;
         });
         
-        // 检查是否有爆炸属性：配件属性里有爆炸 OR 枪械本身数据开启了爆炸
+        // 检查是否有爆炸属性：配件属性里有爆炸 OR 枪械本身数据开启了爆炸 OR 缓存中的爆炸数据启用了爆炸
         net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
         if (minecraft != null && minecraft.player != null) {
             net.minecraft.world.entity.player.Player player = minecraft.player;
@@ -58,9 +58,23 @@ public class GunPropertyDiagramsMixin {
                     boolean hasExplosionFromGun = index.getGunData().getBulletData().getExplosionData() != null && 
                                                  index.getGunData().getBulletData().getExplosionData().isExplode();
                     
-                    if (hasExplosionFromAttachments || hasExplosionFromGun) {
-                        // 加上我们的爆炸属性（爆炸范围+爆炸伤害=20像素）+ 额外间距（5像素）
-                        startYOffset[0] += 25;
+                    // 尝试获取缓存中的爆炸数据
+                    boolean hasExplosionFromCache = false;
+                    com.tacz.guns.api.entity.IGunOperator operator = com.tacz.guns.api.entity.IGunOperator.fromLivingEntity(player);
+                    if (operator != null) {
+                        com.tacz.guns.resource.modifier.AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
+                        if (cacheProperty != null) {
+                            com.tacz.guns.resource.pojo.data.gun.ExplosionData cachedExplosionData = 
+                                cacheProperty.getCache(com.tacz.guns.api.GunProperties.EXPLOSION);
+                            if (cachedExplosionData != null) {
+                                hasExplosionFromCache = cachedExplosionData.isExplode();
+                            }
+                        }
+                    }
+                    
+                    if (hasExplosionFromAttachments || hasExplosionFromGun || hasExplosionFromCache) {
+                        // 加上我们的爆炸属性（爆炸范围+爆炸伤害=20像素）+ 额外间距（15像素）
+                        startYOffset[0] += 35;
                     }
                 });
             }
@@ -259,12 +273,19 @@ public class GunPropertyDiagramsMixin {
             }));
             
             // 在所有属性后添加爆炸范围和爆炸伤害
-            // 检查：配件属性里有爆炸 OR 枪械本身数据开启了爆炸
+            // 检查：配件属性里有爆炸 OR 枪械本身数据开启了爆炸 OR 缓存中的爆炸数据启用了爆炸
             boolean hasExplosionFromAttachments = com.tacz.guns.util.AttachmentDataUtils.isExplodeEnabled(gunItem, gunData);
             boolean hasExplosionFromGun = gunData.getBulletData().getExplosionData() != null && 
                                        gunData.getBulletData().getExplosionData().isExplode();
             
-            if (hasExplosionFromAttachments || hasExplosionFromGun) {
+            // 检查缓存中的爆炸数据是否启用了爆炸
+            boolean hasExplosionFromCache = false;
+            com.tacz.guns.resource.pojo.data.gun.ExplosionData cachedExplosionData = cacheProperty.getCache(com.tacz.guns.api.GunProperties.EXPLOSION);
+            if (cachedExplosionData != null) {
+                hasExplosionFromCache = cachedExplosionData.isExplode();
+            }
+            
+            if (hasExplosionFromAttachments || hasExplosionFromGun || hasExplosionFromCache) {
                 // 获取原始爆炸数据
                 com.tacz.guns.resource.pojo.data.gun.ExplosionData originalExplosionData = gunData.getBulletData().getExplosionData();
                 if (originalExplosionData != null) {

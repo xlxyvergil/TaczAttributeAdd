@@ -385,7 +385,7 @@ public class PropertyCalculator {
             return new ExplosionData(false, 0.0f, 0.0f, false, 0.0f, false);
         }
         
-        boolean explode = originalExplosion.isExplode();
+        boolean explode = calculateExplosionRadius(cacheProperty) > 5 ? true : originalExplosion.isExplode();
         float radius = calculateExplosionRadius(cacheProperty);
         float damage = calculateExplosionDamage(cacheProperty);
         boolean knockback = calculateExplosionKnockback(cacheProperty);

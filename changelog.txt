@@ -18,6 +18,8 @@
 
 47.3
 ====
+ - 版本更新至1.1.0
+ 
  - 47.3.39 Fix ForgeDev's test runs not working due to dead test mod (#10483)
  - 47.3.38 Cache this.useItem before running item break logic, Fixes #10344 (#10376)
  - 47.3.37 Speed up mod annotation scanning by ~30% (#10470)
