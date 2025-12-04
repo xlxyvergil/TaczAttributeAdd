@@ -311,12 +311,7 @@ public class PropertyCalculator {
         
         boolean playerAttributeValue = playerAttribute.isIgniteEnabled();
         
-        // 添加调试日志
-        try {
-            DebugLogger.logIgniteCalculation(originalIgnite, playerAttributeValue);
-        } catch (Exception e) {
-            // 忽略日志错误
-        }
+
         
         // 如果玩家没有相关的属性增强，则直接返回原始值
         if (!playerAttributeValue) {

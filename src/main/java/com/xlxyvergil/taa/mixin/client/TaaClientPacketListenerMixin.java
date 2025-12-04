@@ -1,6 +1,8 @@
 package com.xlxyvergil.taa.mixin.client;
 
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
+import com.xlxyvergil.taa.TaczAttributeAdd;
+import com.xlxyvergil.taa.network.message.ServerMessageUpdateTacZCache;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket.AttributeSnapshot;
@@ -56,17 +58,20 @@ public class TaaClientPacketListenerMixin {
                     // Check main hand item
                     if (mainHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
                         AttachmentPropertyManager.postChangeEvent(player, mainHandItem);
-                        return;
                     }
                     
                     // Check off hand item
-                    if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
+                    else if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
                         AttachmentPropertyManager.postChangeEvent(player, offHandItem);
-                        return;
                     }
                     
                     // Update with empty stack if no gun is held
-                    AttachmentPropertyManager.postChangeEvent(player, ItemStack.EMPTY);
+                    else {
+                        AttachmentPropertyManager.postChangeEvent(player, ItemStack.EMPTY);
+                    }
+                    
+                    // Send message to server to update server-side cache
+                    TaczAttributeAdd.CHANNEL.sendToServer(new ServerMessageUpdateTacZCache());
                 }
             }
         }

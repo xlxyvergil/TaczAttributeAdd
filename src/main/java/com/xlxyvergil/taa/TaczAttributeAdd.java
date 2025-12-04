@@ -2,6 +2,7 @@ package com.xlxyvergil.taa;
 
 import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
 import com.xlxyvergil.taa.config.AttributeConfig;
+import com.xlxyvergil.taa.network.message.ServerMessageUpdateTacZCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -9,11 +10,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraft.resources.ResourceLocation;
 
 // cSpell:ignore Tacz MODID
 @Mod(TaczAttributeAdd.MODID)
 public class TaczAttributeAdd {
     public static final String MODID = "taa";
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
+        new ResourceLocation(MODID, "main"),
+        () -> PROTOCOL_VERSION,
+        PROTOCOL_VERSION::equals,
+        PROTOCOL_VERSION::equals
+    );
+    private static int messageId = 0;
 
     public TaczAttributeAdd() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -46,6 +58,15 @@ public class TaczAttributeAdd {
         
         // 使用event参数进行异步初始化
         event.enqueueWork(() -> {
+            // 注册网络消息
+            CHANNEL.registerMessage(
+                messageId++,
+                ServerMessageUpdateTacZCache.class,
+                ServerMessageUpdateTacZCache::encode,
+                ServerMessageUpdateTacZCache::decode,
+                ServerMessageUpdateTacZCache::handle
+            );
+            
             // 注册扩展Modifier系统
            // registerExtendedModifiers();
             
