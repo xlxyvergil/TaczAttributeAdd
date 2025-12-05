@@ -18,7 +18,10 @@
 
 47.3
 ====
- - 版本更新至1.1.0
+ - 版本更新至1.1.1
+ - 修复与GunsmithLib的兼容性问题
+ - 优化装填时间计算逻辑，确保与GunsmithLib协同工作
+ - 修复UI显示中装填时间计算不正确的问题
  
  - 47.3.39 Fix ForgeDev's test runs not working due to dead test mod (#10483)
  - 47.3.38 Cache this.useItem before running item break logic, Fixes #10344 (#10376)
