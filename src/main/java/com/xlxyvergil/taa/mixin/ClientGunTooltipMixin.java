@@ -31,13 +31,17 @@ public class ClientGunTooltipMixin {
         if (gun != null && !gun.isEmpty()) {
             net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
             if (mc.player != null) {
-                IGunOperator operator = IGunOperator.fromLivingEntity(mc.player);
-                if (operator != null) {
-                    AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
-                    if (cacheProperty != null) {
-                        Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
-                        if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                            return modifiedAmmoCount;
+                // 检查当前枪械是否是玩家主手的枪械
+                ItemStack mainHandItem = mc.player.getMainHandItem();
+                if (ItemStack.matches(mainHandItem, gun)) {
+                    IGunOperator operator = IGunOperator.fromLivingEntity(mc.player);
+                    if (operator != null) {
+                        AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
+                        if (cacheProperty != null) {
+                            Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
+                            if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
+                                return modifiedAmmoCount;
+                            }
                         }
                     }
                 }
