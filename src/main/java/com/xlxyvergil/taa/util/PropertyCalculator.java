@@ -172,12 +172,9 @@ public class PropertyCalculator {
             originalValue = 1.0f; // 默认倍率（无加速）
         }
         double playerAttributeFactor = playerAttribute.getReloadTime();
-        // 使用与配件相同的公式计算最终倍率
         // playerAttributeFactor 是玩家属性值（例如1.6表示1.6倍装填速度）
-        // 我们需要将其转换为时间倍率（例如1.6倍速度 -> 1/1.6 = 0.625倍时间）
-        float playerTimeMultiplier = (float) (1.0f / playerAttributeFactor);
-        // 合并配件倍率和玩家属性倍率
-        return originalValue * playerTimeMultiplier;
+        // 直接作为倍率使用，1.6倍速度 -> 1.6倍时间缩短
+        return originalValue / (float) playerAttributeFactor;
     }
     
     // 近战属性计算方法

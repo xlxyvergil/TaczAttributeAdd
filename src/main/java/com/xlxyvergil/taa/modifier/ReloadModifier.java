@@ -45,21 +45,72 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
 
     @Override
     public CacheValue<Float> initCache(ItemStack gunItem, GunData gunData) {
-        // 初始化时存储默认乘数1.0f而不是具体的装填时间
-        return new CacheValue<>(1.0f);
+        // 初始化时存储默认乘数1.0f
+        float reloadMultiplier = 1.0f;
+        
+        // 尝试使用GunsmithLib的GsHelper来计算RELOAD_SPEED属性
+        try {
+            // 获取RELOAD_SPEED属性
+            Class<?> gunAttributesClass = Class.forName("mod.chloeprime.gunsmithlib.api.common.GunAttributes");
+            java.lang.reflect.Field reloadSpeedField = gunAttributesClass.getField("RELOAD_SPEED");
+            Object reloadSpeedAttributeObj = reloadSpeedField.get(null);
+            
+            // 使用GunsmithLib的GsHelper工具类计算属性值
+            Class<?> gsHelperClass = Class.forName("mod.chloeprime.gunsmithlib.common.util.GsHelper");
+            java.lang.reflect.Method evaluateItemAttributeMethod = gsHelperClass.getMethod(
+                "evaluateItemAttribute", 
+                ItemStack.class, 
+                java.util.function.Supplier.class, 
+                double.class
+            );
+            
+            // 创建Supplier函数接口实例
+            java.util.function.Supplier<Object> attributeSupplier = () -> {
+                try {
+                    Class<?> registryObjectClass = Class.forName("net.minecraftforge.registries.RegistryObject");
+                    java.lang.reflect.Method getMethod = registryObjectClass.getMethod("get");
+                    return getMethod.invoke(reloadSpeedAttributeObj);
+                } catch (Exception e) {
+                    return null;
+                }
+            };
+            
+            // 调用方法计算GunsmithLib修改后的值
+            double gunsmithLibModifiedValue = (Double) evaluateItemAttributeMethod.invoke(
+                null, 
+                gunItem,  // 传入实际的枪械物品
+                attributeSupplier, 
+                1.0  // 使用1.0作为基础值
+            );
+            
+            // 使用GunsmithLib的值作为我们的基础值
+            // 注意：我们需要存储倒数，因为实际计算是 original / multiplier
+            reloadMultiplier = (float) (1.0 / gunsmithLibModifiedValue);
+        } catch (Exception e) {
+            // GunsmithLib不存在或调用失败，使用原始值1.0f
+        }
+        
+        return new CacheValue<>(reloadMultiplier);
     }
 
     @Override
     public void eval(List<ReloadModifierData> modifiers, CacheValue<Float> cache) {
-        // 计算装填时间乘数（与玩家属性使用相同的计算公式）
-        // 从配件字段取值，然后加1操作，最后用1/(1+配件字段值)代表当前的倍率
-        double reloadTimeMultiplier = AttachmentPropertyManager.eval(
+        // 计算装填时间乘数，直接使用Modifier的加法操作
+        double reloadTimeAddition = AttachmentPropertyManager.eval(
                 modifiers.stream().map(m -> m.reloadTime).filter(m -> m != null).toList(), 
-                cache.getValue()
+                0.0f  // 基础值为0，因为我们只关心加法部分
         );
         
-        // 使用 1/(1+value) 公式计算最终倍率
-        cache.setValue(1.0f / (1.0f + (float) reloadTimeMultiplier));
+        // 获取初始缓存值（可能包含GunsmithLib的修改，已经是倒数形式）
+        float baseMultiplier = cache.getValue();
+        
+        // 将我们的修改转换为倒数形式
+        // 使用 1.0 + addition 作为我们的乘数，然后取倒数
+        float ourMultiplier = 1.0f + (float) reloadTimeAddition;
+        float ourInverseMultiplier = 1.0f / ourMultiplier;
+        
+        // 总倒数 = GunsmithLib倒数 * 我们的倒数
+        cache.setValue(baseMultiplier * ourInverseMultiplier);
     }
 
     @Override
@@ -72,11 +123,55 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
             originalTacticalTime = gunData.getReloadData().getFeed().getTacticalTime();
         }
         
-        float reloadMultiplier = cacheProperty.<Float>getCache(ReloadModifier.ID);
-        // 使用乘数的倒数计算修改后的装填时间，与逻辑层保持一致
-        // reloadMultiplier 0.625 表示时间变为原来的62.5%
-        // 所以显示的时间应该是 originalTacticalTime * 0.625
-        float modifiedValue = originalTacticalTime * reloadMultiplier;
+        float reloadInverseMultiplier = cacheProperty.<Float>getCache(ReloadModifier.ID);
+        // 转换回正常的乘数用于显示
+        float reloadMultiplier = 1.0f / reloadInverseMultiplier;
+        
+        // 尝试获取GunsmithLib的RELOAD_SPEED属性值用于显示
+        float gunsmithLibReloadMultiplier = 1.0f;
+        try {
+            // 获取RELOAD_SPEED属性
+            Class<?> gunAttributesClass = Class.forName("mod.chloeprime.gunsmithlib.api.common.GunAttributes");
+            java.lang.reflect.Field reloadSpeedField = gunAttributesClass.getField("RELOAD_SPEED");
+            Object reloadSpeedAttributeObj = reloadSpeedField.get(null);
+            
+            // 使用GunsmithLib的GsHelper工具类计算属性值
+            Class<?> gsHelperClass = Class.forName("mod.chloeprime.gunsmithlib.common.util.GsHelper");
+            java.lang.reflect.Method evaluateItemAttributeMethod = gsHelperClass.getMethod(
+                "evaluateItemAttribute", 
+                ItemStack.class, 
+                java.util.function.Supplier.class, 
+                double.class
+            );
+            
+            // 创建Supplier函数接口实例
+            java.util.function.Supplier<Object> attributeSupplier = () -> {
+                try {
+                    Class<?> registryObjectClass = Class.forName("net.minecraftforge.registries.RegistryObject");
+                    java.lang.reflect.Method getMethod = registryObjectClass.getMethod("get");
+                    return getMethod.invoke(reloadSpeedAttributeObj);
+                } catch (Exception e) {
+                    return null;
+                }
+            };
+            
+            // 调用方法计算GunsmithLib修改后的值
+            double gunsmithLibModifiedValue = (Double) evaluateItemAttributeMethod.invoke(
+                null, 
+                gunItem,  // 传入实际的枪械物品
+                attributeSupplier, 
+                1.0  // 使用1.0作为基础值
+            );
+            
+            gunsmithLibReloadMultiplier = (float) gunsmithLibModifiedValue;
+        } catch (Exception e) {
+            // GunsmithLib不存在或调用失败
+        }
+        
+        // 计算总的修改后装填时间
+        // 实际装填时间 = 原始装填时间 / (GunsmithLib乘数 * 我们的乘数)
+        float totalMultiplier = gunsmithLibReloadMultiplier * reloadMultiplier;
+        float modifiedValue = originalTacticalTime / totalMultiplier;
         float timeDifference = modifiedValue - originalTacticalTime;
 
         // 使用枪械实际的装填时间来计算百分比，而不是硬编码的值

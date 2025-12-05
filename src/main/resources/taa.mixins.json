@@ -26,8 +26,7 @@
     "ModernKineticGunItemMeleeDistanceMixin",
     "ModernKineticGunItemMixin",
     "ModernKineticGunScriptAPIMixin",
-    "ModernKineticGunScriptAPIShootMixin",
-    "ModernKineticGunScriptAPIReloadTimeMixin"
+    "ModernKineticGunScriptAPIShootMixin"
   ],
   "injectors": {
     "defaultRequire": 1

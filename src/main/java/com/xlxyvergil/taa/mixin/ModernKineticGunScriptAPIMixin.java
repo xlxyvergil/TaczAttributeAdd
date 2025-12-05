@@ -1,5 +1,6 @@
 package com.xlxyvergil.taa.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.item.ModernKineticGunScriptAPI;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
@@ -7,14 +8,19 @@ import com.tacz.guns.util.AttachmentDataUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
+import com.xlxyvergil.taa.modifier.ReloadModifier;
 
 
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
 public class ModernKineticGunScriptAPIMixin {
+    
+    @Shadow
+    private LivingEntity shooter;
     
     /**
      * 确保在 putAmmoInMagazine 方法中使用经过 modifier 修改的弹匣容量
@@ -105,5 +111,30 @@ public class ModernKineticGunScriptAPIMixin {
         
         // 如果没有缓存数据，则使用原始方法计算
         return AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunData);
+    }
+    
+    /**
+     * 修改getReloadTime方法，使其考虑我们修改的装填时间
+     */
+    @ModifyReturnValue(method = "getReloadTime", at = @At("RETURN"))
+    private long modifyReloadTime(long original) {
+        if (original <= 0 || shooter == null) {
+            return original;
+        }
+
+        // 从配件缓存中获取换弹时间乘数（倒数形式）
+        IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
+        if (operator != null) {
+            AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
+            if (cacheProperty != null) {
+                Float reloadInverseMultiplier = cacheProperty.getCache(ReloadModifier.ID);
+                // 使用乘法，因为我们存储的是倒数
+                if (reloadInverseMultiplier != null && reloadInverseMultiplier > 0) {
+                    return (long) (original / reloadInverseMultiplier);
+                }
+            }
+        }
+
+        return original;
     }
 }
