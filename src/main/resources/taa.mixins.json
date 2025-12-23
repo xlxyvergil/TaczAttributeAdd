@@ -12,6 +12,7 @@
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
     "GunPropertyDiagramsMixin",
+    "RecoilModifierMixin",
     "client.TaaClientPacketListenerMixin"
   ],
   "server": [
