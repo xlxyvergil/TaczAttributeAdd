@@ -35,7 +35,14 @@ public class ClientGunTooltipMixin {
         require = 0
     )
     private int modifyWeaponAmmoDisplay(int original) {
-        return getModifiedAmmoCount(original);
+        // 严格检查：只有当前查看的枪械与主手枪械完全匹配时才应用修改
+        if (isMainHandGunMatching()) {
+            return getModifiedAmmoCountForCurrentGun(original);
+        }
+        
+        // 如果不匹配，清除可能的缓存数据，返回原始值
+        clearCacheData();
+        return original;
     }
     
     /**
@@ -47,55 +54,22 @@ public class ClientGunTooltipMixin {
         require = 0
     )
     private int modifyCurrentAmmoDisplay(int original) {
-        // 获取修改后的最大容量，确保当前弹匣不超过新的最大值
-        int modifiedMax = getModifiedAmmoCount(-1);
-        if (modifiedMax > 0 && original > modifiedMax) {
-            return modifiedMax;
+        // 严格检查：只有当前查看的枪械与主手枪械完全匹配时才应用修改
+        if (isMainHandGunMatching()) {
+            int modifiedMax = getModifiedAmmoCountForCurrentGun(-1);
+            if (modifiedMax > 0 && original > modifiedMax) {
+                return modifiedMax;
+            }
         }
+        
+        // 如果不匹配，返回原始值
         return original;
     }
     
     /**
-     * 获取修改后的弹匣容量
-     * @param fallback 如果没有修改值时的回退值
-     * @return 修改后的弹匣容量
+     * 严格检查当前查看的枪械是否与主手枪械完全匹配
      */
-    private int getModifiedAmmoCount(int fallback) {
-        // 只有当工具提示的枪械与主手枪械匹配时才应用修改
-        if (!shouldModifyForThisGun()) {
-            return fallback;
-        }
-        
-        try {
-            Minecraft mc = Minecraft.getInstance();
-            if (mc.player != null) {
-                IGunOperator operator = IGunOperator.fromLivingEntity(mc.player);
-                if (operator != null) {
-                    AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
-                    if (cacheProperty != null) {
-                        // 刷新缓存确保数据最新
-                        refreshGunCache();
-                        
-                        Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
-                        if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                            return modifiedAmmoCount;
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // 清除上下文以确保安全
-            ShooterContext.clearShooter();
-            GunTypeContext.clearGunType();
-        }
-        
-        return fallback;
-    }
-    
-    /**
-     * 判断是否应该对当前工具提示的枪械应用修改
-     */
-    private boolean shouldModifyForThisGun() {
+    private boolean isMainHandGunMatching() {
         if (gun == null || gun.isEmpty()) {
             return false;
         }
@@ -109,7 +83,7 @@ public class ClientGunTooltipMixin {
             // 获取主手物品
             ItemStack mainHandItem = mc.player.getMainHandItem();
             
-            // 检查主手物品是否为TACZ枪械且与当前工具提示的枪械匹配
+            // 检查主手物品是否为TACZ枪械且与当前工具提示的枪械完全匹配
             return isTaczGun(mainHandItem) && ItemStack.matches(mainHandItem, gun);
             
         } catch (Exception e) {
@@ -118,9 +92,42 @@ public class ClientGunTooltipMixin {
     }
     
     /**
-     * 刷新枪械缓存数据
+     * 获取当前枪械的修改后弹匣容量
+     * @param fallback 如果没有修改值时的回退值
+     * @return 修改后的弹匣容量
      */
-    private void refreshGunCache() {
+    private int getModifiedAmmoCountForCurrentGun(int fallback) {
+        try {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player == null) {
+                return fallback;
+            }
+            
+            IGunOperator operator = IGunOperator.fromLivingEntity(mc.player);
+            if (operator != null) {
+                AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
+                if (cacheProperty != null) {
+                    // 针对当前查看的枪械刷新缓存
+                    refreshCacheForCurrentGun();
+                    
+                    Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
+                    if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
+                        return modifiedAmmoCount;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // 清除上下文以确保安全
+            clearCacheData();
+        }
+        
+        return fallback;
+    }
+    
+    /**
+     * 为当前查看的枪械刷新缓存
+     */
+    private void refreshCacheForCurrentGun() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null || gun == null || gun.isEmpty()) {
             return;
@@ -134,6 +141,18 @@ public class ClientGunTooltipMixin {
                 AttachmentPropertyEvent event = new AttachmentPropertyEvent(gun, cacheProperty);
                 MinecraftForge.EVENT_BUS.post(event);
             }
+        }
+    }
+    
+    /**
+     * 清除缓存数据，防止数据污染
+     */
+    private void clearCacheData() {
+        try {
+            ShooterContext.clearShooter();
+            GunTypeContext.clearGunType();
+        } catch (Exception e) {
+            // 忽略清除时的异常
         }
     }
     
