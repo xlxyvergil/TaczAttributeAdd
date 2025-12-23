@@ -77,7 +77,7 @@ public class PropertyCalculator {
     public float calculateAdsTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ADS_TIME);
         float playerAttributeFactor = (float) playerAttribute.getAdsTime();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        return originalValue != null ? originalValue / playerAttributeFactor : 0.0f;
     }
     
     public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
@@ -232,13 +232,19 @@ public class PropertyCalculator {
         }
         
         float playerAttributeFactor = (float) playerAttribute.getGunDamageBonus();
+        // 获取玩家的弹头属性值，并按照与calculateBulletCount相同的方式处理
+        double bulletCountAttribute = playerAttribute.getBulletCount();
+        // 按照calculateBulletCount的取整方式：如果有小数部分则向上取整
+        int bulletCountForDamage = (bulletCountAttribute > Math.floor(bulletCountAttribute)) ? 
+            (int) Math.ceil(bulletCountAttribute) : (int) bulletCountAttribute;
+        
         LinkedList<ExtraDamage.DistanceDamagePair> calculatedDamage = new LinkedList<>();
         
         for (ExtraDamage.DistanceDamagePair pair : originalDamage) {
-            // 直接截断小数部分取整，不使用四舍五入
+            // 伤害计算需要再与玩家属性的弹头属性值（向上取整后）相乘
             calculatedDamage.add(new ExtraDamage.DistanceDamagePair(
                 pair.getDistance(),
-                (int) (pair.getDamage() * playerAttributeFactor)
+                (int) (pair.getDamage() * playerAttributeFactor * bulletCountForDamage)
             ));
         }
         
@@ -252,13 +258,13 @@ public class PropertyCalculator {
         }
         
         float playerAttributeFactor = (float) playerAttribute.getInaccuracy();
-        // 创建新的Map来存储计算结果，包含所有5种InaccuracyType
+        // 创建新的Map来存储计算结果，包含所有5种InaccuracyType，使用除法因子
         return Map.of(
-            InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) * playerAttributeFactor,
-            InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) * playerAttributeFactor,
-            InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) * playerAttributeFactor,
-            InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) * playerAttributeFactor,
-            InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) * playerAttributeFactor
+            InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) / playerAttributeFactor,
+            InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) / playerAttributeFactor,
+            InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) / playerAttributeFactor,
+            InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) / playerAttributeFactor,
+            InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) / playerAttributeFactor
         );
     }
     
@@ -269,9 +275,9 @@ public class PropertyCalculator {
         }
         
         float playerAttributeFactor = (float) playerAttribute.getRecoil();
-        // 正确获取ParameterizedCachePair中的默认值，并使用乘法因子
-        Float pitch = originalRecoil.left() != null ? originalRecoil.left().getDefaultValue() * playerAttributeFactor : 0.0f;
-        Float yaw = originalRecoil.right() != null ? originalRecoil.right().getDefaultValue() * playerAttributeFactor : 0.0f;
+        // 正确获取ParameterizedCachePair中的默认值，并使用除法因子
+        Float pitch = originalRecoil.left() != null ? originalRecoil.left().getDefaultValue() / playerAttributeFactor : 0.0f;
+        Float yaw = originalRecoil.right() != null ? originalRecoil.right().getDefaultValue() / playerAttributeFactor : 0.0f;
         
         // 根据TACZ的RecoilModifier.eval()方法，创建包含空modifier列表的ParameterizedCachePair
         return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), pitch, yaw);
@@ -382,7 +388,7 @@ public class PropertyCalculator {
             return new ExplosionData(false, 0.0f, 0.0f, false, 0.0f, false);
         }
         
-        boolean explode = calculateExplosionRadius(cacheProperty) > 5 ? true : originalExplosion.isExplode();
+        boolean explode = calculateExplosionRadius(cacheProperty) > 2 ? true : originalExplosion.isExplode();
         float radius = calculateExplosionRadius(cacheProperty);
         float damage = calculateExplosionDamage(cacheProperty);
         boolean knockback = calculateExplosionKnockback(cacheProperty);
