@@ -3,14 +3,18 @@ package com.xlxyvergil.taa.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.entity.IGunOperator;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
+import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
+import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 
@@ -29,7 +33,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * 覆写GunPropertyDiagrams类的draw方法
- * 完整复制原有功能并修改弹匣容量显示逻辑，支持显示小于默认值的情况
+ * 完整复制原有功能并修改弹匣容量显示逻辑，添加后坐力显示功能
  */
 @Mixin(value = com.tacz.guns.client.gui.components.refit.GunPropertyDiagrams.class, remap = false)
 @OnlyIn(Dist.CLIENT)
@@ -37,7 +41,7 @@ public class GunPropertyDiagramsMixin {
     
     /**
      * @author xlxyvergil
-     * @reason 重写按钮位置计算，考虑爆炸属性
+     * @reason 重写按钮位置计算，考虑爆炸属性和后坐力属性
      */
     @Overwrite
     public static int getHidePropertyButtonYOffset() {
@@ -80,13 +84,16 @@ public class GunPropertyDiagramsMixin {
             }
         }
         
+        // 添加后坐力显示所需的空间（Pitch和Yaw各占10像素，共20像素）
+        startYOffset[0] += 20;
+        
         return startYOffset[0];
     }
     
     
     /**
      * @author xlxyvergil
-     * @reason 完整复制功能并修改弹匣容量显示逻辑
+     * @reason 完整复制功能并修改弹匣容量显示逻辑，添加后坐力显示
      */
     @Overwrite
     public static void draw(GuiGraphics graphics, Font font, int x, int y) {
@@ -272,6 +279,77 @@ public class GunPropertyDiagramsMixin {
                 yOffset[0] += 10;
             }));
             
+            // 显示后坐力信息（使用缓存的玩家属性修改值）
+            // 获取缓存中的后坐力数据
+            ParameterizedCachePair<Float, Float> recoilData = cacheProperty.getCache(GunProperties.RECOIL);
+            
+            // 无论是否有我们的玩家属性修改，TACZ的配件系统都会生成缓存数据
+            // 获取原始后坐力数据用于计算差异
+            GunRecoil recoil = gunData.getRecoil();
+            if (recoil != null) {
+                // 获取原始后坐力值
+                float originalPitch = getMaxInGunRecoilKeyFrame(recoil.getPitch());
+                float originalYaw = getMaxInGunRecoilKeyFrame(recoil.getYaw());
+                
+                // 获取修改后的后坐力值（最终计算结果，包含配件和玩家属性修改）
+                float modifiedPitch = recoilData != null && recoilData.left() != null ? recoilData.left().getDefaultValue() : originalPitch;
+                float modifiedYaw = recoilData != null && recoilData.right() != null ? recoilData.right().getDefaultValue() : originalYaw;
+                
+                // 计算差值
+                float pitchDifference = modifiedPitch - originalPitch;
+                float yawDifference = modifiedYaw - originalYaw;
+                
+                // Pitch后坐力显示
+                double pitchPercent = Math.min(originalPitch / 5.0, 1);
+                double pitchModifierPercent = Math.min(pitchDifference / 5.0, 1);
+                int pitchLength = (int) (barStartX + barMaxWidth * pitchPercent);
+                int pitchModifierLength = (int) (barMaxWidth * pitchModifierPercent);
+                
+                graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.pitch"), nameTextStartX, yOffset[0], fontColor, false);
+                graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                graphics.fill(barStartX, yOffset[0] + 2, pitchLength, yOffset[0] + 6, barBaseColor);
+                
+                if (pitchDifference > 0) {
+                    int barRight = Math.min(pitchLength + pitchModifierLength, barEndX);
+                    graphics.fill(pitchLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor); // 后坐力增加显示为红色（不好）
+                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", modifiedPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
+                } else if (pitchDifference < 0) {
+                    // 后坐力减少显示为绿色（好）
+                    int barLeft = Math.max(pitchLength + pitchModifierLength, barStartX);
+                    graphics.fill(barLeft, yOffset[0] + 2, pitchLength, yOffset[0] + 6, barPositivelyColor);
+                    graphics.drawString(font, String.format("%.2f §a(%.2f)", modifiedPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
+                } else {
+                    graphics.drawString(font, String.format("%.2f", modifiedPitch), valueTextStartX, yOffset[0], fontColor, false);
+                }
+                
+                yOffset[0] += 10;
+                
+                // Yaw后坐力显示
+                double yawPercent = Math.min(originalYaw / 5.0, 1);
+                double yawModifierPercent = Math.min(yawDifference / 5.0, 1);
+                int yawLength = (int) (barStartX + barMaxWidth * yawPercent);
+                int yawModifierLength = (int) (barMaxWidth * yawModifierPercent);
+                
+                graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.yaw"), nameTextStartX, yOffset[0], fontColor, false);
+                graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                graphics.fill(barStartX, yOffset[0] + 2, yawLength, yOffset[0] + 6, barBaseColor);
+                
+                if (yawDifference > 0) {
+                    int barRight = Math.min(yawLength + yawModifierLength, barEndX);
+                    graphics.fill(yawLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor); // 后坐力增加显示为红色（不好）
+                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", modifiedYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
+                } else if (yawDifference < 0) {
+                    // 后坐力减少显示为绿色（好）
+                    int barLeft = Math.max(yawLength + yawModifierLength, barStartX);
+                    graphics.fill(barLeft, yOffset[0] + 2, yawLength, yOffset[0] + 6, barPositivelyColor);
+                    graphics.drawString(font, String.format("%.2f §a(%.2f)", modifiedYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
+                } else {
+                    graphics.drawString(font, String.format("%.2f", modifiedYaw), valueTextStartX, yOffset[0], fontColor, false);
+                }
+                
+                yOffset[0] += 10;
+            }
+            
             // 在所有属性后添加爆炸范围和爆炸伤害
             // 检查：配件属性里有爆炸 OR 枪械本身数据开启了爆炸 OR 缓存中的爆炸数据启用了爆炸
             boolean hasExplosionFromAttachments = com.tacz.guns.util.AttachmentDataUtils.isExplodeEnabled(gunItem, gunData);
@@ -352,5 +430,19 @@ public class GunPropertyDiagramsMixin {
                 }
             }
         });
+    }
+    
+    /**
+     * 从GunRecoilKeyFrame数组中获取最大后坐力值
+     * 与TACZ原版RecoilModifier中的方法相同
+     */
+    private static float getMaxInGunRecoilKeyFrame(GunRecoilKeyFrame[] frames) {
+        if (frames == null || frames.length == 0) {
+            return 0;
+        }
+        float[] value = frames[0].getValue();
+        float leftValue = Math.abs(value[0]);
+        float rightValue = Math.abs(value[1]);
+        return Math.max(leftValue, rightValue);
     }
 }
