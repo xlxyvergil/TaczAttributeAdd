@@ -269,18 +269,18 @@ public class PropertyCalculator {
     }
     
     public ParameterizedCachePair<Float, Float> calculateRecoil(AttachmentCacheProperty cacheProperty) {
-        ParameterizedCachePair<Float, Float> originalRecoil = cacheProperty.getCache(GunProperties.RECOIL);
-        if (originalRecoil == null) {
-            return ParameterizedCachePair.of(0.0f, 0.0f);
-        }
+        // 获取TACZ原版RecoilModifier计算的结果（包含原始后坐力值和配件修改）
+        ParameterizedCachePair<Float, Float> attachmentRecoil = cacheProperty.getCache(com.tacz.guns.resource.modifier.custom.RecoilModifier.ID);
         
         float playerAttributeFactor = (float) playerAttribute.getRecoil();
-        // 正确获取ParameterizedCachePair中的默认值，并使用除法因子
-        Float pitch = originalRecoil.left() != null ? originalRecoil.left().getDefaultValue() / playerAttributeFactor : 0.0f;
-        Float yaw = originalRecoil.right() != null ? originalRecoil.right().getDefaultValue() / playerAttributeFactor : 0.0f;
         
-        // 根据TACZ的RecoilModifier.eval()方法，创建包含空modifier列表的ParameterizedCachePair
-        return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), pitch, yaw);
+        // 直接使用eval方法计算最终后坐力值，应用玩家属性修改
+        double finalPitch = attachmentRecoil.left().eval(attachmentRecoil.left().getDefaultValue()) / playerAttributeFactor;
+        double finalYaw = attachmentRecoil.right().eval(attachmentRecoil.right().getDefaultValue()) / playerAttributeFactor;
+        
+        // 创建包含最终计算结果的ParameterizedCachePair
+        return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), 
+            (float) finalPitch, (float) finalYaw);
     }
     
     public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
