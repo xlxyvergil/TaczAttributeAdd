@@ -1,10 +1,15 @@
 package com.xlxyvergil.taa.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.tacz.guns.api.GunProperties;
+import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
@@ -12,63 +17,24 @@ import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 /**
- * 使用@ModifyExpressionValue修改TACZ原版的RecoilModifier
- * 让它在UI显示时使用我们缓存的后坐力值，同时兼容其他mod
+ * 修改TACZ原版的RecoilModifier，隐藏其UI显示以避免与TaCZTweaks的冲突
+ * 实际后坐力修改通过我们的PlayerAttribute系统实现
  */
 @Mixin(value = com.tacz.guns.resource.modifier.custom.RecoilModifier.class, remap = false)
 public class RecoilModifierMixin {
-    
     /**
-     * 修改垂直后坐力的显示值
-     * 在其他mod（如TaCZTweaks）修改的基础上，再应用我们的属性系统修改
+     * 修改getPropertyDiagramsData方法，使其返回空列表以隐藏UI显示
+     * 这样可以避免与TaCZTweaks的显示修改产生冲突
+     * 实际后坐力修改通过我们的PlayerAttribute系统实现
      */
-    @OnlyIn(Dist.CLIENT)
-    @ModifyExpressionValue(
-        method = "getPropertyDiagramsData", 
-        at = @At(
-            value = "INVOKE", 
-            target = "Lcom/tacz/guns/resource/modifier/custom/RecoilModifier;getMaxInGunRecoilKeyFrame([Lcom/tacz/guns/resource/pojo/data/gun/GunRecoilKeyFrame;)F",
-            ordinal = 0
-        )
-    )
-    private float taa$getPropertyDiagramsData$modifyVerticalRecoil(float original, ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        // 获取我们属性系统修改后的后坐力值
-        ParameterizedCachePair<Float, Float> modifiedRecoil = cacheProperty.getCache(GunProperties.RECOIL);
-        if (modifiedRecoil != null && modifiedRecoil.left() != null) {
-            Float modifiedPitch = modifiedRecoil.left().getDefaultValue();
-            if (modifiedPitch != null) {
-                return modifiedPitch;
-            }
-        }
-        return original;
-    }
-    
-    /**
-     * 修改水平后坐力的显示值
-     * 在其他mod（如TaCZTweaks）修改的基础上，再应用我们的属性系统修改
-     */
-    @OnlyIn(Dist.CLIENT)
-    @ModifyExpressionValue(
-        method = "getPropertyDiagramsData", 
-        at = @At(
-            value = "INVOKE", 
-            target = "Lcom/tacz/guns/resource/modifier/custom/RecoilModifier;getMaxInGunRecoilKeyFrame([Lcom/tacz/guns/resource/pojo/data/gun/GunRecoilKeyFrame;)F",
-            ordinal = 1
-        )
-    )
-    private float taa$getPropertyDiagramsData$modifyHorizontalRecoil(float original, ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        // 获取我们属性系统修改后的后坐力值
-        ParameterizedCachePair<Float, Float> modifiedRecoil = cacheProperty.getCache(GunProperties.RECOIL);
-        if (modifiedRecoil != null && modifiedRecoil.right() != null) {
-            Float modifiedYaw = modifiedRecoil.right().getDefaultValue();
-            if (modifiedYaw != null) {
-                return modifiedYaw;
-            }
-        }
-        return original;
+    @Inject(method = "getPropertyDiagramsData", at = @At("HEAD"), cancellable = true)
+    public void hideRecoilUI(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty, CallbackInfoReturnable<List<IAttachmentModifier.DiagramsData>> cir) {
+        // 返回空列表，隐藏原版后坐力UI显示
+        // 实际的后坐力修改将通过我们的PlayerAttribute系统在计算时应用
+        cir.setReturnValue(List.of());
     }
 }
