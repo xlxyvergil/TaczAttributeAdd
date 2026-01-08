@@ -40,5 +40,6 @@
   "attribute.name.taa.magazine_capacity": "Magazine Capacity",
   "attribute.name.taa.reload_time": "Reload Time",
   "attribute.name.taa.melee_damage": "Melee Damage",
-  "attribute.name.taa.melee_distance": "Melee Distance"
+  "attribute.name.taa.melee_distance": "Melee Distance",
+  "attribute.name.taa.explosion_enabled": "Explosion Enabled"
 }
