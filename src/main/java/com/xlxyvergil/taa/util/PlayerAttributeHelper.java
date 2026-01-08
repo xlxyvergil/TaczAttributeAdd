@@ -26,6 +26,7 @@ public class PlayerAttributeHelper {
     private final double explosionKnockback;
     private final double explosionDestroyBlock;
     private final double explosionDelay;
+    private final double explosionEnabled;
     private final double moveSpeed;
     private final double headshotMultiplier;
     private final double ignite;
@@ -66,6 +67,7 @@ public class PlayerAttributeHelper {
         this.explosionKnockback = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_KNOCKBACK.get(), 1.0D);
         this.explosionDestroyBlock = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get(), 1.0D);
         this.explosionDelay = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DELAY.get(), 1.0D);
+        this.explosionEnabled = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_ENABLED.get(), 1.0D);
         this.moveSpeed = getAttributeValue(PlayerAttributeRegistry.MOVE_SPEED.get(), 1.0D);
         this.headshotMultiplier = getAttributeValue(PlayerAttributeRegistry.HEADSHOT_MULTIPLIER.get(), 1.0D);
         this.ignite = getAttributeValue(PlayerAttributeRegistry.IGNITE.get(), 1.0D);
@@ -206,6 +208,7 @@ public class PlayerAttributeHelper {
     public double getExplosionKnockback() { return explosionKnockback; }
     public double getExplosionDestroyBlock() { return explosionDestroyBlock; }
     public double getExplosionDelay() { return explosionDelay; }
+    public double getExplosionEnabled() { return explosionEnabled; }
     public double getMoveSpeed() { return moveSpeed; }
     public double getHeadshotMultiplier() { return headshotMultiplier; }
     public double getIgnite() { return ignite; }
@@ -231,6 +234,7 @@ public class PlayerAttributeHelper {
     public boolean isIgniteEnabled() { return convertDoubleToBoolean(ignite); }
     public boolean isExplosionKnockbackEnabled() { return convertDoubleToBoolean(explosionKnockback); }
     public boolean isExplosionDestroyBlockEnabled() { return convertDoubleToBoolean(explosionDestroyBlock); }
+    public boolean isExplosionEnabled() { return convertDoubleToBoolean(explosionEnabled); }
     
     /**
      * 获取布尔属性值，将double值转换为boolean

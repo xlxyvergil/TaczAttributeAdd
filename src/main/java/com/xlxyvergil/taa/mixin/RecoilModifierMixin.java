@@ -1,22 +1,17 @@
 package com.xlxyvergil.taa.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
-import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
-import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -25,6 +20,7 @@ import java.util.List;
  * 实际后坐力修改通过我们的PlayerAttribute系统实现
  */
 @Mixin(value = com.tacz.guns.resource.modifier.custom.RecoilModifier.class, remap = false)
+@OnlyIn(Dist.CLIENT)
 public class RecoilModifierMixin {
     /**
      * 修改getPropertyDiagramsData方法，使其返回空列表以隐藏UI显示

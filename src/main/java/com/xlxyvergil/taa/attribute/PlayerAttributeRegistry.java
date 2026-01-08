@@ -60,6 +60,10 @@ public class PlayerAttributeRegistry {
     public static final RegistryObject<Attribute> EXPLOSION_DELAY = ATTRIBUTES.register("explosion_delay", 
         () -> new RangedAttribute("attribute.name.taa.explosion_delay", 1.0D, 0.0D, 1024.0D).setSyncable(true));
     
+    /** 爆炸开启属性 - 影响爆炸是否开启 (布尔属性) */
+    public static final RegistryObject<Attribute> EXPLOSION_ENABLED = ATTRIBUTES.register("explosion_enabled", 
+        () -> new RangedAttribute("attribute.name.taa.explosion_enabled", 1.0D, 0.0D, 3.0D).setSyncable(true));
+    
     /** 移动速度属性 - 影响持枪时对玩家移动速度的影响 */
     public static final RegistryObject<Attribute> MOVE_SPEED = ATTRIBUTES.register("move_speed", 
         () -> new RangedAttribute("attribute.name.taa.move_speed", 1.0D, 0.0D, 1024.0D).setSyncable(true));
@@ -72,7 +76,7 @@ public class PlayerAttributeRegistry {
     public static final RegistryObject<Attribute> IGNITE = ATTRIBUTES.register("ignitefire", 
         () -> new RangedAttribute("attribute.name.taa.ignitefire", 1.0D, 0.0D, 3.0D).setSyncable(true));
     
-    /** 不准确度属性 - 影响射击时的散布程度 */
+    /** 准确度属性 - 影响射击时的散布程度 */
     public static final RegistryObject<Attribute> INACCURACY = ATTRIBUTES.register("inaccuracy", 
         () -> new RangedAttribute("attribute.name.taa.inaccuracy", 1.0D, 0.0D, 1024.0D).setSyncable(true));
     
@@ -161,6 +165,7 @@ public class PlayerAttributeRegistry {
             event.add(type, EXPLOSION_KNOCKBACK.get());
             event.add(type, EXPLOSION_DESTROY_BLOCK.get());
             event.add(type, EXPLOSION_DELAY.get());
+            event.add(type, EXPLOSION_ENABLED.get());
             event.add(type, MOVE_SPEED.get());
             event.add(type, HEADSHOT_MULTIPLIER.get());
             event.add(type, IGNITE.get());

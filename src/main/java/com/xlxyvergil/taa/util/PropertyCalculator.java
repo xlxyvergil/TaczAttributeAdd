@@ -77,7 +77,7 @@ public class PropertyCalculator {
     public float calculateAdsTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ADS_TIME);
         float playerAttributeFactor = (float) playerAttribute.getAdsTime();
-        return originalValue != null ? originalValue / playerAttributeFactor : 0.0f;
+        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
     }
     
     public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
@@ -232,19 +232,18 @@ public class PropertyCalculator {
         }
         
         float playerAttributeFactor = (float) playerAttribute.getGunDamageBonus();
-        // 获取玩家的弹头属性值，并按照与calculateBulletCount相同的方式处理
         double bulletCountAttribute = playerAttribute.getBulletCount();
-        // 按照calculateBulletCount的取整方式：如果有小数部分则向上取整
-        int bulletCountForDamage = (bulletCountAttribute > Math.floor(bulletCountAttribute)) ? 
-            (int) Math.ceil(bulletCountAttribute) : (int) bulletCountAttribute;
         
         LinkedList<ExtraDamage.DistanceDamagePair> calculatedDamage = new LinkedList<>();
         
         for (ExtraDamage.DistanceDamagePair pair : originalDamage) {
-            // 伤害计算需要再与玩家属性的弹头属性值（向上取整后）相乘
+            // 伤害计算与玩家属性的弹头属性值相乘，结果保留两位小数
+            float rawDamage = pair.getDamage() * playerAttributeFactor * (float) bulletCountAttribute;
+            // 保留两位小数
+            float finalDamage = (float) (Math.round(rawDamage * 100.0) / 100.0);
             calculatedDamage.add(new ExtraDamage.DistanceDamagePair(
                 pair.getDistance(),
-                (int) (pair.getDamage() * playerAttributeFactor * bulletCountForDamage)
+                finalDamage
             ));
         }
         
@@ -275,8 +274,8 @@ public class PropertyCalculator {
         float playerAttributeFactor = (float) playerAttribute.getRecoil();
         
         // 直接使用eval方法计算最终后坐力值，应用玩家属性修改
-        double finalPitch = attachmentRecoil.left().eval(attachmentRecoil.left().getDefaultValue()) / playerAttributeFactor;
-        double finalYaw = attachmentRecoil.right().eval(attachmentRecoil.right().getDefaultValue()) / playerAttributeFactor;
+        double finalPitch = attachmentRecoil.left().eval(attachmentRecoil.left().getDefaultValue()) * playerAttributeFactor;
+        double finalYaw = attachmentRecoil.right().eval(attachmentRecoil.right().getDefaultValue()) * playerAttributeFactor;
         
         // 创建包含最终计算结果的ParameterizedCachePair
         return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), 
@@ -388,7 +387,14 @@ public class PropertyCalculator {
             return new ExplosionData(false, 0.0f, 0.0f, false, 0.0f, false);
         }
         
-        boolean explode = calculateExplosionRadius(cacheProperty) > 2 ? true : originalExplosion.isExplode();
+        boolean explode;
+        if (originalExplosion.isExplode()) {
+            explode = true;
+        } else {
+            // 判断玩家属性爆炸是否开启的值是不是大于2
+            explode = playerAttribute.getExplosionEnabled() > 2.0D;
+        }
+        
         float radius = calculateExplosionRadius(cacheProperty);
         float damage = calculateExplosionDamage(cacheProperty);
         boolean knockback = calculateExplosionKnockback(cacheProperty);
