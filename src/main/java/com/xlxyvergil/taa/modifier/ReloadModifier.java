@@ -1,7 +1,6 @@
 package com.xlxyvergil.taa.modifier;
 
 import com.google.gson.annotations.SerializedName;
-import com.tacz.guns.api.GunProperties;
 import com.tacz.guns.api.modifier.CacheValue;
 import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
@@ -10,9 +9,6 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.GunReloadData;
-import com.tacz.guns.resource.pojo.data.gun.GunReloadTime;
-import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

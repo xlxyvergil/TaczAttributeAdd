@@ -4,7 +4,7 @@ import com.tacz.guns.api.event.common.AttachmentPropertyEvent;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.context.GunTypeContext;
-import com.xlxyvergil.taa.util.PlayerAttributeHelper;
+import com.xlxyvergil.taa.util.EntityAttributeHelper;
 import com.xlxyvergil.taa.util.PropertyCalculator;
 import com.xlxyvergil.taa.util.PropertyCalculationResults;
 import com.xlxyvergil.taa.util.PropertyCacheUpdater;
@@ -22,14 +22,14 @@ public class AttachmentPropertyEventHandler {
         LivingEntity shooter = ShooterContext.getShooter();
         String gunType = GunTypeContext.getGunType();
         
-        // 创建PlayerAttributeHelper实例，传入shooter和gunType
-        PlayerAttributeHelper playerAttribute = new PlayerAttributeHelper(shooter, gunType);
+        // 创建EntityAttributeHelper实例，传入shooter和gunType
+        EntityAttributeHelper entityAttribute = new EntityAttributeHelper(shooter, gunType);
         
         // 获取cacheProperty对象
         AttachmentCacheProperty cacheProperty = event.getCacheProperty();
         
-        // 创建PropertyCalculator实例，传入playerAttribute
-        PropertyCalculator calculator = new PropertyCalculator(playerAttribute);
+        // 创建PropertyCalculator实例，传入entityAttribute
+        PropertyCalculator calculator = new PropertyCalculator(entityAttribute);
         
         // 使用PropertyCalculator计算所有属性（包含爆炸属性），传入cacheProperty作为原始数据源
         PropertyCalculationResults results = calculator.calculateAllProperties(cacheProperty);

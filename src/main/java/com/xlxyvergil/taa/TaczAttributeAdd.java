@@ -1,6 +1,6 @@
 package com.xlxyvergil.taa;
 
-import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
+import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.config.AttributeConfig;
 import com.xlxyvergil.taa.network.message.ServerMessageUpdateTacZCache;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +34,7 @@ public class TaczAttributeAdd {
         modEventBus.addListener(this::commonSetup);
         
         // 注册属性
-        PlayerAttributeRegistry.ATTRIBUTES.register(modEventBus);
+        EntityAttributeRegistry.ATTRIBUTES.register(modEventBus);
         
         // 注册配置
         AttributeConfig.register();

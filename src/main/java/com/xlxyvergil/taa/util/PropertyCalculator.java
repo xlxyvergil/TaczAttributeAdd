@@ -19,28 +19,26 @@ import it.unimi.dsi.fastutil.Pair;
 
 /**
  * 属性计算器
- * 纯计算类，基于cacheProperty原始数据和playerAttribute进行计算
+ * 纯计算类，基于cacheProperty原始数据和entityAttribute进行计算
  */
 public class PropertyCalculator {
     
-    private final PlayerAttributeHelper playerAttribute;
+    private final EntityAttributeHelper entityAttribute;
     
     /**
-     * 构造函数
-     * @param playerAttribute 玩家属性助手
-     */
-    public PropertyCalculator(PlayerAttributeHelper playerAttribute) {
-        this.playerAttribute = playerAttribute;
+     * 构造函     * @param entityAttribute 实体属性助     */
+    public PropertyCalculator(EntityAttributeHelper entityAttribute) {
+        this.entityAttribute = entityAttribute;
     }
     
     /**
      * 计算所有属性（包含爆炸相关属性）
-     * @param cacheProperty 原始缓存属性数据
+     * @param cacheProperty 原始缓存属性数
      */
     public PropertyCalculationResults calculateAllProperties(AttachmentCacheProperty cacheProperty) {
         PropertyCalculationResults results = new PropertyCalculationResults();
         
-        // 基于原始数据和playerAttribute计算所有属性
+        // 基于原始数据和entityAttribute计算所有属性
         results.setAdsTime(calculateAdsTime(cacheProperty));
         results.setAmmoSpeed(calculateAmmoSpeed(cacheProperty));
         results.setArmorIgnore(calculateArmorIgnore(cacheProperty));
@@ -66,83 +64,83 @@ public class PropertyCalculator {
         results.setMeleeDamage(calculateMeleeDamage(cacheProperty));
         results.setMeleeDistance(calculateMeleeDistance(cacheProperty));
         
-        // 统一计算爆炸属性
+        // 统一计算爆炸属
         results.setExplosionData(createExplosionData(cacheProperty));
         
         return results;
     }
     
-    // 基本属性计算方法 - 基于cacheProperty原始数据和playerAttribute
+    // 基本属性计算方- 基于cacheProperty原始数据和playerAttribute
     
     public float calculateAdsTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ADS_TIME);
-        float playerAttributeFactor = (float) playerAttribute.getAdsTime();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        float entityAttributeFactor = (float) entityAttribute.getAdsTime();
+        return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
     public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.AMMO_SPEED);
-        float playerAttributeFactor = (float) playerAttribute.getAmmoSpeed();
+        float entityAttributeFactor = (float) entityAttribute.getAmmoSpeed();
         // 直接截断小数部分取整，不使用四舍五入
-        return originalValue != null ? (int) (originalValue * playerAttributeFactor) : 0.0f;
+        return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0.0f;
     }
     
     public float calculateArmorIgnore(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ARMOR_IGNORE);
-        float playerAttributeFactor = (float) playerAttribute.getArmorIgnore();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        float entityAttributeFactor = (float) entityAttribute.getArmorIgnore();
+        return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
     public float calculateEffectiveRange(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.EFFECTIVE_RANGE);
-        float playerAttributeFactor = (float) playerAttribute.getEffectiveRange();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        float entityAttributeFactor = (float) entityAttribute.getEffectiveRange();
+        return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
     public float calculateHeadshotMultiplier(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER);
-        float playerAttributeFactor = (float) playerAttribute.getHeadshotMultiplier();
-        // 由于Forge会自动+1，所以计算时需要-1，然后使用加法
-        return originalValue != null ? originalValue + (playerAttributeFactor - 1.0f) : 0.0f;
+        float entityAttributeFactor = (float) entityAttribute.getHeadshotMultiplier();
+        // 由于Forge会自1，所以计算时需1，然后使用加
+        return originalValue != null ? originalValue + (entityAttributeFactor - 1.0f) : 0.0f;
     }
     
     public float calculateKnockback(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.KNOCKBACK);
-        float playerAttributeFactor = (float) playerAttribute.getKnockback();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        float entityAttributeFactor = (float) entityAttribute.getKnockback();
+        return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
     public float calculateWeight(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.WEIGHT);
-        float playerAttributeFactor = (float) playerAttribute.getWeight();
-        return originalValue != null ? originalValue * playerAttributeFactor : 0.0f;
+        float entityAttributeFactor = (float) entityAttribute.getWeight();
+        return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
     public int calculatePierce(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.PIERCE);
-        float playerAttributeFactor = (float) playerAttribute.getPierce();
+        float entityAttributeFactor = (float) entityAttribute.getPierce();
         // 直接截断小数部分取整，不使用四舍五入
-        return originalValue != null ? (int) (originalValue * playerAttributeFactor) : 0;
+        return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0;
     }
     
     public int calculateRoundsPerMinute(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.ROUNDS_PER_MINUTE);
-        float playerAttributeFactor = (float) playerAttribute.getRoundsPerMinute();
+        float entityAttributeFactor = (float) entityAttribute.getRoundsPerMinute();
         // 直接截断小数部分取整，不使用四舍五入
-        return originalValue != null ? (int) (originalValue * playerAttributeFactor) : 0;
+        return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0;
     }
 
     
-    // 新增属性计算方法
+    // 新增属性计算方
     
     public int calculateBulletCount(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.BULLET_COUNT);
         if (originalValue == null) {
-            originalValue = 1; // 默认值
+            originalValue = 1; // 默认
         }
-        double playerAttributeFactor = playerAttribute.getBulletCount();
-        double result = originalValue * playerAttributeFactor;
-        // 如果计算结果有小数部分，则向上取整
+        double entityAttributeFactor = entityAttribute.getBulletCount();
+        double result = originalValue * entityAttributeFactor;
+        // 如果计算结果有小数部分，则向上取
         if (result > Math.floor(result)) {
             return (int) Math.ceil(result);
         } else {
@@ -153,13 +151,13 @@ public class PropertyCalculator {
     public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.MAGAZINE_CAPACITY);
         if (originalValue == null) {
-            // 如果没有缓存值，使用默认值30
+            // 如果没有缓存值，使用默认0
             originalValue = 30; // 默认弹匣容量
         }
-        double playerAttributeFactor = playerAttribute.getMagazineCapacity();
-        // 修改为直接截断，不使用四舍五入
-        int result = (int) (originalValue * playerAttributeFactor);
-        // 如果结果小于1，则设置为1
+        double entityAttributeFactor = entityAttribute.getMagazineCapacity();
+        // 修改为直接截断，不使用四舍五
+        int result = (int) (originalValue * entityAttributeFactor);
+        // 如果结果小于1，则设置
         if (result < 1) {
             result = 1;
         }
@@ -171,34 +169,33 @@ public class PropertyCalculator {
         if (originalValue == null) {
             originalValue = 1.0f; // 默认倍率（无加速）
         }
-        double playerAttributeFactor = playerAttribute.getReloadTime();
-        // playerAttributeFactor 是玩家属性值（例如1.6表示1.6倍装填速度）
-        // 直接作为倍率使用，1.6倍速度 -> 1.6倍时间缩短
-        return originalValue / (float) playerAttributeFactor;
+        double entityAttributeFactor = entityAttribute.getReloadTime();
+        // entityAttributeFactor 是属性值，直接作为倍率使用
+        return originalValue * (float) entityAttributeFactor;
     }
     
-    // 近战属性计算方法
+    // 近战属性计算方
     
     public float calculateMeleeDamage(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DAMAGE);
         if (originalValue == null) {
-            originalValue = 5.0f; // 默认近战伤害值
+            originalValue = 5.0f; // 默认近战伤害
         }
-        double playerAttributeFactor = playerAttribute.getMeleeDamage();
-        return originalValue * (float) playerAttributeFactor;
+        double entityAttributeFactor = entityAttribute.getMeleeDamage();
+        return originalValue * (float) entityAttributeFactor;
     }
     
     public float calculateMeleeDistance(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DISTANCE);
         if (originalValue == null) {
-            originalValue = 1.0f; // 默认近战距离值
+            originalValue = 1.0f; // 默认近战距离
         }
-        double playerAttributeFactor = playerAttribute.getMeleeDistance();
+        double entityAttributeFactor = entityAttribute.getMeleeDistance();
         // 近战距离采用加法计算，但需要考虑Forge默认+1
-        return originalValue + (float) (playerAttributeFactor - 1.0);
+        return originalValue + (float) (entityAttributeFactor - 1.0);
     }
     
-    // 复杂属性计算方法
+    // 复杂属性计算方
     
     public MoveSpeed calculateMoveSpeed(AttachmentCacheProperty cacheProperty) {
         MoveSpeed originalMoveSpeed = cacheProperty.getCache(GunProperties.MOVE_SPEED);
@@ -206,15 +203,15 @@ public class PropertyCalculator {
             originalMoveSpeed = new MoveSpeed(0.0f, 0.0f, 0.0f);
         }
         
-        // 移动速度计算逻辑：玩家属性值转换为移动速度加成
-        // 属性值解释：1.0 = 基础值，大于1.0表示加速，小于1.0表示减速
-        double playerMoveSpeed = playerAttribute.getMoveSpeed();
+        // 移动速度计算逻辑：属性值转换为移动速度加成
+        // 属性值解释：1.0 = 基础值，大于1.0表示加速，小于1.0表示减
+        double playerMoveSpeed = entityAttribute.getMoveSpeed();
         
-        // 玩家属性值已经是计算后的倍率值，直接使用即可
-        // 例如：玩家属性1.02 -> 加成比例 = 1.02 / 100 = 0.0102
+        // 属性值已经是计算后的倍率值，直接使用即可
+        // 例如：属.02 -> 加成比例 = 1.02 / 100 = 0.0102
         float playerSpeedBonus = (float) (playerMoveSpeed / 10.0D);
         
-        // 创建玩家属性带来的移动速度加成
+        // 创建属性带来的移动速度加成
         MoveSpeed playerBonusMoveSpeed = new MoveSpeed(
             playerSpeedBonus,  // base加成
             playerSpeedBonus,  // aim加成
@@ -231,14 +228,14 @@ public class PropertyCalculator {
             return new LinkedList<>();
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getGunDamageBonus();
-        double bulletCountAttribute = playerAttribute.getBulletCount();
+        float entityAttributeFactor = (float) entityAttribute.getGunDamageBonus();
+        double bulletCountAttribute = entityAttribute.getBulletCount();
         
         LinkedList<ExtraDamage.DistanceDamagePair> calculatedDamage = new LinkedList<>();
         
         for (ExtraDamage.DistanceDamagePair pair : originalDamage) {
-            // 伤害计算与玩家属性的弹头属性值相乘，结果保留两位小数
-            float rawDamage = pair.getDamage() * playerAttributeFactor * (float) bulletCountAttribute;
+            // 伤害计算与属性的弹头属性值相乘，结果保留两位小数
+            float rawDamage = pair.getDamage() * entityAttributeFactor * (float) bulletCountAttribute;
             // 保留两位小数
             float finalDamage = (float) (Math.round(rawDamage * 100.0) / 100.0);
             calculatedDamage.add(new ExtraDamage.DistanceDamagePair(
@@ -256,26 +253,26 @@ public class PropertyCalculator {
             return Map.of();
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getInaccuracy();
-        // 创建新的Map来存储计算结果，包含所有5种InaccuracyType，使用除法因子
+        float entityAttributeFactor = (float) entityAttribute.getInaccuracy();
+        // 创建新的Map来存储计算结果，包含所种InaccuracyType，使用除法因
         return Map.of(
-            InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) / playerAttributeFactor,
-            InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) / playerAttributeFactor,
-            InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) / playerAttributeFactor,
-            InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) / playerAttributeFactor,
-            InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) / playerAttributeFactor
+            InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) / entityAttributeFactor,
+            InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) / entityAttributeFactor,
+            InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) / entityAttributeFactor,
+            InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) / entityAttributeFactor,
+            InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) / entityAttributeFactor
         );
     }
     
     public ParameterizedCachePair<Float, Float> calculateRecoil(AttachmentCacheProperty cacheProperty) {
-        // 获取TACZ原版RecoilModifier计算的结果（包含原始后坐力值和配件修改）
+        // 获取TACZ原版RecoilModifier计算的结果（包含原始后坐力值和配件修改
         ParameterizedCachePair<Float, Float> attachmentRecoil = cacheProperty.getCache(com.tacz.guns.resource.modifier.custom.RecoilModifier.ID);
         
-        float playerAttributeFactor = (float) playerAttribute.getRecoil();
+        float entityAttributeFactor = (float) entityAttribute.getRecoil();
         
-        // 直接使用eval方法计算最终后坐力值，应用玩家属性修改
-        double finalPitch = attachmentRecoil.left().eval(attachmentRecoil.left().getDefaultValue()) * playerAttributeFactor;
-        double finalYaw = attachmentRecoil.right().eval(attachmentRecoil.right().getDefaultValue()) * playerAttributeFactor;
+        // 直接使用eval方法计算最终后坐力值，应用属性修
+        double finalPitch = attachmentRecoil.left().eval(attachmentRecoil.left().getDefaultValue()) * entityAttributeFactor;
+        double finalYaw = attachmentRecoil.right().eval(attachmentRecoil.right().getDefaultValue()) * entityAttributeFactor;
         
         // 创建包含最终计算结果的ParameterizedCachePair
         return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), 
@@ -290,16 +287,16 @@ public class PropertyCalculator {
             return Pair.of(0, false);
         }
         
-        // 使用数值乘法因子计算声音距离
-        double playerAttributeFactor = playerAttribute.getSilence();
+        // 使用数值乘法因子计算声音距
+        double entityAttributeFactor = entityAttribute.getSilence();
         Integer originalLevel = originalSilence.left() != null ? originalSilence.left() : 0;
-        Integer level = (int) Math.round(originalLevel * playerAttributeFactor);
+        Integer level = (int) Math.round(originalLevel * entityAttributeFactor);
         
-        // 被动消音效果：当玩家silence属性值 < 1.0时，自动开启消音效果
+        // 被动消音效果：当silence属性< 1.0时，自动开启消音效
         boolean originalEnabled = originalSilence.right() != null ? originalSilence.right() : false;
-        boolean passiveSilenceEnabled = playerAttributeFactor < 1.0D;
+        boolean passiveSilenceEnabled = entityAttributeFactor < 1.0D;
         
-        // 合并效果：原配件消音效果 或 被动属性消音效果
+        // 合并效果：原配件消音效果 被动属性消音效
         boolean enabled = originalEnabled || passiveSilenceEnabled;
         
         return Pair.of(level, enabled);
@@ -311,22 +308,22 @@ public class PropertyCalculator {
             originalIgnite = new Ignite(false, false);
         }
         
-        boolean playerAttributeValue = playerAttribute.isIgniteEnabled();
+        boolean entityAttributeValue = entityAttribute.isIgniteEnabled();
         
 
         
-        // 如果玩家没有相关的属性增强，则直接返回原始值
-        if (!playerAttributeValue) {
+        // 如果没有相关的属性增强，则直接返回原始
+        if (!entityAttributeValue) {
             return originalIgnite;
         }
         
-        // 玩家有属性增强，在原有基础上进一步增强点燃效果
+        // 有属性增强，在原有基础上进一步增强点燃效
         // entity保持原有值（如果配件已提供则为true，否则为false）或增强为true
         // block从原有值增强为true
-        return new Ignite(originalIgnite.isIgniteEntity() || playerAttributeValue, true);
+        return new Ignite(originalIgnite.isIgniteEntity() || entityAttributeValue, true);
     }
     
-    // 爆炸相关属性计算
+    // 爆炸相关属性计
     
     public float calculateExplosionRadius(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
@@ -334,9 +331,9 @@ public class PropertyCalculator {
             return 0.0f;
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getExplosionRadius();
+        float entityAttributeFactor = (float) entityAttribute.getExplosionRadius();
         // 考虑Forge默认+1
-        return originalExplosion.getRadius() + (playerAttributeFactor - 1.0f);
+        return originalExplosion.getRadius() + (entityAttributeFactor - 1.0f);
     }
     
     public float calculateExplosionDamage(AttachmentCacheProperty cacheProperty) {
@@ -345,8 +342,8 @@ public class PropertyCalculator {
             return 0.0f;
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getExplosionDamage();
-        return originalExplosion.getDamage() * playerAttributeFactor;
+        float entityAttributeFactor = (float) entityAttribute.getExplosionDamage();
+        return originalExplosion.getDamage() * entityAttributeFactor;
     }
     
     public boolean calculateExplosionKnockback(AttachmentCacheProperty cacheProperty) {
@@ -355,8 +352,8 @@ public class PropertyCalculator {
             return false;
         }
         
-        boolean playerAttributeValue = playerAttribute.isExplosionKnockbackEnabled();
-        List<Boolean> knockbackValues = List.of(originalExplosion.isKnockback(), playerAttributeValue);
+        boolean entityAttributeValue = entityAttribute.isExplosionKnockbackEnabled();
+        List<Boolean> knockbackValues = List.of(originalExplosion.isKnockback(), entityAttributeValue);
         return AttachmentPropertyManager.eval(knockbackValues, false);
     }
     
@@ -366,8 +363,8 @@ public class PropertyCalculator {
             return false;
         }
         
-        boolean playerAttributeValue = playerAttribute.isExplosionDestroyBlockEnabled();
-        List<Boolean> destroyBlockValues = List.of(originalExplosion.isDestroyBlock(), playerAttributeValue);
+        boolean entityAttributeValue = entityAttribute.isExplosionDestroyBlockEnabled();
+        List<Boolean> destroyBlockValues = List.of(originalExplosion.isDestroyBlock(), entityAttributeValue);
         return AttachmentPropertyManager.eval(destroyBlockValues, false);
     }
     
@@ -377,8 +374,8 @@ public class PropertyCalculator {
             return 0;
         }
         
-        float playerAttributeFactor = (float) playerAttribute.getExplosionDelay();
-        return Math.round(originalExplosion.getDelay() * playerAttributeFactor);
+        float entityAttributeFactor = (float) entityAttribute.getExplosionDelay();
+        return Math.round(originalExplosion.getDelay() * entityAttributeFactor);
     }
     
     public ExplosionData createExplosionData(AttachmentCacheProperty cacheProperty) {
@@ -391,8 +388,8 @@ public class PropertyCalculator {
         if (originalExplosion.isExplode()) {
             explode = true;
         } else {
-            // 判断玩家属性爆炸是否开启的值是不是大于2
-            explode = playerAttribute.getExplosionEnabled() > 2.0D;
+            // 判断属性爆炸是否开启的值是不是大于2
+            explode = entityAttribute.getExplosionEnabled() > 2.0D;
         }
         
         float radius = calculateExplosionRadius(cacheProperty);

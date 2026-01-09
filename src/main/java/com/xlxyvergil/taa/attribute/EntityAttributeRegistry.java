@@ -13,11 +13,11 @@ import net.minecraftforge.registries.RegistryObject;
 
 
 /**
- * 玩家属性注册类
- * 注册所有与枪械属性相关的玩家属性（排除DAMAGE属性）
+ * 实体属性注册类
+ * 注册所有与枪械属性相关的实体属性（排除DAMAGE属性）
  */
 @Mod.EventBusSubscriber(modid = TaczAttributeAdd.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class PlayerAttributeRegistry {
+public class EntityAttributeRegistry {
     
     // 创建属性的DeferredRegister
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, TaczAttributeAdd.MODID);

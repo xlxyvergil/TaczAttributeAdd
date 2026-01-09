@@ -1,22 +1,21 @@
 package com.xlxyvergil.taa.util;
 
-import com.xlxyvergil.taa.attribute.PlayerAttributeRegistry;
+import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.config.AttributeConfig;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
 
 /**
- * 玩家属性助手类
- * 用于存储和计算特定射击者的属性值
+ * 实体属性助手类
+ * 用于存储和计算特定射击者的属性 
  */
-public class PlayerAttributeHelper {
+public class EntityAttributeHelper {
     private final LivingEntity shooter;
     private final String gunType;
     
-    // 存储所有计算出的属性值
+    // 存储所有计算出的属性 
     private final double adsTime;
     private final double ammoSpeed;
     private final double armorIgnore;
@@ -39,75 +38,69 @@ public class PlayerAttributeHelper {
     private final double weight;
     private final double gunDamageBonus;
     
-    // 新增的属性
+    // 新增的属 
     private final double bulletCount;
     private final double magazineCapacity;
     private final double reloadTime;
     
-    // 近战相关属性
+    // 近战相关属 
     private final double meleeDamage;
     private final double meleeDistance;
 
     /**
-     * 构造函数
-     * @param shooter 射击者实体
+     * 构造函 
+     * @param shooter 射击者实 
      * @param gunType 枪械类型
      */
-    public PlayerAttributeHelper(LivingEntity shooter, String gunType) {
+    public EntityAttributeHelper(LivingEntity shooter, String gunType) {
         this.shooter = shooter;
         this.gunType = gunType;
         
-        // 计算并存储所有属性值
-        this.adsTime = getAttributeValue(PlayerAttributeRegistry.ADS_TIME.get(), 1.0D);
-        this.ammoSpeed = getAttributeValue(PlayerAttributeRegistry.AMMO_SPEED.get(), 1.0D);
-        this.armorIgnore = getAttributeValue(PlayerAttributeRegistry.ARMOR_IGNORE.get(), 1.0D);
-        this.effectiveRange = getAttributeValue(PlayerAttributeRegistry.EFFECTIVE_RANGE.get(), 1.0D);
-        this.explosionRadius = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_RADIUS.get(), 1.0D);
-        this.explosionDamage = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DAMAGE.get(), 1.0D);
-        this.explosionKnockback = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_KNOCKBACK.get(), 1.0D);
-        this.explosionDestroyBlock = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get(), 1.0D);
-        this.explosionDelay = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_DELAY.get(), 1.0D);
-        this.explosionEnabled = getAttributeValue(PlayerAttributeRegistry.EXPLOSION_ENABLED.get(), 1.0D);
-        this.moveSpeed = getAttributeValue(PlayerAttributeRegistry.MOVE_SPEED.get(), 1.0D);
-        this.headshotMultiplier = getAttributeValue(PlayerAttributeRegistry.HEADSHOT_MULTIPLIER.get(), 1.0D);
-        this.ignite = getAttributeValue(PlayerAttributeRegistry.IGNITE.get(), 1.0D);
-        this.inaccuracy = getAttributeValue(PlayerAttributeRegistry.INACCURACY.get(), 1.0D);
-        this.knockback = getAttributeValue(PlayerAttributeRegistry.KNOCKBACK.get(), 1.0D);
-        this.pierce = getAttributeValue(PlayerAttributeRegistry.PIERCE.get(), 1.0D);
-        this.recoil = getAttributeValue(PlayerAttributeRegistry.RECOIL.get(), 1.0D);
-        this.roundsPerMinute = getAttributeValue(PlayerAttributeRegistry.ROUNDS_PER_MINUTE.get(), 1.0D);
-        this.silence = getAttributeValue(PlayerAttributeRegistry.SILENCE.get(), 1.0D);
-        this.weight = getAttributeValue(PlayerAttributeRegistry.WEIGHT.get(), 1.0D);
+        // 计算并存储所有属性 
+        this.adsTime = getAttributeValue(EntityAttributeRegistry.ADS_TIME.get(), 1.0D);
+        this.ammoSpeed = getAttributeValue(EntityAttributeRegistry.AMMO_SPEED.get(), 1.0D);
+        this.armorIgnore = getAttributeValue(EntityAttributeRegistry.ARMOR_IGNORE.get(), 1.0D);
+        this.effectiveRange = getAttributeValue(EntityAttributeRegistry.EFFECTIVE_RANGE.get(), 1.0D);
+        this.explosionRadius = getAttributeValue(EntityAttributeRegistry.EXPLOSION_RADIUS.get(), 1.0D);
+        this.explosionDamage = getAttributeValue(EntityAttributeRegistry.EXPLOSION_DAMAGE.get(), 1.0D);
+        this.explosionKnockback = getAttributeValue(EntityAttributeRegistry.EXPLOSION_KNOCKBACK.get(), 1.0D);
+        this.explosionDestroyBlock = getAttributeValue(EntityAttributeRegistry.EXPLOSION_DESTROY_BLOCK.get(), 1.0D);
+        this.explosionDelay = getAttributeValue(EntityAttributeRegistry.EXPLOSION_DELAY.get(), 1.0D);
+        this.explosionEnabled = getAttributeValue(EntityAttributeRegistry.EXPLOSION_ENABLED.get(), 1.0D);
+        this.moveSpeed = getAttributeValue(EntityAttributeRegistry.MOVE_SPEED.get(), 1.0D);
+        this.headshotMultiplier = getAttributeValue(EntityAttributeRegistry.HEADSHOT_MULTIPLIER.get(), 1.0D);
+        this.ignite = getAttributeValue(EntityAttributeRegistry.IGNITE.get(), 1.0D);
+        this.inaccuracy = getAttributeValue(EntityAttributeRegistry.INACCURACY.get(), 1.0D);
+        this.knockback = getAttributeValue(EntityAttributeRegistry.KNOCKBACK.get(), 1.0D);
+        this.pierce = getAttributeValue(EntityAttributeRegistry.PIERCE.get(), 1.0D);
+        this.recoil = getAttributeValue(EntityAttributeRegistry.RECOIL.get(), 1.0D);
+        this.roundsPerMinute = getAttributeValue(EntityAttributeRegistry.ROUNDS_PER_MINUTE.get(), 1.0D);
+        this.silence = getAttributeValue(EntityAttributeRegistry.SILENCE.get(), 1.0D);
+        this.weight = getAttributeValue(EntityAttributeRegistry.WEIGHT.get(), 1.0D);
         this.gunDamageBonus = calculateGunDamageBonus();
         
         // 新增属性的计算
-        this.bulletCount = getAttributeValue(PlayerAttributeRegistry.BULLET_COUNT.get(), 1.0D);
-        this.magazineCapacity = getAttributeValue(PlayerAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
-        this.reloadTime = getAttributeValue(PlayerAttributeRegistry.RELOAD_TIME.get(), 1.0D);
+        this.bulletCount = getAttributeValue(EntityAttributeRegistry.BULLET_COUNT.get(), 1.0D);
+        this.magazineCapacity = getAttributeValue(EntityAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
+        this.reloadTime = getAttributeValue(EntityAttributeRegistry.RELOAD_TIME.get(), 1.0D);
         
         // 近战相关属性的计算
-        this.meleeDamage = getAttributeValue(PlayerAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
-        this.meleeDistance = getAttributeValue(PlayerAttributeRegistry.MELEE_DISTANCE.get(), 1.0D);
+        this.meleeDamage = getAttributeValue(EntityAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
+        this.meleeDistance = getAttributeValue(EntityAttributeRegistry.MELEE_DISTANCE.get(), 1.0D);
     }
     
     /**
-     * 获取指定属性值
-     * @param attribute 要获取的属性
-     * @param defaultValue 默认值
-     * @return 属性值，如果无法获取则返回默认值
+     * 获取指定属性 
+     * @param attribute 要获取的属 
+     * @param defaultValue 默认 
+     * @return 属性值，如果无法获取则返回默认 
      */
     private double getAttributeValue(Attribute attribute, double defaultValue) {
         if (this.shooter == null) {
             return defaultValue;
         }
         
-        // 检查是否为玩家实体
-        if (!(this.shooter instanceof Player)) {
-            return defaultValue;
-        }
-        
-        Player player = (Player) this.shooter;
-        AttributeInstance instance = player.getAttribute(attribute);
+        AttributeInstance instance = this.shooter.getAttribute(attribute);
         if (instance != null) {
             return instance.getValue();
         }
@@ -116,9 +109,9 @@ public class PlayerAttributeHelper {
     }
     
     /**
-     * 将double值转换为布尔值
-     * @param value double值
-     * @return 转换后的布尔值（1.0D表示true，0.0D表示false）
+     * 将double值转换为布尔 
+     * @param value double 
+     * @return 转换后的布尔值（1.0D表示true .0D表示false 
      */
     private boolean convertDoubleToBoolean(double value) {
         return value >= 2.0D;
@@ -126,7 +119,7 @@ public class PlayerAttributeHelper {
     
     /**
      * 计算枪械伤害加成
-     * @return 伤害加成值
+     * @return 伤害加成 
      */
     private double calculateGunDamageBonus() {
         // 根据配置项决定具体生效的规则
@@ -141,23 +134,23 @@ public class PlayerAttributeHelper {
     }
     
     /**
-     * 计算枪械伤害加成 - 规则1：通用与特定取最大
-     * @return 伤害加成值
+     * 计算枪械伤害加成 - 规则1：通用与特定取最 
+     * @return 伤害加成 
      */
     private double calculateGunDamageBonusRule1() {
-        double genericDamage = getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
+        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
         double specificDamage = getSpecificGunDamageBonus(this.gunType);
         
-        // 规则1：通用与特定取最大
+        // 规则1：通用与特定取最 
         return Math.max(genericDamage, specificDamage);
     }
     
     /**
      * 计算枪械伤害加成 - 规则2：通用+特定-1
-     * @return 伤害加成值
+     * @return 伤害加成 
      */
     private double calculateGunDamageBonusRule2() {
-        double genericDamage = getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
+        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
         double specificDamage = getSpecificGunDamageBonus(this.gunType);
         
         // 规则2：通用+特定-1
@@ -166,10 +159,10 @@ public class PlayerAttributeHelper {
     
     /**
      * 计算枪械伤害加成 - 规则3：通用*特定
-     * @return 伤害加成值
+     * @return 伤害加成 
      */
     private double calculateGunDamageBonusRule3() {
-        double genericDamage = getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
+        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
         double specificDamage = getSpecificGunDamageBonus(this.gunType);
         
         // 规则3：通用*特定
@@ -179,7 +172,7 @@ public class PlayerAttributeHelper {
     /**
      * 根据枪械类型获取特定枪械伤害加成
      * @param gunType 枪械类型
-     * @return 特定枪械伤害加成值
+     * @return 特定枪械伤害加成 
      */
     private double getSpecificGunDamageBonus(String gunType) {
         if (gunType == null) {
@@ -187,13 +180,13 @@ public class PlayerAttributeHelper {
         }
         
         return switch (gunType.toLowerCase()) {
-            case "pistol" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_PISTOL.get(), 1.0D);
-            case "rifle" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_RIFLE.get(), 1.0D);
-            case "shotgun" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_SHOTGUN.get(), 1.0D);
-            case "sniper" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_SNIPER.get(), 1.0D);
-            case "smg" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_SMG.get(), 1.0D);
-            case "mg" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_LMG.get(), 1.0D);
-            case "rpg" -> getAttributeValue(PlayerAttributeRegistry.BULLET_GUNDAMAGE_LAUNCHER.get(), 1.0D);
+            case "pistol" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_PISTOL.get(), 1.0D);
+            case "rifle" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_RIFLE.get(), 1.0D);
+            case "shotgun" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_SHOTGUN.get(), 1.0D);
+            case "sniper" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_SNIPER.get(), 1.0D);
+            case "smg" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_SMG.get(), 1.0D);
+            case "mg" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_LMG.get(), 1.0D);
+            case "rpg" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_LAUNCHER.get(), 1.0D);
             default -> 1.0D;
         };
     }
@@ -238,8 +231,8 @@ public class PlayerAttributeHelper {
     
     /**
      * 获取布尔属性值，将double值转换为boolean
-     * @param doubleValue double值
-     * @return boolean值（1.0D表示true，0.0D表示false）
+     * @param doubleValue double 
+     * @return boolean值（1.0D表示true .0D表示false 
      */
     public boolean getBooleanValue(double doubleValue) {
         return convertDoubleToBoolean(doubleValue);
