@@ -30,7 +30,7 @@ public class PropertyCalculationResults {
     private MoveSpeed moveSpeed;
     private LinkedList<ExtraDamage.DistanceDamagePair> damage;
     private Map<InaccuracyType, Float> inaccuracy;
-    private ParameterizedCachePair<Float, Float> recoil;
+//    private ParameterizedCachePair<Float, Float> recoil; // 后坐力由CameraSetupEventMixin直接处理
     private Pair<Integer, Boolean> silence;
     private Ignite ignite;
     private ExplosionData explosionData;
@@ -81,8 +81,8 @@ public class PropertyCalculationResults {
     public Map<InaccuracyType, Float> getInaccuracy() { return inaccuracy; }
     public void setInaccuracy(Map<InaccuracyType, Float> inaccuracy) { this.inaccuracy = inaccuracy; }
     
-    public ParameterizedCachePair<Float, Float> getRecoil() { return recoil; }
-    public void setRecoil(ParameterizedCachePair<Float, Float> recoil) { this.recoil = recoil; }
+//    public ParameterizedCachePair<Float, Float> getRecoil() { return recoil; } // 后坐力由CameraSetupEventMixin直接处理
+//    public void setRecoil(ParameterizedCachePair<Float, Float> recoil) { this.recoil = recoil; }
     
     public Pair<Integer, Boolean> getSilence() { return silence; }
     public void setSilence(Pair<Integer, Boolean> silence) { this.silence = silence; }

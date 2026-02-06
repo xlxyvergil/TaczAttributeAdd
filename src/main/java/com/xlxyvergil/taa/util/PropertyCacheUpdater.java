@@ -44,7 +44,7 @@ public class PropertyCacheUpdater {
         cacheProperty.setCache(GunProperties.MOVE_SPEED, results.getMoveSpeed());
         cacheProperty.setCache(GunProperties.DAMAGE, results.getDamage());
         cacheProperty.setCache(GunProperties.INACCURACY, results.getInaccuracy());
-        cacheProperty.setCache(GunProperties.RECOIL, results.getRecoil());
+//        cacheProperty.setCache(GunProperties.RECOIL, results.getRecoil()); // 后坐力由CameraSetupEventMixin直接处理
         cacheProperty.setCache(GunProperties.SILENCE, results.getSilence());
         cacheProperty.setCache(GunProperties.IGNITE, results.getIgnite());
         cacheProperty.setCache(GunProperties.EXPLOSION, results.getExplosionData());

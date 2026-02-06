@@ -17,6 +17,7 @@ import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
+import com.xlxyvergil.taa.util.EntityAttributeHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -279,11 +280,14 @@ public class GunPropertyDiagramsMixin {
                 yOffset[0] += 10;
             }));
             
-            // 显示后坐力信息（使用缓存的玩家属性修改值）
-            // 获取缓存中的后坐力数据
+            // 显示后坐力信息（同时显示配件和玩家属性的影响）
+            // 获取缓存中的后坐力数据（包含TACZ配件修改）
             ParameterizedCachePair<Float, Float> recoilData = cacheProperty.getCache(GunProperties.RECOIL);
             
-            // 无论是否有我们的玩家属性修改，TACZ的配件系统都会生成缓存数据
+            // 获取玩家实体属性
+            EntityAttributeHelper entityAttribute = new EntityAttributeHelper(player, "");
+            float recoilFactor = (float) entityAttribute.getRecoil();
+            
             // 获取原始后坐力数据用于计算差异
             GunRecoil recoil = gunData.getRecoil();
             if (recoil != null) {
@@ -291,13 +295,19 @@ public class GunPropertyDiagramsMixin {
                 float originalPitch = getMaxInGunRecoilKeyFrame(recoil.getPitch());
                 float originalYaw = getMaxInGunRecoilKeyFrame(recoil.getYaw());
                 
-                // 获取修改后的后坐力值（最终计算结果，包含配件和玩家属性修改）
-                float modifiedPitch = recoilData != null && recoilData.left() != null ? recoilData.left().getDefaultValue() : originalPitch;
-                float modifiedYaw = recoilData != null && recoilData.right() != null ? recoilData.right().getDefaultValue() : originalYaw;
+                // 获取配件修改后的值
+                float attachmentModifiedPitch = recoilData != null && recoilData.left() != null ? 
+                    (float) recoilData.left().eval(originalPitch) : originalPitch;
+                float attachmentModifiedYaw = recoilData != null && recoilData.right() != null ? 
+                    (float) recoilData.right().eval(originalYaw) : originalYaw;
                 
-                // 计算差值
-                float pitchDifference = modifiedPitch - originalPitch;
-                float yawDifference = modifiedYaw - originalYaw;
+                // 应用玩家属性修改（在配件基础上）
+                float finalPitch = attachmentModifiedPitch * recoilFactor;
+                float finalYaw = attachmentModifiedYaw * recoilFactor;
+                
+                // 计算总差值（相对于原始值）
+                float pitchDifference = finalPitch - originalPitch;
+                float yawDifference = finalYaw - originalYaw;
                 
                 // Pitch后坐力显示
                 double pitchPercent = Math.min(originalPitch / 5.0, 1);
@@ -312,14 +322,14 @@ public class GunPropertyDiagramsMixin {
                 if (pitchDifference > 0) {
                     int barRight = Math.min(pitchLength + pitchModifierLength, barEndX);
                     graphics.fill(pitchLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor); // 后坐力增加显示为红色（不好）
-                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", modifiedPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", finalPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else if (pitchDifference < 0) {
                     // 后坐力减少显示为绿色（好）
                     int barLeft = Math.max(pitchLength + pitchModifierLength, barStartX);
                     graphics.fill(barLeft, yOffset[0] + 2, pitchLength, yOffset[0] + 6, barPositivelyColor);
-                    graphics.drawString(font, String.format("%.2f §a(%.2f)", modifiedPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.drawString(font, String.format("%.2f §a(%.2f)", finalPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else {
-                    graphics.drawString(font, String.format("%.2f", modifiedPitch), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.drawString(font, String.format("%.2f", finalPitch), valueTextStartX, yOffset[0], fontColor, false);
                 }
                 
                 yOffset[0] += 10;
@@ -337,14 +347,14 @@ public class GunPropertyDiagramsMixin {
                 if (yawDifference > 0) {
                     int barRight = Math.min(yawLength + yawModifierLength, barEndX);
                     graphics.fill(yawLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor); // 后坐力增加显示为红色（不好）
-                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", modifiedYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", finalYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else if (yawDifference < 0) {
                     // 后坐力减少显示为绿色（好）
                     int barLeft = Math.max(yawLength + yawModifierLength, barStartX);
                     graphics.fill(barLeft, yOffset[0] + 2, yawLength, yOffset[0] + 6, barPositivelyColor);
-                    graphics.drawString(font, String.format("%.2f §a(%.2f)", modifiedYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.drawString(font, String.format("%.2f §a(%.2f)", finalYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else {
-                    graphics.drawString(font, String.format("%.2f", modifiedYaw), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.drawString(font, String.format("%.2f", finalYaw), valueTextStartX, yOffset[0], fontColor, false);
                 }
                 
                 yOffset[0] += 10;

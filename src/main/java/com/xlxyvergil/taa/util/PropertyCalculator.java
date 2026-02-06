@@ -51,7 +51,7 @@ public class PropertyCalculator {
         results.setMoveSpeed(calculateMoveSpeed(cacheProperty));
         results.setDamage(calculateDamage(cacheProperty));
         results.setInaccuracy(calculateInaccuracy(cacheProperty));
-        results.setRecoil(calculateRecoil(cacheProperty));
+//        results.setRecoil(calculateRecoil(cacheProperty)); // 后坐力由CameraSetupEventMixin直接处理，不通过缓存
         results.setSilence(calculateSilence(cacheProperty));
         results.setIgnite(calculateIgnite(cacheProperty));
         
@@ -264,6 +264,9 @@ public class PropertyCalculator {
         );
     }
     
+/*
+    // 后坐力计算已移除，改为在CameraSetupEventMixin中直接处理
+    // 避免修改缓存数据
     public ParameterizedCachePair<Float, Float> calculateRecoil(AttachmentCacheProperty cacheProperty) {
         // 获取TACZ原版RecoilModifier计算的结果（包含原始后坐力值和配件修改
         ParameterizedCachePair<Float, Float> attachmentRecoil = cacheProperty.getCache(com.tacz.guns.resource.modifier.custom.RecoilModifier.ID);
@@ -278,6 +281,7 @@ public class PropertyCalculator {
         return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), 
             (float) finalPitch, (float) finalYaw);
     }
+*/
     
     public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
         Pair<Integer, Boolean> originalSilence = cacheProperty.getCache(GunProperties.SILENCE);
