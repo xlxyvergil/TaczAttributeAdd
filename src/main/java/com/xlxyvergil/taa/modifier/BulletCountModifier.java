@@ -103,11 +103,62 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
         return List.of(bulletCountDiagramsData);
     }
     
+    // TACZ版本缓存
+    private static Boolean isTacz117OrAbove = null;
+    
+    /**
+     * 检查TACZ版本是否为1.1.7或更高
+     */
+    private static boolean isTacz117OrAbove() {
+        if (isTacz117OrAbove == null) {
+            try {
+                String version = net.minecraftforge.fml.ModList.get()
+                    .getModContainerById("tacz")
+                    .map(container -> container.getModInfo().getVersion().toString())
+                    .orElse("0.0.0");
+                
+                // 解析版本号，检查是否 >= 1.1.7
+                isTacz117OrAbove = isVersionAtLeast(version, "1.1.7");
+            } catch (Exception e) {
+                // 如果无法获取版本，假设是旧版本
+                isTacz117OrAbove = false;
+            }
+        }
+        return isTacz117OrAbove;
+    }
+    
+    /**
+     * 比较版本号，检查target是否 >= base
+     */
+    private static boolean isVersionAtLeast(String target, String base) {
+        try {
+            String[] targetParts = target.split("\\.");
+            String[] baseParts = base.split("\\.");
+            
+            for (int i = 0; i < Math.max(targetParts.length, baseParts.length); i++) {
+                int targetPart = i < targetParts.length ? Integer.parseInt(targetParts[i].replaceAll("\\D.*", "")) : 0;
+                int basePart = i < baseParts.length ? Integer.parseInt(baseParts[i].replaceAll("\\D.*", "")) : 0;
+                
+                if (targetPart > basePart) return true;
+                if (targetPart < basePart) return false;
+            }
+            return true; // 版本相等
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     /**
      * 检测是否安装了独头弹效果
      * 使用TACZ的标签检测机制，兼容所有使用intrinsic/slug标签的配件
+     * 仅在TACZ 1.1.7+版本中启用
      */
     private boolean hasSlugEffect(ItemStack gunItem) {
+        // 检查TACZ版本，1.1.7以下不启用独头弹检测
+        if (!isTacz117OrAbove()) {
+            return false;
+        }
+        
         try {
             IGun iGun = IGun.getIGunOrNull(gunItem);
             if (iGun == null) return false;

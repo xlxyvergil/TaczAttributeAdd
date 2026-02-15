@@ -249,36 +249,44 @@ public class GunPropertyDiagramsMixin {
 
             yOffset[0] += 10;
 
-            AttachmentPropertyManager.getModifiers().forEach((key, value) -> value.getPropertyDiagramsData(gunItem, gunData, cacheProperty).forEach(data -> {
-                double defaultPercent = data.defaultPercent();
-                double modifierPercent = data.modifierPercent();
-                double modifier = data.modifier().doubleValue();
-                String titleKey = data.titleKey();
-                String positivelyString = data.positivelyString();
-                String negativeString = data.negativeString();
-                String defaultString = data.defaultString();
-                boolean positivelyBetter = data.positivelyBetter();
-
-                defaultPercent = Mth.clamp(defaultPercent, 0, 1);
-                int defaultLength = (int) (barStartX + barMaxWidth * defaultPercent);
-                int modifierLength = Mth.clamp(defaultLength + (int) (barMaxWidth * modifierPercent), barStartX, barEndX);
-
-                graphics.drawString(font, Component.translatable(titleKey), nameTextStartX, yOffset[0], fontColor, false);
-                graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
-                graphics.fill(barStartX, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barBaseColor);
-                if (modifier > 0) {
-                    int barColor = positivelyBetter ? barPositivelyColor : barNegativeColor;
-                    graphics.fill(defaultLength, yOffset[0] + 2, modifierLength, yOffset[0] + 6, barColor);
-                    graphics.drawString(font, positivelyString, valueTextStartX, yOffset[0], fontColor, false);
-                } else if (modifier < 0) {
-                    int barColor = positivelyBetter ? barNegativeColor : barPositivelyColor;
-                    graphics.fill(modifierLength, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barColor);
-                    graphics.drawString(font, negativeString, valueTextStartX, yOffset[0], fontColor, false);
-                } else {
-                    graphics.drawString(font, defaultString, valueTextStartX, yOffset[0], fontColor, false);
+            // 遍历所有modifier的getPropertyDiagramsData，但跳过后坐力（RECOIL）
+            // 后坐力由我们自己在下面单独绘制，以显示包含玩家属性的最终值
+            AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
+                // 跳过后坐力modifier，避免与我们的自定义后坐力显示重复
+                if (com.tacz.guns.resource.modifier.custom.RecoilModifier.ID.equals(key)) {
+                    return;
                 }
-                yOffset[0] += 10;
-            }));
+                value.getPropertyDiagramsData(gunItem, gunData, cacheProperty).forEach(data -> {
+                    double defaultPercent = data.defaultPercent();
+                    double modifierPercent = data.modifierPercent();
+                    double modifier = data.modifier().doubleValue();
+                    String titleKey = data.titleKey();
+                    String positivelyString = data.positivelyString();
+                    String negativeString = data.negativeString();
+                    String defaultString = data.defaultString();
+                    boolean positivelyBetter = data.positivelyBetter();
+
+                    defaultPercent = Mth.clamp(defaultPercent, 0, 1);
+                    int defaultLength = (int) (barStartX + barMaxWidth * defaultPercent);
+                    int modifierLength = Mth.clamp(defaultLength + (int) (barMaxWidth * modifierPercent), barStartX, barEndX);
+
+                    graphics.drawString(font, Component.translatable(titleKey), nameTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                    graphics.fill(barStartX, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barBaseColor);
+                    if (modifier > 0) {
+                        int barColor = positivelyBetter ? barPositivelyColor : barNegativeColor;
+                        graphics.fill(defaultLength, yOffset[0] + 2, modifierLength, yOffset[0] + 6, barColor);
+                        graphics.drawString(font, positivelyString, valueTextStartX, yOffset[0], fontColor, false);
+                    } else if (modifier < 0) {
+                        int barColor = positivelyBetter ? barNegativeColor : barPositivelyColor;
+                        graphics.fill(modifierLength, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barColor);
+                        graphics.drawString(font, negativeString, valueTextStartX, yOffset[0], fontColor, false);
+                    } else {
+                        graphics.drawString(font, defaultString, valueTextStartX, yOffset[0], fontColor, false);
+                    }
+                    yOffset[0] += 10;
+                });
+            });
             
             // 显示后坐力信息（同时显示配件和玩家属性的影响）
             // 获取缓存中的后坐力数据（包含TACZ配件修改）

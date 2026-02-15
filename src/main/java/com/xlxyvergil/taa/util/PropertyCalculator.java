@@ -199,27 +199,24 @@ public class PropertyCalculator {
     
     public MoveSpeed calculateMoveSpeed(AttachmentCacheProperty cacheProperty) {
         MoveSpeed originalMoveSpeed = cacheProperty.getCache(GunProperties.MOVE_SPEED);
-        if (originalMoveSpeed == null) {
-            originalMoveSpeed = new MoveSpeed(0.0f, 0.0f, 0.0f);
-        }
         
-        // 移动速度计算逻辑：属性值转换为移动速度加成
-        // 属性值解释：1.0 = 基础值，大于1.0表示加速，小于1.0表示减
+        // 移动速度计算逻辑：属性值直接作为偏移量加到原始值上
+        // 属性值解释：1.0 = 无影响，大于1.0表示加速，小于1.0表示减速
         double playerMoveSpeed = entityAttribute.getMoveSpeed();
         
-        // 属性值已经是计算后的倍率值，直接使用即可
-        // 例如：属.02 -> 加成比例 = 1.02 / 100 = 0.0102
-        float playerSpeedBonus = (float) (playerMoveSpeed / 10.0D);
+        // 计算相对于基础值1.0的偏移量
+        // 例如：属性值1.0 -> 偏移0（无影响）
+        //       属性值1.5 -> 偏移+0.5（+50%移速）
+        //       属性值0.5 -> 偏移-0.5（-50%移速）
+        float playerSpeedOffset = (float) (playerMoveSpeed - 1.0D);
         
-        // 创建属性带来的移动速度加成
-        MoveSpeed playerBonusMoveSpeed = new MoveSpeed(
-            playerSpeedBonus,  // base加成
-            playerSpeedBonus,  // aim加成
-            0.0f              // reload加成（保持原值）
+        // 直接将偏移量加到原始MoveSpeed上（不是乘，是加）
+        // 这样：final = original + (playerAttribute - 1.0)
+        return new MoveSpeed(
+            originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset,
+            originalMoveSpeed.getAimMultiplier() + playerSpeedOffset,
+            originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset
         );
-        
-        // 使用TACZ的MoveSpeed.of方法合并加成
-        return MoveSpeed.of(originalMoveSpeed, java.util.List.of(playerBonusMoveSpeed));
     }
     
     public LinkedList<ExtraDamage.DistanceDamagePair> calculateDamage(AttachmentCacheProperty cacheProperty) {
