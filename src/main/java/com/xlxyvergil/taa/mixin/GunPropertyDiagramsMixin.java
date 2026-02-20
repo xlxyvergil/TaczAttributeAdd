@@ -294,7 +294,9 @@ public class GunPropertyDiagramsMixin {
             
             // 获取玩家实体属性
             EntityAttributeHelper entityAttribute = new EntityAttributeHelper(player, "");
-            float recoilFactor = (float) entityAttribute.getRecoil();
+            // 计算方式：综合属性 × 细分属性（乘法叠加）
+            float recoilPitchFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilPitch());
+            float recoilYawFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilYaw());
             
             // 获取原始后坐力数据用于计算差异
             GunRecoil recoil = gunData.getRecoil();
@@ -309,9 +311,9 @@ public class GunPropertyDiagramsMixin {
                 float attachmentModifiedYaw = recoilData != null && recoilData.right() != null ? 
                     (float) recoilData.right().eval(originalYaw) : originalYaw;
                 
-                // 应用玩家属性修改（在配件基础上）
-                float finalPitch = attachmentModifiedPitch * recoilFactor;
-                float finalYaw = attachmentModifiedYaw * recoilFactor;
+                // 应用玩家属性修改（在配件基础上）- 使用拆分后的计算方式
+                float finalPitch = attachmentModifiedPitch * recoilPitchFactor;
+                float finalYaw = attachmentModifiedYaw * recoilYawFactor;
                 
                 // 计算总差值（相对于原始值）
                 float pitchDifference = finalPitch - originalPitch;

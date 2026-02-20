@@ -29,7 +29,8 @@ public class CameraSetupEventMixin {
         net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
         if (mc.player != null) {
             EntityAttributeHelper entityAttribute = new EntityAttributeHelper(mc.player, "");
-            float recoilFactor = (float) entityAttribute.getRecoil();
+            // 计算方式：综合属性 × 细分属性（乘法叠加）
+            float recoilFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilPitch());
             return originalValue * recoilFactor;
         }
         
@@ -52,7 +53,8 @@ public class CameraSetupEventMixin {
         net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
         if (mc.player != null) {
             EntityAttributeHelper entityAttribute = new EntityAttributeHelper(mc.player, "");
-            float recoilFactor = (float) entityAttribute.getRecoil();
+            // 计算方式：综合属性 × 细分属性（乘法叠加）
+            float recoilFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilYaw());
             return originalValue * recoilFactor;
         }
         

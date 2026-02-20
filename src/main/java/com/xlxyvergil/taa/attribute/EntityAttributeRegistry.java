@@ -80,6 +80,26 @@ public class EntityAttributeRegistry {
     public static final RegistryObject<Attribute> INACCURACY = ATTRIBUTES.register("inaccuracy", 
         () -> new RangedAttribute("attribute.name.taa.inaccuracy", 1.0D, 0.0D, 1024.0D).setSyncable(true));
     
+    /** 准确度细分属性 - 站立时的散布程度 */
+    public static final RegistryObject<Attribute> INACCURACY_STAND = ATTRIBUTES.register("inaccuracy_stand", 
+        () -> new RangedAttribute("attribute.name.taa.inaccuracy_stand", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    /** 准确度细分属性 - 移动时的散布程度 */
+    public static final RegistryObject<Attribute> INACCURACY_MOVE = ATTRIBUTES.register("inaccuracy_move", 
+        () -> new RangedAttribute("attribute.name.taa.inaccuracy_move", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    /** 准确度细分属性 - 蹲下时的散布程度 */
+    public static final RegistryObject<Attribute> INACCURACY_SNEAK = ATTRIBUTES.register("inaccuracy_sneak", 
+        () -> new RangedAttribute("attribute.name.taa.inaccuracy_sneak", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    /** 准确度细分属性 - 趴下时的散布程度 */
+    public static final RegistryObject<Attribute> INACCURACY_LIE = ATTRIBUTES.register("inaccuracy_lie", 
+        () -> new RangedAttribute("attribute.name.taa.inaccuracy_lie", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    /** 准确度细分属性 - 瞄准时的散布程度 */
+    public static final RegistryObject<Attribute> INACCURACY_AIM = ATTRIBUTES.register("inaccuracy_aim", 
+        () -> new RangedAttribute("attribute.name.taa.inaccuracy_aim", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
     /** 击退效果属性 - 影响子弹命中目标时的击退力度 */
     public static final RegistryObject<Attribute> KNOCKBACK = ATTRIBUTES.register("knockback", 
         () -> new RangedAttribute("attribute.name.taa.knockback", 1.0D, 0.0D, 1024.0D).setSyncable(true));
@@ -91,6 +111,14 @@ public class EntityAttributeRegistry {
     /** 后坐力属性 - 影响枪械射击时的后坐力大小 */
     public static final RegistryObject<Attribute> RECOIL = ATTRIBUTES.register("recoil", 
         () -> new RangedAttribute("attribute.name.taa.recoil", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    /** 后坐力细分属性 - 垂直后坐力（pitch） */
+    public static final RegistryObject<Attribute> RECOIL_PITCH = ATTRIBUTES.register("recoil_pitch", 
+        () -> new RangedAttribute("attribute.name.taa.recoil_pitch", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+    
+    /** 后坐力细分属性 - 水平后坐力（yaw） */
+    public static final RegistryObject<Attribute> RECOIL_YAW = ATTRIBUTES.register("recoil_yaw", 
+        () -> new RangedAttribute("attribute.name.taa.recoil_yaw", 1.0D, 0.0D, 1024.0D).setSyncable(true));
     
     /** 射速属性 - 影响每分钟发射的子弹数量 */
     public static final RegistryObject<Attribute> ROUNDS_PER_MINUTE = ATTRIBUTES.register("rounds_per_minute", 
@@ -170,9 +198,16 @@ public class EntityAttributeRegistry {
             event.add(type, HEADSHOT_MULTIPLIER.get());
             event.add(type, IGNITE.get());
             event.add(type, INACCURACY.get());
+            event.add(type, INACCURACY_STAND.get());
+            event.add(type, INACCURACY_MOVE.get());
+            event.add(type, INACCURACY_SNEAK.get());
+            event.add(type, INACCURACY_LIE.get());
+            event.add(type, INACCURACY_AIM.get());
             event.add(type, KNOCKBACK.get());
             event.add(type, PIERCE.get());
             event.add(type, RECOIL.get());
+            event.add(type, RECOIL_PITCH.get());
+            event.add(type, RECOIL_YAW.get());
             event.add(type, ROUNDS_PER_MINUTE.get());
             event.add(type, SILENCE.get());
             event.add(type, WEIGHT.get());

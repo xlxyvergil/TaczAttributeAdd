@@ -30,9 +30,16 @@ public class EntityAttributeHelper {
     private final double headshotMultiplier;
     private final double ignite;
     private final double inaccuracy;
+    private final double inaccuracyStand;
+    private final double inaccuracyMove;
+    private final double inaccuracySneak;
+    private final double inaccuracyLie;
+    private final double inaccuracyAim;
     private final double knockback;
     private final double pierce;
     private final double recoil;
+    private final double recoilPitch;
+    private final double recoilYaw;
     private final double roundsPerMinute;
     private final double silence;
     private final double weight;
@@ -71,9 +78,16 @@ public class EntityAttributeHelper {
         this.headshotMultiplier = getAttributeValue(EntityAttributeRegistry.HEADSHOT_MULTIPLIER.get(), 1.0D);
         this.ignite = getAttributeValue(EntityAttributeRegistry.IGNITE.get(), 1.0D);
         this.inaccuracy = getAttributeValue(EntityAttributeRegistry.INACCURACY.get(), 1.0D);
+        this.inaccuracyStand = getAttributeValue(EntityAttributeRegistry.INACCURACY_STAND.get(), 1.0D);
+        this.inaccuracyMove = getAttributeValue(EntityAttributeRegistry.INACCURACY_MOVE.get(), 1.0D);
+        this.inaccuracySneak = getAttributeValue(EntityAttributeRegistry.INACCURACY_SNEAK.get(), 1.0D);
+        this.inaccuracyLie = getAttributeValue(EntityAttributeRegistry.INACCURACY_LIE.get(), 1.0D);
+        this.inaccuracyAim = getAttributeValue(EntityAttributeRegistry.INACCURACY_AIM.get(), 1.0D);
         this.knockback = getAttributeValue(EntityAttributeRegistry.KNOCKBACK.get(), 1.0D);
         this.pierce = getAttributeValue(EntityAttributeRegistry.PIERCE.get(), 1.0D);
         this.recoil = getAttributeValue(EntityAttributeRegistry.RECOIL.get(), 1.0D);
+        this.recoilPitch = getAttributeValue(EntityAttributeRegistry.RECOIL_PITCH.get(), 1.0D);
+        this.recoilYaw = getAttributeValue(EntityAttributeRegistry.RECOIL_YAW.get(), 1.0D);
         this.roundsPerMinute = getAttributeValue(EntityAttributeRegistry.ROUNDS_PER_MINUTE.get(), 1.0D);
         this.silence = getAttributeValue(EntityAttributeRegistry.SILENCE.get(), 1.0D);
         this.weight = getAttributeValue(EntityAttributeRegistry.WEIGHT.get(), 1.0D);
@@ -206,9 +220,16 @@ public class EntityAttributeHelper {
     public double getHeadshotMultiplier() { return headshotMultiplier; }
     public double getIgnite() { return ignite; }
     public double getInaccuracy() { return inaccuracy; }
+    public double getInaccuracyStand() { return inaccuracyStand; }
+    public double getInaccuracyMove() { return inaccuracyMove; }
+    public double getInaccuracySneak() { return inaccuracySneak; }
+    public double getInaccuracyLie() { return inaccuracyLie; }
+    public double getInaccuracyAim() { return inaccuracyAim; }
     public double getKnockback() { return knockback; }
     public double getPierce() { return pierce; }
     public double getRecoil() { return recoil; }
+    public double getRecoilPitch() { return recoilPitch; }
+    public double getRecoilYaw() { return recoilYaw; }
     public double getRoundsPerMinute() { return roundsPerMinute; }
     public double getSilence() { return silence; }
     public double getWeight() { return weight; }

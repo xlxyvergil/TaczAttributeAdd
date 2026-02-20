@@ -247,38 +247,21 @@ public class PropertyCalculator {
     public Map<InaccuracyType, Float> calculateInaccuracy(AttachmentCacheProperty cacheProperty) {
         Map<InaccuracyType, Float> originalInaccuracy = cacheProperty.getCache(GunProperties.INACCURACY);
         if (originalInaccuracy == null || originalInaccuracy.isEmpty()) {
-            return Map.of();
+            return new java.util.HashMap<>();
         }
         
-        float entityAttributeFactor = (float) entityAttribute.getInaccuracy();
-        // 创建新的Map来存储计算结果，包含所种InaccuracyType，使用除法因
-        return Map.of(
-            InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) / entityAttributeFactor,
-            InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) / entityAttributeFactor,
-            InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) / entityAttributeFactor,
-            InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) / entityAttributeFactor,
-            InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) / entityAttributeFactor
-        );
+        // 创建可变的Map来存储计算结果，避免与其他mod（如Gun Durability）的兼容性问题
+        java.util.HashMap<InaccuracyType, Float> result = new java.util.HashMap<>();
+        
+        // 计算方式：综合属性 × 细分属性（乘法叠加）
+        float baseFactor = (float) entityAttribute.getInaccuracy();
+        result.put(InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracyStand());
+        result.put(InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracyMove());
+        result.put(InaccuracyType.SNEAK, originalInaccuracy.getOrDefault(InaccuracyType.SNEAK, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracySneak());
+        result.put(InaccuracyType.LIE, originalInaccuracy.getOrDefault(InaccuracyType.LIE, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracyLie());
+        result.put(InaccuracyType.AIM, originalInaccuracy.getOrDefault(InaccuracyType.AIM, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracyAim());
+        return result;
     }
-    
-/*
-    // 后坐力计算已移除，改为在CameraSetupEventMixin中直接处理
-    // 避免修改缓存数据
-    public ParameterizedCachePair<Float, Float> calculateRecoil(AttachmentCacheProperty cacheProperty) {
-        // 获取TACZ原版RecoilModifier计算的结果（包含原始后坐力值和配件修改
-        ParameterizedCachePair<Float, Float> attachmentRecoil = cacheProperty.getCache(com.tacz.guns.resource.modifier.custom.RecoilModifier.ID);
-        
-        float entityAttributeFactor = (float) entityAttribute.getRecoil();
-        
-        // 直接使用eval方法计算最终后坐力值，应用属性修
-        double finalPitch = attachmentRecoil.left().eval(attachmentRecoil.left().getDefaultValue()) * entityAttributeFactor;
-        double finalYaw = attachmentRecoil.right().eval(attachmentRecoil.right().getDefaultValue()) * entityAttributeFactor;
-        
-        // 创建包含最终计算结果的ParameterizedCachePair
-        return ParameterizedCachePair.of(java.util.Collections.emptyList(), java.util.Collections.emptyList(), 
-            (float) finalPitch, (float) finalYaw);
-    }
-*/
     
     public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
         Pair<Integer, Boolean> originalSilence = cacheProperty.getCache(GunProperties.SILENCE);
