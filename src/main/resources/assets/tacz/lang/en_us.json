@@ -1,9 +1,9 @@
 {
   "tooltip.tacz.attachment.reload_time.change": "Reload Time Change",
-  "gui.tacz.gun_refit.property_diagrams.reload_time": "Reload Time Multiplier",
-  "gui.tacz.gun_refit.property_diagrams.bullet_count": "Bullet Count Multiplier",
-  "gui.tacz.gun_refit.property_diagrams.melee_distance": "Melee Distance Multiplier",
-  "gui.tacz.gun_refit.property_diagrams.melee_damage": "Melee Base Damage Multiplier",
+  "gui.tacz.gun_refit.property_diagrams.reload_time": "Reload Time",
+  "gui.tacz.gun_refit.property_diagrams.bullet_count": "Bullet Count",
+  "gui.tacz.gun_refit.property_diagrams.melee_distance": "Melee Distance",
+  "gui.tacz.gun_refit.property_diagrams.melee_damage": "Melee Base Damage",
   "tooltip.tacz.attachment.bullet_count.change": "Bullet Count Multiplier",
   "tooltip.tacz.attachment.melee.distance": "Melee Distance Multiplier",
   "tooltip.tacz.attachment.melee.damage": "Melee Damage Multiplier",

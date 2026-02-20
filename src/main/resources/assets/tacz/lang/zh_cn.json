@@ -1,9 +1,9 @@
 {
   "tooltip.tacz.attachment.reload_time.change": "装填时间变更",
-  "gui.tacz.gun_refit.property_diagrams.reload_time": "装填时间倍率",
-  "gui.tacz.gun_refit.property_diagrams.bullet_count": "弹头数量倍率",
-  "gui.tacz.gun_refit.property_diagrams.melee_distance": "近战距离倍率",
-  "gui.tacz.gun_refit.property_diagrams.melee_damage": "近战基础伤害倍率",
+  "gui.tacz.gun_refit.property_diagrams.reload_time": "装填时间",
+  "gui.tacz.gun_refit.property_diagrams.bullet_count": "弹头数量",
+  "gui.tacz.gun_refit.property_diagrams.melee_distance": "近战距离",
+  "gui.tacz.gun_refit.property_diagrams.melee_damage": "近战基础伤害",
   "tooltip.tacz.attachment.bullet_count.change": "弹头数量倍率",
   "tooltip.tacz.attachment.melee.distance": "近战距离倍率",
   "tooltip.tacz.attachment.melee.damage": "近战伤害倍率",

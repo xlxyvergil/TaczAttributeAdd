@@ -177,25 +177,13 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
         double modifierPercent = Math.min(Math.abs(timeDifference) / (maxReloadTime * 2), 1);
 
         String titleKey = "gui.tacz.gun_refit.property_diagrams.reload_time";
-        // 装填时间越短越好，所以时间减少用绿色（带-号），时间增加用红色（带+号）
-        if (timeDifference < 0) {
-            // 时间减少（装填加速）用绿色显示，带-号
-            String positivelyString = String.format("%.2fs §a(%.2fs)", modifiedValue, timeDifference);
-            String defaultString = String.format("%.2fs", modifiedValue);
-            DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, positivelyString, positivelyString, defaultString, false);
-            return Collections.singletonList(diagramsData);
-        } else if (timeDifference > 0) {
-            // 时间增加（装填减速）用红色显示，带+号
-            String negativelyString = String.format("%.2fs §c(+%.2fs)", modifiedValue, timeDifference);
-            String defaultString = String.format("%.2fs", modifiedValue);
-            DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, negativelyString, negativelyString, defaultString, false);
-            return Collections.singletonList(diagramsData);
-        } else {
-            // 无变化
-            String defaultString = String.format("%.2fs", modifiedValue);
-            DiagramsData diagramsData = new DiagramsData(percent, 0, timeDifference, titleKey, defaultString, defaultString, defaultString, false);
-            return Collections.singletonList(diagramsData);
-        }
+        // 装填时间越短越好，所以时间减少用绿色，时间增加用红色
+        // 注意：TACZ的positivelyString表示数值增加（红色/不好），negativelyString表示数值减少（绿色/好）
+        String positivelyString = String.format("%.2fs §c(+%.2fs)", modifiedValue, timeDifference);
+        String negativelyString = String.format("%.2fs §a(%.2fs)", modifiedValue, timeDifference);
+        String defaultString = String.format("%.2fs", modifiedValue);
+        DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, positivelyString, negativelyString, defaultString, false);
+        return Collections.singletonList(diagramsData);
     }
 
     @Override
