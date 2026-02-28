@@ -15,7 +15,6 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.MeleeData;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
-import com.tacz.guns.resource.pojo.data.gun.GunDefaultMeleeData;
 import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -30,8 +29,7 @@ import java.util.List;
 
 /**
  * 近战距离 Modifier
- * 用于修改枪械的近战距离
- * 基于 TACZ 源代码的标准实现模式
+ * 仅计算配件提供的近战距离，属性计算由 PropertyCalculator 处理
  */
 public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
     public static final String ID = "melee_distance";
@@ -49,41 +47,32 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
 
     @Override
     public CacheValue<Float> initCache(ItemStack gunItem, GunData gunData) {
-        // 获取枪械的近战数据
         GunMeleeData meleeData = gunData.getMeleeData();
         if (meleeData == null) {
             return new CacheValue<>(0.0f);
         }
         
-        // 只返回枪械基础距离，不添加默认近战距离
-        // 默认近战距离由 TACZ 原版逻辑在 doMelee 中添加
+        // 只计算枪械基础距离 + 配件距离
         float baseDistance = meleeData.getDistance();
         
-        // 获取当前安装的配件（枪口或枪托）的近战距离
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun != null) {
-            // 检查枪口配件
             ResourceLocation muzzleId = iGun.getAttachmentId(gunItem, AttachmentType.MUZZLE);
             float attachmentDistance = getMeleeAttachmentDistance(muzzleId);
             if (attachmentDistance > 0) {
                 baseDistance += attachmentDistance;
             } else {
-                // 检查枪托配件
                 ResourceLocation stockId = iGun.getAttachmentId(gunItem, AttachmentType.STOCK);
                 attachmentDistance = getMeleeAttachmentDistance(stockId);
                 if (attachmentDistance > 0) {
                     baseDistance += attachmentDistance;
                 }
-                // 无配件时不添加默认近战距离，由 mixin 处理
             }
         }
         
         return new CacheValue<>(baseDistance);
     }
     
-    /**
-     * 获取配件的近战距离
-     */
     private float getMeleeAttachmentDistance(ResourceLocation attachmentId) {
         if (DefaultAssets.isEmptyAttachmentId(attachmentId)) {
             return 0.0f;
@@ -107,50 +96,30 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
     @Override
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        // 基础距离 = 枪械基础距离（作为显示基准）
+        // 基础值 = data 中的原始近战距离
         GunMeleeData meleeData = gunData.getMeleeData();
         float baseDistance = meleeData != null ? meleeData.getDistance() : 0.0f;
         
-        // 计算配件提供的距离（用于显示总变动）
-        float attachmentDistance = 0.0f;
-        IGun iGun = IGun.getIGunOrNull(gunItem);
-        if (iGun != null) {
-            // 检查枪口配件
-            ResourceLocation muzzleId = iGun.getAttachmentId(gunItem, AttachmentType.MUZZLE);
-            float muzzleDistance = getMeleeAttachmentDistance(muzzleId);
-            if (muzzleDistance > 0) {
-                attachmentDistance = muzzleDistance;
-            } else {
-                // 检查枪托配件
-                ResourceLocation stockId = iGun.getAttachmentId(gunItem, AttachmentType.STOCK);
-                float stockDistance = getMeleeAttachmentDistance(stockId);
-                if (stockDistance > 0) {
-                    attachmentDistance = stockDistance;
-                }
-            }
-        }
-        
-        // 获取修改后的距离（属性修改后的值，initCache 中已包含配件距离）
+        // 最终值 = 缓存中的值（已包含配件加成）
         Float modifiedDistance = cacheProperty.getCache(MeleeModifier.ID);
         if (modifiedDistance == null) {
-            modifiedDistance = baseDistance + attachmentDistance;
+            modifiedDistance = baseDistance;
         }
         
-        // 总变动值 = 配件距离 + 属性修改带来的变动
-        float totalDifference = modifiedDistance - baseDistance;
+        // 变动值 = 配件提供的加成
+        float difference = modifiedDistance - baseDistance;
         
-        // 计算近战距离的显示数据
         double distancePercent = Math.min(baseDistance / 5.0, 1);
-        double distanceModifierPercent = Math.min(Math.abs(totalDifference) / 5.0, 1);
+        double distanceModifierPercent = Math.min(Math.abs(difference) / 5.0, 1);
 
         String distanceTitleKey = "gui.tacz.gun_refit.property_diagrams.melee_distance";
-        String distancePositivelyString = String.format("%.2fm §a(+%.2fm)", modifiedDistance, totalDifference);
-        String distanceNegativelyString = String.format("%.2fm §c(%.2fm)", modifiedDistance, totalDifference);
+        String distancePositivelyString = String.format("%.2fm §a(+%.2fm)", modifiedDistance, difference);
+        String distanceNegativelyString = String.format("%.2fm §c(%.2fm)", modifiedDistance, difference);
         String distanceDefaultString = String.format("%.2fm", modifiedDistance);
-        boolean distancePositivelyBetter = true; // 近战距离越长越好
+        boolean distancePositivelyBetter = true;
 
         DiagramsData distanceDiagramsData = new DiagramsData(
-                distancePercent, distanceModifierPercent, totalDifference, 
+                distancePercent, distanceModifierPercent, difference, 
                 distanceTitleKey, distancePositivelyString, distanceNegativelyString, 
                 distanceDefaultString, distancePositivelyBetter);
 

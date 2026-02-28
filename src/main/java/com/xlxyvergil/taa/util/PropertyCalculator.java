@@ -188,11 +188,11 @@ public class PropertyCalculator {
     public float calculateMeleeDistance(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DISTANCE);
         if (originalValue == null) {
-            originalValue = 1.0f; // 默认近战距离
+            originalValue = 0.0f;
         }
         double entityAttributeFactor = entityAttribute.getMeleeDistance();
-        // 近战距离采用加法计算，但需要考虑Forge默认+1
-        return originalValue + (float) (entityAttributeFactor - 1.0);
+        // 近战距离采用加法计算，属性值直接加到原始值上
+        return originalValue + (float) entityAttributeFactor;
     }
     
     // 复杂属性计算方

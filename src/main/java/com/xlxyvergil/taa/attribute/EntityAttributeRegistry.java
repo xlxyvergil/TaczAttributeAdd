@@ -150,9 +150,9 @@ public class EntityAttributeRegistry {
     public static final RegistryObject<Attribute> MELEE_DAMAGE = ATTRIBUTES.register("melee_damage", 
         () -> new RangedAttribute("attribute.name.taa.melee_damage", 1.0D, 0.0D, 1024.0D).setSyncable(true));
 
-    /** 近战距离属性 - 影响枪械近战攻击的距离范围 */
+    /** 近战距离属性 - 影响枪械近战攻击的距离范围（默认值为0，表示无加成） */
     public static final RegistryObject<Attribute> MELEE_DISTANCE = ATTRIBUTES.register("melee_distance", 
-        () -> new RangedAttribute("attribute.name.taa.melee_distance", 1.0D, 0.0D, 1024.0D).setSyncable(true));
+        () -> new RangedAttribute("attribute.name.taa.melee_distance", 0.0D, 0.0D, 1024.0D).setSyncable(true));
 
     // 7个具体枪械类型伤害加成属性
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_PISTOL = ATTRIBUTES.register("bullet_gundamage_pistol",
