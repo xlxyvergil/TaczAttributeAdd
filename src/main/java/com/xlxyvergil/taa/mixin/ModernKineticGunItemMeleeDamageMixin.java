@@ -9,7 +9,6 @@ import com.tacz.guns.resource.pojo.data.gun.GunDefaultMeleeData;
 import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
 import com.xlxyvergil.taa.modifier.MeleeDamageModifier;
 import com.tacz.guns.api.TimelessAPI;
-import com.tacz.guns.resource.index.CommonGunIndex;
 import com.tacz.guns.api.DefaultAssets;
 import com.tacz.guns.entity.shooter.ShooterDataHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,47 +50,43 @@ public class ModernKineticGunItemMeleeDamageMixin {
     
     /**
      * 自定义近战逻辑
-     * 复制原始逻辑，但加入我们的伤害计算
+     * 复用 TACZ 原版逻辑，但使用缓存的伤害值（已包含属性修改）
+     * 
+     * 注意：MeleeDamageModifier.initCache 已经按照 TACZ 原版逻辑计算了基础伤害
+     * （有配件用配件伤害，无配件用默认伤害），然后 eval 应用了属性修改器的倍率/加值
      */
     private void executeCustomMelee(ShooterDataHolder dataHolder, LivingEntity user, ItemStack gunItem, ModernKineticGunItem gunItemObj) {
         ResourceLocation gunId = gunItemObj.getGunId(gunItem);
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(gunIndex -> {
             GunMeleeData meleeData = gunIndex.getGunData().getMeleeData();
             float distance = meleeData.getDistance();
+            
+            // 获取缓存的伤害值（已包含配件伤害和属性修改）
+            float finalDamage = getModifiedDamage(user);
 
-            // 获取我们缓存的近战伤害
-            float cachedDamage = getModifiedDamage(user);
-
-            // 检查枪口配件（刺刀）
+            // 1. 检查枪口配件（刺刀）- 复用 TACZ 原版逻辑
             ResourceLocation muzzleId = gunItemObj.getAttachmentId(gunItem, AttachmentType.MUZZLE);
             MeleeData muzzleData = getMeleeData(muzzleId);
             if (muzzleData != null) {
-                // 有配件情况：叠加伤害 = 配件伤害 + 缓存伤害
-                float finalDamage = muzzleData.getDamage() + cachedDamage;
                 doMeleeCustom(gunItemObj, user, distance, muzzleData.getDistance(), muzzleData.getRangeAngle(), 
                            muzzleData.getKnockback(), finalDamage, muzzleData.getEffects());
                 return;
             }
 
-            // 检查枪托配件
+            // 2. 检查枪托配件 - 复用 TACZ 原版逻辑
             ResourceLocation stockId = gunItemObj.getAttachmentId(gunItem, AttachmentType.STOCK);
             MeleeData stockData = getMeleeData(stockId);
             if (stockData != null) {
-                // 有配件情况：叠加伤害 = 配件伤害 + 缓存伤害
-                float finalDamage = stockData.getDamage() + cachedDamage;
                 doMeleeCustom(gunItemObj, user, distance, stockData.getDistance(), stockData.getRangeAngle(), 
                            stockData.getKnockback(), finalDamage, stockData.getEffects());
                 return;
             }
 
-            // 检查默认近战
+            // 3. 没有近战配件，使用默认近战数据 - 复用 TACZ 原版逻辑
             GunDefaultMeleeData defaultData = meleeData.getDefaultMeleeData();
             if (defaultData == null) {
                 return;
             }
-            
-            // 无配件情况：缓存伤害覆盖基础伤害
-            float finalDamage = cachedDamage > 0 ? cachedDamage : defaultData.getDamage();
             doMeleeCustom(gunItemObj, user, distance, defaultData.getDistance(), defaultData.getRangeAngle(), 
                        defaultData.getKnockback(), finalDamage, Collections.emptyList());
         });

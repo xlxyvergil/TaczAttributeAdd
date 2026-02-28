@@ -19,6 +19,8 @@ public class ModernKineticGunItemMeleeDistanceMixin {
     /**
      * 修改近战攻击距离
      * 修改 distance = gunDistance + meleeDistance 的计算结果
+     * 注意：MeleeModifier 的 initCache 已经包含了枪械基础距离和配件距离的总和
+     * 所以这里直接用缓存值替换原始计算结果
      */
     @ModifyVariable(
         method = "doMelee",
@@ -29,14 +31,16 @@ public class ModernKineticGunItemMeleeDistanceMixin {
         // 设置 ShooterContext 确保上下文正确
         com.xlxyvergil.taa.context.ShooterContext.setShooter(user);
         
-        // 从配件缓存中获取修改后的近战距离
+        // 从配件缓存中获取修改后的总近战距离
+        // MeleeModifier.initCache 已经计算了：枪械基础距离 + 配件距离
+        // 然后 eval 方法应用了属性修改器的倍率/加值
         IGunOperator operator = IGunOperator.fromLivingEntity(user);
         if (operator != null) {
             AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
             if (cacheProperty != null) {
                 Float modifiedDistance = cacheProperty.getCache(MeleeModifier.ID);
                 if (modifiedDistance != null && modifiedDistance > 0) {
-                    // 返回修改后的距离值
+                    // 返回修改后的总距离值（已包含配件距离和属性修改）
                     return modifiedDistance;
                 }
             }

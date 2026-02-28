@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="taa"
-version="1.2.0"
+version="1.2.1"
 displayName="Tacz Attribute Add"
 description="Adds additional attributes and functionality to TACZ guns"
 authors="xlxyvergil"
