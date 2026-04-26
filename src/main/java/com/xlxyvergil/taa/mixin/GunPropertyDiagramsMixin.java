@@ -21,6 +21,8 @@ import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
+import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
+import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.*;
@@ -41,6 +43,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * 覆写GunPropertyDiagrams类的draw方法
@@ -303,10 +308,10 @@ public class GunPropertyDiagramsMixin {
             
             // ========== 枪械伤害显示（整合KuvaLich）==========
             float originalDamage = gunData.getBulletData().getDamageAmount();
-            Float taaDamageMod = cacheProperty.<Float>getCache(DamageModifier.ID);
+            LinkedList<DistanceDamagePair> taaDamageMod = cacheProperty.getCache(DamageModifier.ID);
             float modifiedDamage = originalDamage;
-            if (taaDamageMod != null && taaDamageMod != 0) {
-                modifiedDamage *= (1 + taaDamageMod);
+            if (taaDamageMod != null && !taaDamageMod.isEmpty()) {
+                modifiedDamage = taaDamageMod.getFirst().getDamage();
             }
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + gun_damage)
             float kuvaDamageMod = KuvaLichIntegrationHelper.getGunDamageMod(gunItem, player);
@@ -597,11 +602,11 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // ========== 精准度显示（整合KuvaLich）==========
-            Float taaInaccuracyMod = cacheProperty.<Float>getCache(InaccuracyModifier.ID);
+            Map<InaccuracyType, Float> taaInaccuracyMod = cacheProperty.getCache(InaccuracyModifier.ID);
             float originalInaccuracy = gunData.getInaccuracy() != null ? gunData.getInaccuracy().getOrDefault(InaccuracyType.STAND, 0f) : 0f;
             float modifiedInaccuracy = originalInaccuracy;
-            if (taaInaccuracyMod != null && taaInaccuracyMod != 0) {
-                modifiedInaccuracy *= (1 + taaInaccuracyMod);
+            if (taaInaccuracyMod != null && taaInaccuracyMod.containsKey(InaccuracyType.STAND)) {
+                modifiedInaccuracy = taaInaccuracyMod.get(InaccuracyType.STAND);
             }
             // 整合KuvaLich: 最终 = 我们计算的 * (1 - accuracy)
             float kuvaAccuracyMod = KuvaLichIntegrationHelper.getAccuracyMod(gunItem, player);
