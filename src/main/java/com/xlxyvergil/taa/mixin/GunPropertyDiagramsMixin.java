@@ -10,13 +10,16 @@ import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.api.item.gun.FireMode;
 import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.client.gui.components.refit.GunPropertyDiagrams;
+import com.tacz.guns.config.sync.SyncConfig;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.modifier.custom.*;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
+import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.FeedType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
 import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
@@ -307,7 +310,25 @@ public class GunPropertyDiagramsMixin {
             }
             
             // ========== 枪械伤害显示（整合KuvaLich）==========
-            float originalDamage = gunData.getBulletData().getDamageAmount();
+            // 必要数据获取
+            BulletData bulletData = gunData.getBulletData();
+            GunFireModeAdjustData fireModeAdjustData = gunData.getFireModeAdjustData(fireMode);
+
+            // 获取最原始的数值
+            float rawDamage = bulletData.getDamageAmount();
+            // 额外伤害
+            ExtraDamage extraDamage = bulletData.getExtraDamage();
+            // 开火模式调整
+            // 最终的 base 伤害
+            float originalDamage = fireModeAdjustData != null ? fireModeAdjustData.getDamageAmount() : 0f;
+            if (extraDamage != null && extraDamage.getDamageAdjust() != null) {
+                originalDamage += extraDamage.getDamageAdjust().get(0).getDamage();
+            } else {
+                originalDamage += rawDamage;
+            }
+            // 应用基础伤害倍率
+            originalDamage *= SyncConfig.DAMAGE_BASE_MULTIPLIER.get();
+            
             LinkedList<DistanceDamagePair> taaDamageMod = cacheProperty.getCache(DamageModifier.ID);
             float modifiedDamage = originalDamage;
             if (taaDamageMod != null && !taaDamageMod.isEmpty()) {
@@ -341,7 +362,13 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // ========== 爆头伤害显示（整合KuvaLich）==========
-            float originalHeadshot = gunData.getBulletData().getExtraDamage() != null ? gunData.getBulletData().getExtraDamage().getHeadShotMultiplier() : 1f;
+            // 额外伤害
+            // 开火模式调整
+            // 最终的 base
+            float originalHeadshot = extraDamage != null ? extraDamage.getHeadShotMultiplier() : 0;
+            originalHeadshot = fireModeAdjustData != null ? originalHeadshot + fireModeAdjustData.getHeadShotMultiplier() : originalHeadshot;
+            originalHeadshot *= SyncConfig.HEAD_SHOT_BASE_MULTIPLIER.get();
+            
             Float taaHeadshotMod = cacheProperty.<Float>getCache(HeadShotModifier.ID);
             float modifiedHeadshot = originalHeadshot;
             if (taaHeadshotMod != null && taaHeadshotMod != 0) {
@@ -358,7 +385,7 @@ public class GunPropertyDiagramsMixin {
             int headshotLength = (int) (barStartX + barMaxWidth * headshotPercent);
             int headshotDiffLength = (int) (barMaxWidth * headshotDiff / 5.0);
             
-            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.headshot_multiplier"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.head_shot"), nameTextStartX, yOffset[0], fontColor, false);
             graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
             graphics.fill(barStartX, yOffset[0] + 2, headshotLength, yOffset[0] + 6, barBaseColor);
             if (headshotDiff > 0) {
@@ -465,7 +492,7 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // ========== 射速显示（整合KuvaLich）==========
-            int originalRpm = gunData.getRoundsPerMinute();
+            int originalRpm = gunData.getRoundsPerMinute(fireMode);
             Integer taaRpmMod = cacheProperty.<Integer>getCache(RpmModifier.ID);
             int modifiedRpm = originalRpm;
             if (taaRpmMod != null && taaRpmMod != 0) {
@@ -478,28 +505,31 @@ public class GunPropertyDiagramsMixin {
             }
             int rpmDiff = modifiedRpm - originalRpm;
             
-            double rpmPercent = Mth.clamp(originalRpm / 1200.0, 0, 1);
+            double rpmPercent = Math.min(originalRpm / 1200.0, 1);
             int rpmLength = (int) (barStartX + barMaxWidth * rpmPercent);
             int rpmDiffLength = (int) (barMaxWidth * rpmDiff / 1200.0);
             
-            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.rounds_per_minute"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.rpm"), nameTextStartX, yOffset[0], fontColor, false);
             graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
             graphics.fill(barStartX, yOffset[0] + 2, rpmLength, yOffset[0] + 6, barBaseColor);
             if (rpmDiff > 0) {
                 int barRight = Math.min(rpmLength + rpmDiffLength, barEndX);
                 graphics.fill(rpmLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
-                graphics.drawString(font, String.format("%d §a(+%d)", modifiedRpm, rpmDiff), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.drawString(font, String.format("%drpm §a(+%d)", modifiedRpm, rpmDiff), valueTextStartX, yOffset[0], fontColor, false);
             } else if (rpmDiff < 0) {
                 int barLeft = Math.max(rpmLength + rpmDiffLength, barStartX);
                 graphics.fill(barLeft, yOffset[0] + 2, rpmLength, yOffset[0] + 6, barNegativeColor);
-                graphics.drawString(font, String.format("%d §c(%d)", modifiedRpm, rpmDiff), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.drawString(font, String.format("%drpm §c(%d)", modifiedRpm, rpmDiff), valueTextStartX, yOffset[0], fontColor, false);
             } else {
-                graphics.drawString(font, String.format("%d", modifiedRpm), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.drawString(font, String.format("%drpm", modifiedRpm), valueTextStartX, yOffset[0], fontColor, false);
             }
             yOffset[0] += 10;
             
             // ========== 弹丸速度显示（整合KuvaLich）==========
             float originalAmmoSpeed = gunData.getBulletData().getSpeed();
+            if (fireModeAdjustData != null) {
+                originalAmmoSpeed += fireModeAdjustData.getSpeed();
+            }
             Float taaAmmoSpeedMod = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
             float modifiedAmmoSpeed = originalAmmoSpeed;
             if (taaAmmoSpeedMod != null && taaAmmoSpeedMod != 0) {
@@ -512,9 +542,9 @@ public class GunPropertyDiagramsMixin {
             }
             float ammoSpeedDiff = modifiedAmmoSpeed - originalAmmoSpeed;
             
-            double ammoSpeedPercent = Mth.clamp(originalAmmoSpeed / 500.0, 0, 1);
+            double ammoSpeedPercent = Math.min(originalAmmoSpeed / 600.0, 1);
             int ammoSpeedLength = (int) (barStartX + barMaxWidth * ammoSpeedPercent);
-            int ammoSpeedDiffLength = (int) (barMaxWidth * ammoSpeedDiff / 500.0);
+            int ammoSpeedDiffLength = (int) (barMaxWidth * ammoSpeedDiff / 600.0);
             
             graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_speed"), nameTextStartX, yOffset[0], fontColor, false);
             graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
@@ -522,13 +552,13 @@ public class GunPropertyDiagramsMixin {
             if (ammoSpeedDiff > 0) {
                 int barRight = Math.min(ammoSpeedLength + ammoSpeedDiffLength, barEndX);
                 graphics.fill(ammoSpeedLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
-                graphics.drawString(font, String.format("%.0f §a(+%.0f)", modifiedAmmoSpeed, ammoSpeedDiff), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.drawString(font, String.format("%dm/s §a(+%d)", Math.round(modifiedAmmoSpeed), Math.round(ammoSpeedDiff)), valueTextStartX, yOffset[0], fontColor, false);
             } else if (ammoSpeedDiff < 0) {
                 int barLeft = Math.max(ammoSpeedLength + ammoSpeedDiffLength, barStartX);
                 graphics.fill(barLeft, yOffset[0] + 2, ammoSpeedLength, yOffset[0] + 6, barNegativeColor);
-                graphics.drawString(font, String.format("%.0f §c(%.0f)", modifiedAmmoSpeed, ammoSpeedDiff), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.drawString(font, String.format("%dm/s §c(%d)", Math.round(modifiedAmmoSpeed), Math.round(ammoSpeedDiff)), valueTextStartX, yOffset[0], fontColor, false);
             } else {
-                graphics.drawString(font, String.format("%.0f", modifiedAmmoSpeed), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.drawString(font, String.format("%dm/s", Math.round(modifiedAmmoSpeed)), valueTextStartX, yOffset[0], fontColor, false);
             }
             yOffset[0] += 10;
             
@@ -585,7 +615,7 @@ public class GunPropertyDiagramsMixin {
             int adsLength = (int) (barStartX + barMaxWidth * adsPercent);
             int adsDiffLength = (int) (barMaxWidth * adsDiff / 1.0);
             
-            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ads_time"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ads"), nameTextStartX, yOffset[0], fontColor, false);
             graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
             graphics.fill(barStartX, yOffset[0] + 2, adsLength, yOffset[0] + 6, barBaseColor);
             if (adsDiff < 0) {
@@ -602,8 +632,13 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // ========== 精准度显示（整合KuvaLich）==========
+            // 腰射扩散
+            float originalInaccuracy = gunData.getInaccuracy(InaccuracyType.STAND);
+            if (fireModeAdjustData != null) {
+                originalInaccuracy += fireModeAdjustData.getOtherInaccuracy();
+            }
+            
             Map<InaccuracyType, Float> taaInaccuracyMod = cacheProperty.getCache(InaccuracyModifier.ID);
-            float originalInaccuracy = gunData.getInaccuracy() != null ? gunData.getInaccuracy().getOrDefault(InaccuracyType.STAND, 0f) : 0f;
             float modifiedInaccuracy = originalInaccuracy;
             if (taaInaccuracyMod != null && taaInaccuracyMod.containsKey(InaccuracyType.STAND)) {
                 modifiedInaccuracy = taaInaccuracyMod.get(InaccuracyType.STAND);
@@ -619,7 +654,7 @@ public class GunPropertyDiagramsMixin {
             int inaccuracyLength = (int) (barStartX + barMaxWidth * inaccuracyPercent);
             int inaccuracyDiffLength = (int) (barMaxWidth * inaccuracyDiff / 10.0);
             
-            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.inaccuracy"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.aim_inaccuracy"), nameTextStartX, yOffset[0], fontColor, false);
             graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
             graphics.fill(barStartX, yOffset[0] + 2, inaccuracyLength, yOffset[0] + 6, barBaseColor);
             if (inaccuracyDiff < 0) {
