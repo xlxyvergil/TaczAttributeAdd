@@ -20,6 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,7 +33,8 @@ import java.util.List;
  * 仅计算配件提供的近战距离，属性计算由 PropertyCalculator 处理
  */
 public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "melee_distance";
+    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
+    public static final String ID = ExtendedGunProperties.MELEE_DISTANCE.name();
 
     @Override
     public String getId() {
@@ -95,41 +97,8 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        // 基础值 = data 中的原始近战距离
-        GunMeleeData meleeData = gunData.getMeleeData();
-        float baseDistance = meleeData != null ? meleeData.getDistance() : 0.0f;
-        
-        // 最终值 = 缓存中的值（已包含配件加成）
-        Float modifiedDistance = cacheProperty.getCache(MeleeModifier.ID);
-        if (modifiedDistance == null) {
-            modifiedDistance = baseDistance;
-        }
-        
-        // 变动值 = 配件提供的加成
-        float difference = modifiedDistance - baseDistance;
-        
-        double distancePercent = Math.min(baseDistance / 5.0, 1);
-        double distanceModifierPercent = Math.min(Math.abs(difference) / 5.0, 1);
-
-        String distanceTitleKey = "gui.tacz.gun_refit.property_diagrams.melee_distance";
-        String distancePositivelyString = String.format("%.2fm §a(+%.2fm)", modifiedDistance, difference);
-        String distanceNegativelyString = String.format("%.2fm §c(%.2fm)", modifiedDistance, difference);
-        String distanceDefaultString = String.format("%.2fm", modifiedDistance);
-        boolean distancePositivelyBetter = true;
-
-        DiagramsData distanceDiagramsData = new DiagramsData(
-                distancePercent, distanceModifierPercent, difference, 
-                distanceTitleKey, distancePositivelyString, distanceNegativelyString, 
-                distanceDefaultString, distancePositivelyBetter);
-
-        return Collections.singletonList(distanceDiagramsData);
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 1;
+        return 0; // 近战距离显示由GunPropertyDiagramsMixin自行处理
     }
 
     public static class MeleeJsonProperty extends JsonProperty<Modifier> {
