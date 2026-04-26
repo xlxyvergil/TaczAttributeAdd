@@ -180,54 +180,6 @@ public class GunPropertyDiagramsMixin {
             graphics.drawString(font, sprintValueText, valueTextStartX, yOffset[0], fontColor, false);
 
             yOffset[0] += 10;
-
-            // 遍历所有modifier的getPropertyDiagramsData，但跳过后坐力和需要KuvaLich整合的modifier
-            // 这些属性由我们自己在下面单独绘制
-            AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
-                // 跳过后坐力modifier
-                if (RecoilModifier.ID.equals(key)) {
-                    return;
-                }
-                // 跳过需要KuvaLich整合的modifier，由我们自己重新绘制
-                if (DamageModifier.ID.equals(key) ||
-                    RpmModifier.ID.equals(key) ||
-                    InaccuracyModifier.ID.equals(key) ||
-                    AdsModifier.ID.equals(key) ||
-                    HeadShotModifier.ID.equals(key) ||
-                    AmmoSpeedModifier.ID.equals(key)) {
-                    return;
-                }
-                value.getPropertyDiagramsData(gunItem, gunData, cacheProperty).forEach(data -> {
-                    double defaultPercent = data.defaultPercent();
-                    double modifierPercent = data.modifierPercent();
-                    double modifier = data.modifier().doubleValue();
-                    String titleKey = data.titleKey();
-                    String positivelyString = data.positivelyString();
-                    String negativeString = data.negativeString();
-                    String defaultString = data.defaultString();
-                    boolean positivelyBetter = data.positivelyBetter();
-
-                    defaultPercent = Mth.clamp(defaultPercent, 0, 1);
-                    int defaultLength = (int) (barStartX + barMaxWidth * defaultPercent);
-                    int modifierLength = Mth.clamp(defaultLength + (int) (barMaxWidth * modifierPercent), barStartX, barEndX);
-
-                    graphics.drawString(font, Component.translatable(titleKey), nameTextStartX, yOffset[0], fontColor, false);
-                    graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
-                    graphics.fill(barStartX, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barBaseColor);
-                    if (modifier > 0) {
-                        int barColor = positivelyBetter ? barPositivelyColor : barNegativeColor;
-                        graphics.fill(defaultLength, yOffset[0] + 2, modifierLength, yOffset[0] + 6, barColor);
-                        graphics.drawString(font, positivelyString, valueTextStartX, yOffset[0], fontColor, false);
-                    } else if (modifier < 0) {
-                        int barColor = positivelyBetter ? barNegativeColor : barPositivelyColor;
-                        graphics.fill(modifierLength, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barColor);
-                        graphics.drawString(font, negativeString, valueTextStartX, yOffset[0], fontColor, false);
-                    } else {
-                        graphics.drawString(font, defaultString, valueTextStartX, yOffset[0], fontColor, false);
-                    }
-                    yOffset[0] += 10;
-                });
-            });
             
             // 在所有属性后添加爆炸范围和爆炸伤害
             // 检查：配件属性里有爆炸 OR 枪械本身数据开启了爆炸 OR 缓存中的爆炸数据启用了爆炸
@@ -785,6 +737,54 @@ public class GunPropertyDiagramsMixin {
                 graphics.drawString(font, String.format("%d", displayBulletCount), valueTextStartX, yOffset[0], fontColor, false);
             }
             yOffset[0] += 10;
+            
+            // ========== 绘制剩下的 modifier 属性 ==========
+            // 跳过后坐力和已经由我们绘制的 modifier，剩下的在这里绘制
+            AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
+                // 跳过后坐力modifier
+                if (RecoilModifier.ID.equals(key)) {
+                    return;
+                }
+                // 跳过需要KuvaLich整合的modifier，由我们自己重新绘制
+                if (DamageModifier.ID.equals(key) ||
+                    RpmModifier.ID.equals(key) ||
+                    InaccuracyModifier.ID.equals(key) ||
+                    AdsModifier.ID.equals(key) ||
+                    HeadShotModifier.ID.equals(key) ||
+                    AmmoSpeedModifier.ID.equals(key)) {
+                    return;
+                }
+                value.getPropertyDiagramsData(gunItem, gunData, cacheProperty).forEach(data -> {
+                    double defaultPercent = data.defaultPercent();
+                    double modifierPercent = data.modifierPercent();
+                    double modifier = data.modifier().doubleValue();
+                    String titleKey = data.titleKey();
+                    String positivelyString = data.positivelyString();
+                    String negativeString = data.negativeString();
+                    String defaultString = data.defaultString();
+                    boolean positivelyBetter = data.positivelyBetter();
+
+                    defaultPercent = Mth.clamp(defaultPercent, 0, 1);
+                    int defaultLength = (int) (barStartX + barMaxWidth * defaultPercent);
+                    int modifierLength = Mth.clamp(defaultLength + (int) (barMaxWidth * modifierPercent), barStartX, barEndX);
+
+                    graphics.drawString(font, Component.translatable(titleKey), nameTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                    graphics.fill(barStartX, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barBaseColor);
+                    if (modifier > 0) {
+                        int barColor = positivelyBetter ? barPositivelyColor : barNegativeColor;
+                        graphics.fill(defaultLength, yOffset[0] + 2, modifierLength, yOffset[0] + 6, barColor);
+                        graphics.drawString(font, positivelyString, valueTextStartX, yOffset[0], fontColor, false);
+                    } else if (modifier < 0) {
+                        int barColor = positivelyBetter ? barNegativeColor : barPositivelyColor;
+                        graphics.fill(modifierLength, yOffset[0] + 2, defaultLength, yOffset[0] + 6, barColor);
+                        graphics.drawString(font, negativeString, valueTextStartX, yOffset[0], fontColor, false);
+                    } else {
+                        graphics.drawString(font, defaultString, valueTextStartX, yOffset[0], fontColor, false);
+                    }
+                    yOffset[0] += 10;
+                });
+            });
             
             // ========== 近战伤害显示 ==========
             // 参考 TACZ 原版 doMelee 计算逻辑
