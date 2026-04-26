@@ -369,11 +369,8 @@ public class GunPropertyDiagramsMixin {
             originalHeadshot = fireModeAdjustData != null ? originalHeadshot + fireModeAdjustData.getHeadShotMultiplier() : originalHeadshot;
             originalHeadshot *= SyncConfig.HEAD_SHOT_BASE_MULTIPLIER.get();
             
-            Float taaHeadshotMod = cacheProperty.<Float>getCache(HeadShotModifier.ID);
-            float modifiedHeadshot = originalHeadshot;
-            if (taaHeadshotMod != null && taaHeadshotMod != 0) {
-                modifiedHeadshot *= (1 + taaHeadshotMod);
-            }
+            Float taaModifiedHeadshot = cacheProperty.<Float>getCache(HeadShotModifier.ID);
+            float modifiedHeadshot = taaModifiedHeadshot != null ? taaModifiedHeadshot : originalHeadshot;
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + headshot_damage)
             float kuvaHeadshotMod = KuvaLichIntegrationHelper.getHeadshotDamageMod(gunItem, player);
             if (kuvaHeadshotMod != 0) {
@@ -493,11 +490,8 @@ public class GunPropertyDiagramsMixin {
             
             // ========== 射速显示（整合KuvaLich）==========
             int originalRpm = gunData.getRoundsPerMinute(fireMode);
-            Integer taaRpmMod = cacheProperty.<Integer>getCache(RpmModifier.ID);
-            int modifiedRpm = originalRpm;
-            if (taaRpmMod != null && taaRpmMod != 0) {
-                modifiedRpm = (int) (modifiedRpm * (1 + taaRpmMod));
-            }
+            Integer taaModifiedRpm = cacheProperty.<Integer>getCache(RpmModifier.ID);
+            int modifiedRpm = taaModifiedRpm != null ? taaModifiedRpm : originalRpm;
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + firing_rate)
             float kuvaFireRateMod = KuvaLichIntegrationHelper.getFireRateMod(gunItem, player);
             if (kuvaFireRateMod != 0) {
@@ -530,11 +524,8 @@ public class GunPropertyDiagramsMixin {
             if (fireModeAdjustData != null) {
                 originalAmmoSpeed += fireModeAdjustData.getSpeed();
             }
-            Float taaAmmoSpeedMod = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
-            float modifiedAmmoSpeed = originalAmmoSpeed;
-            if (taaAmmoSpeedMod != null && taaAmmoSpeedMod != 0) {
-                modifiedAmmoSpeed *= (1 + taaAmmoSpeedMod);
-            }
+            Float taaModifiedAmmoSpeed = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
+            float modifiedAmmoSpeed = taaModifiedAmmoSpeed != null ? taaModifiedAmmoSpeed : originalAmmoSpeed;
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + projectile_speed)
             float kuvaProjectileSpeedMod = KuvaLichIntegrationHelper.getProjectileSpeedMod(gunItem, player);
             if (kuvaProjectileSpeedMod != 0) {
@@ -599,11 +590,8 @@ public class GunPropertyDiagramsMixin {
             
             // ========== 瞄准速度显示（整合KuvaLich）==========
             float originalAdsTime = gunData.getAimTime();
-            Float taaAdsMod = cacheProperty.<Float>getCache(AdsModifier.ID);
-            float modifiedAdsTime = originalAdsTime;
-            if (taaAdsMod != null && taaAdsMod != 0) {
-                modifiedAdsTime /= (1 + taaAdsMod);
-            }
+            Float taaModifiedAdsTime = cacheProperty.<Float>getCache(AdsModifier.ID);
+            float modifiedAdsTime = taaModifiedAdsTime != null ? taaModifiedAdsTime : originalAdsTime;
             // 整合KuvaLich: 最终 = 我们计算的 / (1 + aim_time)
             float kuvaAimTimeMod = KuvaLichIntegrationHelper.getAimTimeMod(gunItem, player);
             if (kuvaAimTimeMod != 0) {
