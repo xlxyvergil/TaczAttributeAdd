@@ -16,8 +16,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * 全局修改 getAmmoCountWithAttachment 方法，确保所有地方都使用 modifier 修改后的弹匣容量
+ * 优先级设置为 900，让我们的修改先执行，KuvaLich 再在我们的基础上乘以 magazine_size
  */
-@Mixin(value = AttachmentDataUtils.class, remap = false, priority = 1100)
+@Mixin(value = AttachmentDataUtils.class, remap = false, priority = 900)
 public class AttachmentDataUtilsMixin {
     
     @ModifyReturnValue(method = "getAmmoCountWithAttachment", at = @At("RETURN"))
@@ -28,9 +29,8 @@ public class AttachmentDataUtilsMixin {
             return original;
         }
 
-        // 使用 ShooterContext 获取射手信息
+        // 只应用我们的 modifier，然后计算 KuvaLich 的弹匣容量修改
         LivingEntity shooter = com.xlxyvergil.taa.context.ShooterContext.getShooter();
-        int result = original;
         
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
@@ -39,19 +39,19 @@ public class AttachmentDataUtilsMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        result = modifiedAmmoCount;
+                        // 计算 KuvaLich 的弹匣容量修改
+                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
+                            float magazineSizeMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
+                            // 应用 KuvaLich 的修改公式：最终容量 = 原始容量 × (1 + magazine_size)
+                            int result = (int) (modifiedAmmoCount * (1f + magazineSizeMod));
+                            return Math.max(result, 1);
+                        }
+                        return modifiedAmmoCount;
                     }
                 }
             }
         }
         
-        // 整合 KuvaLich 的 magazine_size 加成
-        float kuvaMagazineSizeMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
-        if (kuvaMagazineSizeMod != 0f) {
-            // magazine_size 是百分比增加，计算方式参考 KuvaLich
-            result = (int) Math.floor(result * (1f + kuvaMagazineSizeMod));
-        }
-        
-        return result;
+        return original;
     }
 }
