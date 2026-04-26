@@ -709,8 +709,12 @@ public class GunPropertyDiagramsMixin {
             int ammoAmount = originalBulletCount + barrelBulletAmount;
             // 获取缓存中的子弹数量（已包含配件加成）
             Integer cachedBulletCount = cacheProperty.<Integer>getCache(BulletCountModifier.ID);
-            int displayBulletCount = cachedBulletCount != null ? cachedBulletCount : ammoAmount;
-            displayBulletCount += barrelBulletAmount;
+            int displayBulletCount;
+            if (cachedBulletCount != null) {
+                displayBulletCount = cachedBulletCount + barrelBulletAmount;
+            } else {
+                displayBulletCount = ammoAmount;
+            }
             // 整合KuvaLich多重射击公式: 最终 = 我们计算的 * (1 + multishot)
             float kuvaMultishotMod = KuvaLichIntegrationHelper.getMultishotMod(gunItem, player);
             if (kuvaMultishotMod != 0) {

@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * 全局修改 getAmmoCountWithAttachment 方法，确保所有地方都使用 modifier 修改后的弹匣容量
- * 优先级设置为 900，让我们的修改先执行，KuvaLich 再在我们的基础上乘以 magazine_size
  */
 @Mixin(value = AttachmentDataUtils.class, remap = false, priority = 900)
 public class AttachmentDataUtilsMixin {
