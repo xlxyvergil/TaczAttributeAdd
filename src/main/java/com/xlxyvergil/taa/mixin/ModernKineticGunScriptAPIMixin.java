@@ -14,14 +14,15 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.modifier.ReloadModifier;
+import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
 
 
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
 public class ModernKineticGunScriptAPIMixin {
-    
+
     @Shadow
     private LivingEntity shooter;
-    
+
     /**
      * 确保在 putAmmoInMagazine 方法中使用经过 modifier 修改的弹匣容量
      */
@@ -43,16 +44,24 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        return modifiedAmmoCount;
+                        int result = modifiedAmmoCount;
+                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
+                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
+                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
+                            if (kuvaMagazineMod != 0) {
+                                result = (int) (result * (1 + kuvaMagazineMod));
+                            }
+                        }
+                        return result;
                     }
                 }
             }
         }
-        
+
         // 如果没有缓存数据，则使用原始方法计算
         return AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunData);
     }
-    
+
     /**
      * 确保在 getNeededAmmoAmount 方法中使用经过 modifier 修改的弹匣容量
      */
@@ -73,16 +82,24 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        return modifiedAmmoCount;
+                        int result = modifiedAmmoCount;
+                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
+                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
+                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
+                            if (kuvaMagazineMod != 0) {
+                                result = (int) (result * (1 + kuvaMagazineMod));
+                            }
+                        }
+                        return result;
                     }
                 }
             }
         }
-        
+
         // 如果没有缓存数据，则使用原始方法计算
         return AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunData);
     }
-    
+
     /**
      * 确保在 getMaxAmmoCount 方法中使用经过 modifier 修改的弹匣容量
      */
@@ -103,16 +120,24 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        return modifiedAmmoCount;
+                        int result = modifiedAmmoCount;
+                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
+                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
+                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
+                            if (kuvaMagazineMod != 0) {
+                                result = (int) (result * (1 + kuvaMagazineMod));
+                            }
+                        }
+                        return result;
                     }
                 }
             }
         }
-        
+
         // 如果没有缓存数据，则使用原始方法计算
         return AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunData);
     }
-    
+
     /**
      * 修改getReloadTime方法，使其考虑我们修改的装填时间
      */

@@ -12,6 +12,7 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,8 +26,8 @@ import java.util.List;
  * 完全遵循TACZ配件系统的标准模式
  */
 public class ReloadModifier implements IAttachmentModifier<ReloadModifier.ReloadModifierData, Float> {
-    // 使用字符串常量作为ID，避免架构重复
-    public static final String ID = "reload_time";
+    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
+    public static final String ID = ExtendedGunProperties.RELOAD_TIME.name();
 
     @Override
     public String getId() {
@@ -111,85 +112,8 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        float originalTacticalTime = 0.0f; // 默认值
-        
-        // 添加空值检查，避免空指针异常
-        if (gunData.getReloadData() != null && gunData.getReloadData().getFeed() != null) {
-            originalTacticalTime = gunData.getReloadData().getFeed().getTacticalTime();
-        }
-        
-        float reloadInverseMultiplier = cacheProperty.<Float>getCache(ReloadModifier.ID);
-        // 转换回正常的乘数用于显示
-        float reloadMultiplier = 1.0f / reloadInverseMultiplier;
-        
-        // 尝试获取GunsmithLib的RELOAD_SPEED属性值用于显示
-        float gunsmithLibReloadMultiplier = 1.0f;
-        try {
-            // 获取RELOAD_SPEED属性
-            Class<?> gunAttributesClass = Class.forName("mod.chloeprime.gunsmithlib.api.common.GunAttributes");
-            java.lang.reflect.Field reloadSpeedField = gunAttributesClass.getField("RELOAD_SPEED");
-            Object reloadSpeedAttributeObj = reloadSpeedField.get(null);
-            
-            // 使用GunsmithLib的GsHelper工具类计算属性值
-            Class<?> gsHelperClass = Class.forName("mod.chloeprime.gunsmithlib.common.util.GsHelper");
-            java.lang.reflect.Method evaluateItemAttributeMethod = gsHelperClass.getMethod(
-                "evaluateItemAttribute", 
-                ItemStack.class, 
-                java.util.function.Supplier.class, 
-                double.class
-            );
-            
-            // 创建Supplier函数接口实例
-            java.util.function.Supplier<Object> attributeSupplier = () -> {
-                try {
-                    Class<?> registryObjectClass = Class.forName("net.minecraftforge.registries.RegistryObject");
-                    java.lang.reflect.Method getMethod = registryObjectClass.getMethod("get");
-                    return getMethod.invoke(reloadSpeedAttributeObj);
-                } catch (Exception e) {
-                    return null;
-                }
-            };
-            
-            // 调用方法计算GunsmithLib修改后的值
-            double gunsmithLibModifiedValue = (Double) evaluateItemAttributeMethod.invoke(
-                null, 
-                gunItem,  // 传入实际的枪械物品
-                attributeSupplier, 
-                1.0  // 使用1.0作为基础值
-            );
-            
-            gunsmithLibReloadMultiplier = (float) gunsmithLibModifiedValue;
-        } catch (Exception e) {
-            // GunsmithLib不存在或调用失败
-        }
-        
-        // 计算总的修改后装填时间
-        // 实际装填时间 = 原始装填时间 / (GunsmithLib乘数 * 我们的乘数)
-        float totalMultiplier = gunsmithLibReloadMultiplier * reloadMultiplier;
-        float modifiedValue = originalTacticalTime / totalMultiplier;
-        float timeDifference = modifiedValue - originalTacticalTime;
-
-        // 使用枪械实际的装填时间来计算百分比，而不是硬编码的值
-        // 为了避免除以0的情况，设置一个最小值
-        float maxReloadTime = Math.max(originalTacticalTime, 0.1f);
-        double percent = Math.min(originalTacticalTime / (maxReloadTime * 2), 1);
-        double modifierPercent = Math.min(Math.abs(timeDifference) / (maxReloadTime * 2), 1);
-
-        String titleKey = "gui.tacz.gun_refit.property_diagrams.reload_time";
-        // 装填时间越短越好，所以时间减少用绿色，时间增加用红色
-        // 注意：TACZ的positivelyString表示数值增加（红色/不好），negativelyString表示数值减少（绿色/好）
-        String positivelyString = String.format("%.2fs §c(+%.2fs)", modifiedValue, timeDifference);
-        String negativelyString = String.format("%.2fs §a(%.2fs)", modifiedValue, timeDifference);
-        String defaultString = String.format("%.2fs", modifiedValue);
-        DiagramsData diagramsData = new DiagramsData(percent, modifierPercent, timeDifference, titleKey, positivelyString, negativelyString, defaultString, false);
-        return Collections.singletonList(diagramsData);
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 1;
+        return 0; // 装填时间显示由GunPropertyDiagramsMixin自行处理
     }
 
     /**

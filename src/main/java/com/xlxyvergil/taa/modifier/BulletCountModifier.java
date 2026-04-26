@@ -31,8 +31,8 @@ import java.util.List;
  * 完全遵循TACZ配件系统的标准模式
  */
 public class BulletCountModifier implements IAttachmentModifier<Modifier, Integer> {
-    // 使用字符串常量作为ID，避免架构重复
-    public static final String ID = "bullet_count";
+    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
+    public static final String ID = ExtendedGunProperties.BULLET_COUNT.name();
 
     @Override
     public String getId() {
@@ -69,85 +69,10 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        // 检测是否安装了独头弹
-        boolean hasSlugEffect = hasSlugEffect(gunItem);
-        
-        // 获取原始子弹数量
-        int originalBulletCount = gunData.getBulletData().getBulletAmount();
-        if (originalBulletCount <= 0) {
-            originalBulletCount = 1;
-        }
-        
-        // 如果有独头弹效果，强制显示1发
-        int displayBulletCount = hasSlugEffect ? 1 : cacheProperty.<Integer>getCache(BulletCountModifier.ID);
-        int effectiveOriginalCount = hasSlugEffect ? 1 : originalBulletCount;
-        
-        int bulletCountDifference = displayBulletCount - effectiveOriginalCount;
-        
-        // 计算显示数据
-        double bulletCountPercent = Math.min(effectiveOriginalCount / 10.0, 1);
-        double bulletCountModifierPercent = Math.min(Math.abs(bulletCountDifference) / 10.0, 1);
-
-        String bulletCountTitleKey = "gui.tacz.gun_refit.property_diagrams.bullet_count";
-        String bulletCountPositivelyString = String.format("%d §a(+%d)", displayBulletCount, bulletCountDifference);
-        String bulletCountNegativelyString = String.format("%d §c(%d)", displayBulletCount, bulletCountDifference);
-        String bulletCountDefaultString = String.format("%d", displayBulletCount);
-        boolean bulletCountPositivelyBetter = true; // 子弹数量越多越好
-
-        DiagramsData bulletCountDiagramsData = new DiagramsData(
-                bulletCountPercent, bulletCountModifierPercent, bulletCountDifference,
-                bulletCountTitleKey, bulletCountPositivelyString, bulletCountNegativelyString,
-                bulletCountDefaultString, bulletCountPositivelyBetter);
-
-        return List.of(bulletCountDiagramsData);
+    public int getDiagramsDataSize() {
+        return 0; // 子弹数量显示由GunPropertyDiagramsMixin自行处理
     }
-    
-    // TACZ版本缓存
-    private static Boolean isTacz117OrAbove = null;
-    
-    /**
-     * 检查TACZ版本是否为1.1.7或更高
-     */
-    private static boolean isTacz117OrAbove() {
-        if (isTacz117OrAbove == null) {
-            try {
-                String version = net.minecraftforge.fml.ModList.get()
-                    .getModContainerById("tacz")
-                    .map(container -> container.getModInfo().getVersion().toString())
-                    .orElse("0.0.0");
-                
-                // 解析版本号，检查是否 >= 1.1.7
-                isTacz117OrAbove = isVersionAtLeast(version, "1.1.7");
-            } catch (Exception e) {
-                // 如果无法获取版本，假设是旧版本
-                isTacz117OrAbove = false;
-            }
-        }
-        return isTacz117OrAbove;
-    }
-    
-    /**
-     * 比较版本号，检查target是否 >= base
-     */
-    private static boolean isVersionAtLeast(String target, String base) {
-        try {
-            String[] targetParts = target.split("\\.");
-            String[] baseParts = base.split("\\.");
-            
-            for (int i = 0; i < Math.max(targetParts.length, baseParts.length); i++) {
-                int targetPart = i < targetParts.length ? Integer.parseInt(targetParts[i].replaceAll("\\D.*", "")) : 0;
-                int basePart = i < baseParts.length ? Integer.parseInt(baseParts[i].replaceAll("\\D.*", "")) : 0;
-                
-                if (targetPart > basePart) return true;
-                if (targetPart < basePart) return false;
-            }
-            return true; // 版本相等
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    
+
     /**
      * 检测是否安装了独头弹效果
      * 使用TACZ的标签检测机制，兼容所有使用intrinsic/slug标签的配件
@@ -176,10 +101,43 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
         }
     }
 
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public int getDiagramsDataSize() {
-        return 1; // 子弹数量一个属性
+    /**
+     * 检查TACZ版本是否为1.1.7或更高
+     */
+    private static boolean isTacz117OrAbove() {
+        try {
+            String version = net.minecraftforge.fml.ModList.get()
+                .getModContainerById("tacz")
+                .map(container -> container.getModInfo().getVersion().toString())
+                .orElse("0.0.0");
+            
+            // 解析版本号，检查是否 >= 1.1.7
+            return isVersionAtLeast(version, "1.1.7");
+        } catch (Exception e) {
+            // 如果无法获取版本，假设是旧版本
+            return false;
+        }
+    }
+    
+    /**
+     * 比较版本号，检查target是否 >= base
+     */
+    private static boolean isVersionAtLeast(String target, String base) {
+        try {
+            String[] targetParts = target.split("\\.");
+            String[] baseParts = base.split("\\.");
+            
+            for (int i = 0; i < Math.max(targetParts.length, baseParts.length); i++) {
+                int targetPart = i < targetParts.length ? Integer.parseInt(targetParts[i].replaceAll("\\D.*", "")) : 0;
+                int basePart = i < baseParts.length ? Integer.parseInt(baseParts[i].replaceAll("\\D.*", "")) : 0;
+                
+                if (targetPart > basePart) return true;
+                if (targetPart < basePart) return false;
+            }
+            return true; // 版本相等
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static class BulletCountJsonProperty extends JsonProperty<Modifier> {

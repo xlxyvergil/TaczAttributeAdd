@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,7 +36,8 @@ import java.util.List;
  * 仅计算配件提供的近战伤害，属性计算由 PropertyCalculator 处理
  */
 public class MeleeDamageModifier implements IAttachmentModifier<Modifier, Float> {
-    public static final String ID = "melee_damage";
+    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
+    public static final String ID = ExtendedGunProperties.MELEE_DAMAGE.name();
 
     @Override
     public String getId() {
@@ -101,59 +103,8 @@ public class MeleeDamageModifier implements IAttachmentModifier<Modifier, Float>
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData, AttachmentCacheProperty cacheProperty) {
-        // 参考 TACZ 原版 doMelee 计算逻辑
-        // 最终伤害 = 玩家攻击伤害(基础值临时设为0) + 枪械近战伤害(加法修饰符) + 其他攻击伤害修饰符
-        
-        // 参照 TACZ 方式计算：基础值设为0，然后加上枪械近战伤害和其他修饰符
-        // 其他攻击伤害修饰符 = 当前攻击伤害总值 - 基础值
-        float otherModifiers = 0f;
-        Player player = net.minecraft.client.Minecraft.getInstance().player;
-        if (player != null && player.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
-            var instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
-            otherModifiers = (float) (instance.getValue() - instance.getBaseValue());
-        }
-        
-        // 基础值 = 枪械默认近战伤害（作为加法修饰符的基础值）
-        GunMeleeData meleeData = gunData.getMeleeData();
-        float baseModifierDamage = 0f;
-        if (meleeData != null && meleeData.getDefaultMeleeData() != null) {
-            baseModifierDamage = meleeData.getDefaultMeleeData().getDamage();
-        }
-        
-        // 最终值 = 缓存中的枪械近战伤害（含配件加成，作为加法修饰符）
-        Float finalModifierDamage = cacheProperty.getCache(MeleeDamageModifier.ID);
-        if (finalModifierDamage == null) {
-            finalModifierDamage = baseModifierDamage;
-        }
-        
-        // 计算最终显示伤害（参照 TACZ：0 + 枪械近战伤害 + 其他修饰符）
-        float baseTotalDamage = otherModifiers + baseModifierDamage;
-        float finalTotalDamage = otherModifiers + finalModifierDamage;
-        float difference = finalTotalDamage - baseTotalDamage;
-        
-        // 显示进度条用最终总伤害
-        double damagePercent = Math.min(finalTotalDamage / 20.0, 1);
-        double damageModifierPercent = Math.min(Math.abs(difference) / 20.0, 1);
-
-        String damageTitleKey = "gui.tacz.gun_refit.property_diagrams.melee_damage";
-        String damagePositivelyString = String.format(" %.1f §a(+%.1f)", finalTotalDamage, difference);
-        String damageNegativelyString = String.format(" %.1f §c(%.1f)", finalTotalDamage, difference);
-        String damageDefaultString = String.format(" %.1f", finalTotalDamage);
-        boolean damagePositivelyBetter = true;
-
-        DiagramsData damageDiagramsData = new DiagramsData(
-                damagePercent, damageModifierPercent, difference, 
-                damageTitleKey, damagePositivelyString, damageNegativelyString, 
-                damageDefaultString, damagePositivelyBetter);
-
-        return Collections.singletonList(damageDiagramsData);
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 1;
+        return 0; // 近战伤害显示由GunPropertyDiagramsMixin自行处理
     }
 
     public static class MeleeDamageJsonProperty extends JsonProperty<Modifier> {

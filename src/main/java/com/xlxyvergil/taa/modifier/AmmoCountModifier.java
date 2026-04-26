@@ -11,6 +11,7 @@ import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.attachment.Modifier;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -22,8 +23,8 @@ import java.util.List;
  * 完全遵循TACZ配件系统的标准模式
  */
 public class AmmoCountModifier implements IAttachmentModifier<Modifier, Integer> {
-    // 使用字符串常量作为ID，避免架构重复
-    public static final String ID = "magazine_capacity";
+    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
+    public static final String ID = ExtendedGunProperties.MAGAZINE_CAPACITY.name();
 
     @Override
     public String getId() {

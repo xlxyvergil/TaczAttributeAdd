@@ -205,6 +205,9 @@ dependencies {
         implementation fg.deobf('curse.maven:timeless-and-classics-zero-1028108:6654541-sources-6654543')
     }
 
+    // KuvaLich - 可选依赖（编译时需要，运行时可选）
+    compileOnly fg.deobf('libs:KuvaLich-forge-1.20.1-2.6.0:2.6.0')
+
     // MixinExtras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
