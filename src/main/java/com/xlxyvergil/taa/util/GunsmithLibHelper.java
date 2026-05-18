@@ -7,7 +7,6 @@ import mod.chloeprime.gunsmithlib.common.util.GsHelper;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.RegistryObject;
 
 public class GunsmithLibHelper {
    private static final boolean IS_GUNSMITHLIB_LOADED = ModList.get().isLoaded("gunsmithlib");

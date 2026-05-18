@@ -184,6 +184,21 @@ repositories {
         url = 'https://maven.chloeprime.cn:4080/releases/'
     }
     maven {
+        // latvian.dev Maven (KubeJS and Rhino)
+        url "https://maven.latvian.dev/releases"
+        content {
+            includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
+        }
+    }
+    maven {
+        // Architectury API (required by KubeJS)
+        url = "https://maven.architectury.dev"
+        content {
+            includeGroup "dev.architectury"
+        }
+    }
+    maven {
         // SpongePowered Mixin 仓库
         url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
@@ -213,6 +228,10 @@ dependencies {
 
     // Apothic Attributes - 可选依赖（编译时需要，运行时可选）
     compileOnly fg.deobf("curse.maven:apothic-attributes-898963:5634071")
+
+    // KubeJS - 可选依赖（编译时需要，运行时可选）
+    compileOnly fg.deobf("dev.latvian.mods:kubejs-forge:2001.6.5-build.14")
+    compileOnly fg.deobf("dev.latvian.mods:rhino-forge:2001.2.3-build.6")
 
     // MixinExtras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))

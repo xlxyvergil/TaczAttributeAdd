@@ -29,6 +29,7 @@ import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.xlxyvergil.taa.config.AttributeConfig;
 import com.xlxyvergil.taa.context.ShooterContext;
+import com.xlxyvergil.taa.compat.kubejs.KubeJSEventHelper;
 import com.xlxyvergil.taa.modifier.*;
 import com.xlxyvergil.taa.util.ApothicAttributesHelper;
 import com.xlxyvergil.taa.util.EntityAttributeHelper;
@@ -220,6 +221,13 @@ public class GunPropertyDiagramsMixin {
                         int explosionRadiusLength = (int) (barStartX + barMaxWidth * explosionRadiusPercent);
                         float addRadius = modifiedExplosionRadius - originalExplosionRadius;
                         int addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
+                        
+                        // 触发KubeJS事件，允许外部脚本修改显示值
+                        modifiedExplosionRadius = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                            player, gunItem, "EXPLOSION_RADIUS", modifiedExplosionRadius, originalExplosionRadius
+                        );
+                        addRadius = modifiedExplosionRadius - originalExplosionRadius;
+                        addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
 
                         graphics.drawString(font, Component.literal("爆炸范围"), nameTextStartX, yOffset[0], fontColor, false);
                         graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
@@ -247,6 +255,13 @@ public class GunPropertyDiagramsMixin {
                         int explosionDamageLength = (int) (barStartX + barMaxWidth * explosionDamagePercent);
                         float addDamage = modifiedExplosionDamage - originalExplosionDamage;
                         int addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
+                        
+                        // 触发KubeJS事件，允许外部脚本修改显示值
+                        modifiedExplosionDamage = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                            player, gunItem, "EXPLOSION_DAMAGE", modifiedExplosionDamage, originalExplosionDamage
+                        );
+                        addDamage = modifiedExplosionDamage - originalExplosionDamage;
+                        addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
 
                         graphics.drawString(font, Component.literal("爆炸伤害"), nameTextStartX, yOffset[0], fontColor, false);
                         graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
@@ -306,6 +321,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaDamageMod != 0) {
                 modifiedDamage *= (1 + kuvaDamageMod);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedDamage = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "DAMAGE", modifiedDamage, originalDamage
+            );
+            
             float damageDiff = modifiedDamage - originalDamage;
             
             double damagePercent = Mth.clamp(originalDamage / 100.0, 0, 1);
@@ -349,6 +370,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaHeadshotMod != 0) {
                 modifiedHeadshot *= (1 + kuvaHeadshotMod);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedHeadshot = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "HEADSHOT", modifiedHeadshot, originalHeadshot
+            );
+            
             float headshotDiff = modifiedHeadshot - originalHeadshot;
             
             double headshotPercent = Mth.clamp(originalHeadshot / 5.0, 0, 1);
@@ -432,6 +459,11 @@ public class GunPropertyDiagramsMixin {
                                             if (kuvaMagazineMod != 0) {
                                                 maxAmmoCount = (int) (maxAmmoCount * (1 + kuvaMagazineMod));
                                             }
+                                            
+                                            // 触发KubeJS事件，允许外部脚本修改显示值
+                                            maxAmmoCount = (int) KubeJSEventHelper.postAndGetDisplayValue(
+                                                clientPlayer, gunItem, "AMMO_CAPACITY", maxAmmoCount, ammoAmount
+                                            );
                                         }
                                     }
                                 }
@@ -482,6 +514,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaFireRateMod != 0) {
                 modifiedRpm = (int) (modifiedRpm * (1 + kuvaFireRateMod));
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedRpm = (int) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "RPM", modifiedRpm, originalRpm
+            );
+            
             int rpmDiff = modifiedRpm - originalRpm;
             
             double rpmPercent = Math.min(originalRpm / 1200.0, 1);
@@ -522,6 +560,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaProjectileSpeedMod != 0) {
                 modifiedAmmoSpeed *= (1 + kuvaProjectileSpeedMod);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedAmmoSpeed = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "BULLET_SPEED", modifiedAmmoSpeed, originalAmmoSpeed
+            );
+            
             float ammoSpeedDiff = modifiedAmmoSpeed - originalAmmoSpeed;
             
             double ammoSpeedPercent = Math.min(originalAmmoSpeed / 600.0, 1);
@@ -557,6 +601,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaReloadSpeedMod != 0) {
                 modifiedReloadTime /= (1 + kuvaReloadSpeedMod);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedReloadTime = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "RELOAD_TIME", modifiedReloadTime, originalReloadTime
+            );
+            
             float reloadDiff = modifiedReloadTime - originalReloadTime;
             
             double reloadPercent = Math.min(originalReloadTime / 5.0, 1);
@@ -588,6 +638,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaAimTimeMod != 0) {
                 modifiedAdsTime /= (1 + kuvaAimTimeMod);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedAdsTime = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "ADS_TIME", modifiedAdsTime, originalAdsTime
+            );
+            
             float adsDiff = modifiedAdsTime - originalAdsTime;
             
             double adsPercent = Mth.clamp(originalAdsTime / 1.0, 0, 1);
@@ -627,6 +683,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaAccuracyMod != 0) {
                 modifiedInaccuracy *= (1 - kuvaAccuracyMod);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedInaccuracy = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "INACCURACY", modifiedInaccuracy, originalInaccuracy
+            );
+            
             float inaccuracyDiff = modifiedInaccuracy - originalInaccuracy;
             
             double inaccuracyPercent = Mth.clamp(originalInaccuracy / 10.0, 0, 1);
@@ -688,6 +750,15 @@ public class GunPropertyDiagramsMixin {
                     finalPitch *= (1 - kuvaRecoilReduction);
                     finalYaw *= (1 - kuvaRecoilReduction);
                 }
+                
+                // 触发KubeJS事件，允许外部脚本修改显示值
+                finalPitch = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                    player, gunItem, "RECOIL_PITCH", finalPitch, originalPitch
+                );
+                
+                finalYaw = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                    player, gunItem, "RECOIL_YAW", finalYaw, originalYaw
+                );
                 
                 // 计算总差值（相对于原始值）
                 float pitchDifference = finalPitch - originalPitch;
@@ -765,6 +836,12 @@ public class GunPropertyDiagramsMixin {
             if (kuvaMultishotMod != 0) {
                 displayBulletCount = (int) (displayBulletCount * (1 + kuvaMultishotMod));
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            displayBulletCount = (int) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "BULLET_COUNT", displayBulletCount, ammoAmount
+            );
+            
             int bulletCountDiff = displayBulletCount - ammoAmount;
             
             double bulletCountPercent = Math.min(ammoAmount / 10.0, 1);
@@ -805,6 +882,11 @@ public class GunPropertyDiagramsMixin {
             if (GunsmithLibHelper.isGunsmithLibLoaded()) {
                 modifiedArmorIgnore = (float) GunsmithLibHelper.getArmorPiercingRatio(gunItem, modifiedArmorIgnore);
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedArmorIgnore = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "ARMOR_IGNORE", modifiedArmorIgnore, originalArmorIgnore
+            );
             
             float armorIgnoreDiff = modifiedArmorIgnore - originalArmorIgnore;
             
@@ -954,6 +1036,12 @@ public class GunPropertyDiagramsMixin {
             }
             float baseTotalDamage = otherModifiers + baseModifierDamage;
             float finalTotalDamage = otherModifiers + finalModifierDamage;
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            finalTotalDamage = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player1, gunItem, "MELEE_DAMAGE", finalTotalDamage, baseTotalDamage
+            );
+            
             float meleeDamageDiff = finalTotalDamage - baseTotalDamage;
             
             double meleeDamagePercent = Math.min(finalTotalDamage / 20.0, 1);
@@ -982,6 +1070,12 @@ public class GunPropertyDiagramsMixin {
             if (modifiedDistance == null) {
                 modifiedDistance = baseDistance;
             }
+            
+            // 触发KubeJS事件，允许外部脚本修改显示值
+            modifiedDistance = (float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "MELEE_DISTANCE", modifiedDistance, baseDistance
+            );
+            
             float meleeDistanceDiff = modifiedDistance - baseDistance;
             
             double meleeDistancePercent = Math.min(baseDistance / 5.0, 1);
