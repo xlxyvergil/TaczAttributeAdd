@@ -27,11 +27,13 @@ import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
 import com.tacz.guns.util.AttachmentDataUtils;
+import com.xlxyvergil.taa.config.AttributeConfig;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.*;
+import com.xlxyvergil.taa.util.ApothicAttributesHelper;
 import com.xlxyvergil.taa.util.EntityAttributeHelper;
+import com.xlxyvergil.taa.util.GunsmithLibHelper;
 import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -106,6 +108,9 @@ public class GunPropertyDiagramsMixin {
         // 添加后坐力显示所需的空间（Pitch和Yaw各占10像素，共20像素）
         startYOffset[0] += 20;
         
+        // 添加暴击属性显示所需的空间（暴击率+暴击伤害=20像素）
+        startYOffset[0] += 20;
+        
         return startYOffset[0];
     }
     
@@ -116,8 +121,11 @@ public class GunPropertyDiagramsMixin {
      */
     @Overwrite
     public static void draw(GuiGraphics graphics, Font font, int x, int y) {
+        // 计算是否需要显示暴击属性
+        boolean showCritAttributes = true; // 始终尝试显示，由工具类处理null情况
         // 使用重写后的方法计算背景高度，与原版保持一致（按钮位置-11）
-        graphics.fill(x, y, x + 288, y + GunPropertyDiagrams.getHidePropertyButtonYOffset() - 11 , 0xAF222222);
+        // getHidePropertyButtonYOffset已经包含了暴击属性的额外高度
+        graphics.fill(x, y, x + 288, y + GunPropertyDiagrams.getHidePropertyButtonYOffset() - 11, 0xAF222222);
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
@@ -286,6 +294,13 @@ public class GunPropertyDiagramsMixin {
             if (taaDamageMod != null && !taaDamageMod.isEmpty()) {
                 modifiedDamage = taaDamageMod.getFirst().getDamage();
             }
+            
+            // 整合GunsmithLib
+            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                int shrapnel = Math.max(bulletData.getBulletAmount(), 1);
+                modifiedDamage = (float) GunsmithLibHelper.getBulletDamage(gunItem, modifiedDamage, shrapnel);
+            }
+            
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + gun_damage)
             float kuvaDamageMod = KuvaLichIntegrationHelper.getGunDamageMod(gunItem, player);
             if (kuvaDamageMod != 0) {
@@ -323,6 +338,12 @@ public class GunPropertyDiagramsMixin {
             
             Float taaModifiedHeadshot = cacheProperty.<Float>getCache(HeadShotModifier.ID);
             float modifiedHeadshot = taaModifiedHeadshot != null ? taaModifiedHeadshot : originalHeadshot;
+            
+            // 整合GunsmithLib
+            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                modifiedHeadshot = (float) GunsmithLibHelper.getHeadshotMultiplier(gunItem, modifiedHeadshot);
+            }
+            
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + headshot_damage)
             float kuvaHeadshotMod = KuvaLichIntegrationHelper.getHeadshotDamageMod(gunItem, player);
             if (kuvaHeadshotMod != 0) {
@@ -440,10 +461,16 @@ public class GunPropertyDiagramsMixin {
 
             yOffset[0] += 10;
             
-            // ========== 射速显示（整合KuvaLich）==========
+            // ========== 射速显示（整合KuvaLich + GunsmithLib）==========
             int originalRpm = gunData.getRoundsPerMinute(fireMode);
             Integer taaModifiedRpm = cacheProperty.<Integer>getCache(RpmModifier.ID);
             int modifiedRpm = taaModifiedRpm != null ? taaModifiedRpm : originalRpm;
+            
+            // 整合GunsmithLib
+            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                modifiedRpm = (int) Math.round(GunsmithLibHelper.getRpm(gunItem, modifiedRpm));
+            }
+            
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + firing_rate)
             float kuvaFireRateMod = KuvaLichIntegrationHelper.getFireRateMod(gunItem, player);
             if (kuvaFireRateMod != 0) {
@@ -471,13 +498,19 @@ public class GunPropertyDiagramsMixin {
             }
             yOffset[0] += 10;
             
-            // ========== 弹丸速度显示（整合KuvaLich）==========
+            // ========== 弹丸速度显示（整合KuvaLich + GunsmithLib）==========
             float originalAmmoSpeed = gunData.getBulletData().getSpeed();
             if (fireModeAdjustData != null) {
                 originalAmmoSpeed += fireModeAdjustData.getSpeed();
             }
             Float taaModifiedAmmoSpeed = cacheProperty.<Float>getCache(AmmoSpeedModifier.ID);
             float modifiedAmmoSpeed = taaModifiedAmmoSpeed != null ? taaModifiedAmmoSpeed : originalAmmoSpeed;
+            
+            // 整合GunsmithLib
+            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                modifiedAmmoSpeed = (float) GunsmithLibHelper.getBulletSpeed(gunItem, modifiedAmmoSpeed);
+            }
+            
             // 整合KuvaLich: 最终 = 我们计算的 * (1 + projectile_speed)
             float kuvaProjectileSpeedMod = KuvaLichIntegrationHelper.getProjectileSpeedMod(gunItem, player);
             if (kuvaProjectileSpeedMod != 0) {
@@ -637,6 +670,12 @@ public class GunPropertyDiagramsMixin {
                 float finalPitch = attachmentModifiedPitch * recoilPitchFactor;
                 float finalYaw = attachmentModifiedYaw * recoilYawFactor;
 
+                // 整合GunsmithLib后坐力属性
+                if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                    finalPitch = (float) GunsmithLibHelper.getVRecoil(gunItem, finalPitch);
+                    finalYaw = (float) GunsmithLibHelper.getHRecoil(gunItem, finalYaw);
+                }
+
                 // 整合KuvaLich后坐力减少公式: 最终 = 我们计算的 * (1 - recoil_reduction)
                 float kuvaRecoilReduction = KuvaLichIntegrationHelper.getRecoilReductionMod(gunItem, player);
                 if (kuvaRecoilReduction != 0) {
@@ -742,6 +781,105 @@ public class GunPropertyDiagramsMixin {
             }
             yOffset[0] += 10;
             
+            // ========== 穿甲倍率显示（整合GunsmithLib）==========
+            // 获取原始穿甲值
+            float originalArmorIgnore = gunData.getBulletData().getExtraDamage() != null ? 
+                gunData.getBulletData().getExtraDamage().getArmorIgnore() : 0f;
+            GunFireModeAdjustData fireModeAdjustDataForAp = gunData.getFireModeAdjustData(fireMode);
+            if (fireModeAdjustDataForAp != null) {
+                originalArmorIgnore += fireModeAdjustDataForAp.getArmorIgnore();
+            }
+            originalArmorIgnore *= SyncConfig.ARMOR_IGNORE_BASE_MULTIPLIER.get();
+            
+            // 获取缓存中的穿甲值（包含配件修改）
+            Float taaModifiedArmorIgnore = cacheProperty.<Float>getCache(ArmorIgnoreModifier.ID);
+            float modifiedArmorIgnore = taaModifiedArmorIgnore != null ? taaModifiedArmorIgnore : originalArmorIgnore;
+            
+            // 整合GunsmithLib
+            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                modifiedArmorIgnore = (float) GunsmithLibHelper.getArmorPiercingRatio(gunItem, modifiedArmorIgnore);
+            }
+            
+            float armorIgnoreDiff = modifiedArmorIgnore - originalArmorIgnore;
+            
+            double armorIgnorePercent = Mth.clamp(originalArmorIgnore, 0, 1);
+            int armorIgnoreLength = (int) (barStartX + barMaxWidth * armorIgnorePercent);
+            int armorIgnoreDiffLength = (int) (barMaxWidth * armorIgnoreDiff);
+            
+            graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.armor_ignore"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+            graphics.fill(barStartX, yOffset[0] + 2, armorIgnoreLength, yOffset[0] + 6, barBaseColor);
+            if (armorIgnoreDiff > 0) {
+                int barRight = Math.min(armorIgnoreLength + armorIgnoreDiffLength, barEndX);
+                graphics.fill(armorIgnoreLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                graphics.drawString(font, String.format("%.1f%% §a(+%.1f%%)", modifiedArmorIgnore * 100, armorIgnoreDiff * 100), valueTextStartX, yOffset[0], fontColor, false);
+            } else if (armorIgnoreDiff < 0) {
+                int barLeft = Math.max(armorIgnoreLength + armorIgnoreDiffLength, barStartX);
+                graphics.fill(barLeft, yOffset[0] + 2, armorIgnoreLength, yOffset[0] + 6, barNegativeColor);
+                graphics.drawString(font, String.format("%.1f%% §c(%.1f%%)", modifiedArmorIgnore * 100, armorIgnoreDiff * 100), valueTextStartX, yOffset[0], fontColor, false);
+            } else {
+                graphics.drawString(font, String.format("%.1f%%", modifiedArmorIgnore * 100), valueTextStartX, yOffset[0], fontColor, false);
+            }
+            yOffset[0] += 10;
+            
+            // ========== 暴击属性显示 ==========
+            if (showCritAttributes) {
+                ApothicAttributesHelper.CritAttributeData critChanceData = ApothicAttributesHelper.getCritChanceData(player);
+                ApothicAttributesHelper.CritAttributeData critDamageData = ApothicAttributesHelper.getCritDamageData(player);
+                
+                if (critChanceData != null) {
+                    String critChanceName = AttributeConfig.getCritChanceName();
+                    
+                    // 暴击率条：使用最终值计算进度条长度
+                    double critChancePercent = Mth.clamp(critChanceData.modifiedValue / (critChanceData.isDecimalFormat ? 1.0 : 1000.0), 0, 1);
+                    int critChanceLength = (int) (barStartX + barMaxWidth * critChancePercent);
+                    int critChanceBaseLength = (int) (barStartX + barMaxWidth * Mth.clamp(critChanceData.baseValue / (critChanceData.isDecimalFormat ? 1.0 : 1000.0), 0, 1));
+                    
+                    graphics.drawString(font, Component.literal(critChanceName), nameTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                    graphics.fill(barStartX, yOffset[0] + 2, critChanceBaseLength, yOffset[0] + 6, barBaseColor);
+                    
+                    if (critChanceData.difference > 0) {
+                        int barRight = Math.min(critChanceLength, barEndX);
+                        graphics.fill(critChanceBaseLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                        graphics.drawString(font, critChanceData.formatValue(critChanceData.modifiedValue) + " §a(+" + critChanceData.formatValue(critChanceData.difference) + ")", valueTextStartX, yOffset[0], fontColor, false);
+                    } else if (critChanceData.difference < 0) {
+                        int barLeft = Math.max(critChanceLength, barStartX);
+                        graphics.fill(barLeft, yOffset[0] + 2, critChanceBaseLength, yOffset[0] + 6, barNegativeColor);
+                        graphics.drawString(font, critChanceData.formatValue(critChanceData.modifiedValue) + " §c(" + critChanceData.formatValue(critChanceData.difference) + ")", valueTextStartX, yOffset[0], fontColor, false);
+                    } else {
+                        graphics.drawString(font, critChanceData.formatValue(critChanceData.modifiedValue), valueTextStartX, yOffset[0], fontColor, false);
+                    }
+                    yOffset[0] += 10;
+                }
+                
+                if (critDamageData != null) {
+                    String critDamageName = AttributeConfig.getCritDamageName();
+                    
+                    // 暴击伤害条：使用最终值计算进度条长度
+                    double critDamagePercent = Mth.clamp(critDamageData.modifiedValue / (critDamageData.isDecimalFormat ? 100.0 : 1000.0), 0, 1);
+                    int critDamageLength = (int) (barStartX + barMaxWidth * critDamagePercent);
+                    int critDamageBaseLength = (int) (barStartX + barMaxWidth * Mth.clamp(critDamageData.baseValue / (critDamageData.isDecimalFormat ? 100.0 : 1000.0), 0, 1));
+                    
+                    graphics.drawString(font, Component.literal(critDamageName), nameTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+                    graphics.fill(barStartX, yOffset[0] + 2, critDamageBaseLength, yOffset[0] + 6, barBaseColor);
+                    
+                    if (critDamageData.difference > 0) {
+                        int barRight = Math.min(critDamageLength, barEndX);
+                        graphics.fill(critDamageBaseLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                        graphics.drawString(font, critDamageData.formatValue(critDamageData.modifiedValue) + " §a(+" + critDamageData.formatValue(critDamageData.difference) + ")", valueTextStartX, yOffset[0], fontColor, false);
+                    } else if (critDamageData.difference < 0) {
+                        int barLeft = Math.max(critDamageLength, barStartX);
+                        graphics.fill(barLeft, yOffset[0] + 2, critDamageBaseLength, yOffset[0] + 6, barNegativeColor);
+                        graphics.drawString(font, critDamageData.formatValue(critDamageData.modifiedValue) + " §c(" + critDamageData.formatValue(critDamageData.difference) + ")", valueTextStartX, yOffset[0], fontColor, false);
+                    } else {
+                        graphics.drawString(font, critDamageData.formatValue(critDamageData.modifiedValue), valueTextStartX, yOffset[0], fontColor, false);
+                    }
+                    yOffset[0] += 10;
+                }
+            }
+            
             // ========== 绘制剩下的 modifier 属性 ==========
             // 跳过后坐力和已经由我们绘制的 modifier，剩下的在这里绘制
             AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
@@ -749,13 +887,14 @@ public class GunPropertyDiagramsMixin {
                 if (RecoilModifier.ID.equals(key)) {
                     return;
                 }
-                // 跳过需要KuvaLich整合的modifier，由我们自己重新绘制
+                // 跳过需要KuvaLich/GunsmithLib整合的modifier，由我们自己重新绘制
                 if (DamageModifier.ID.equals(key) ||
                     RpmModifier.ID.equals(key) ||
                     InaccuracyModifier.ID.equals(key) ||
                     AdsModifier.ID.equals(key) ||
                     HeadShotModifier.ID.equals(key) ||
-                    AmmoSpeedModifier.ID.equals(key)) {
+                    AmmoSpeedModifier.ID.equals(key) ||
+                    ArmorIgnoreModifier.ID.equals(key)) {
                     return;
                 }
                 value.getPropertyDiagramsData(gunItem, gunData, cacheProperty).forEach(data -> {
