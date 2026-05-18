@@ -2,6 +2,7 @@ package com.xlxyvergil.taa;
 
 import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.config.AttributeConfig;
+import com.xlxyvergil.taa.network.SyncConfigPacket;
 import com.xlxyvergil.taa.network.message.ServerMessageUpdateTacZCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -65,6 +66,14 @@ public class TaczAttributeAdd {
                 ServerMessageUpdateTacZCache::encode,
                 ServerMessageUpdateTacZCache::decode,
                 ServerMessageUpdateTacZCache::handle
+            );
+            
+            CHANNEL.registerMessage(
+                messageId++,
+                SyncConfigPacket.class,
+                SyncConfigPacket::encode,
+                SyncConfigPacket::decode,
+                SyncConfigPacket::handle
             );
             
             // 注册扩展Modifier系统
