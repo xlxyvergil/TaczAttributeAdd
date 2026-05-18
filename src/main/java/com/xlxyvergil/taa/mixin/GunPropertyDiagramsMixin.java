@@ -421,6 +421,12 @@ public class GunPropertyDiagramsMixin {
                                         Integer modifiedAmmoCount = cache.getCache(AmmoCountModifier.ID);
                                         if (modifiedAmmoCount != null) {
                                             maxAmmoCount = modifiedAmmoCount + barrelBulletAmount; // 使用缓存值并加上枪管中的子弹
+                                            
+                                            // 整合GunsmithLib弹匣容量属性
+                                            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                                                maxAmmoCount = GunsmithLibHelper.getAmmoCapacity(gunItem, maxAmmoCount);
+                                            }
+                                            
                                             // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
                                             float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
                                             if (kuvaMagazineMod != 0) {
