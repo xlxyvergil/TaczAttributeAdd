@@ -4,6 +4,12 @@ import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.config.AttributeConfig;
 import com.xlxyvergil.taa.network.SyncConfigPacket;
 import com.xlxyvergil.taa.network.message.ServerMessageUpdateTacZCache;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -13,7 +19,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 // cSpell:ignore Tacz MODID
 @Mod(TaczAttributeAdd.MODID)
@@ -27,6 +36,20 @@ public class TaczAttributeAdd {
         PROTOCOL_VERSION::equals
     );
     private static int messageId = 0;
+    
+    // 注册 CreativeTab（用于 MaidAttributeDisplay 显示图标）
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = 
+        DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    
+    public static final RegistryObject<CreativeModeTab> TAA_TAB = CREATIVE_TABS.register("main",
+        () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.taa.main"))
+            .icon(() -> {
+                // 使用 TACZ 雕像作为图标
+                var statueItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation("tacz", "statue"));
+                return new ItemStack(statueItem);
+            })
+            .build());
 
     public TaczAttributeAdd() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -36,6 +59,9 @@ public class TaczAttributeAdd {
         
         // 注册属性
         EntityAttributeRegistry.ATTRIBUTES.register(modEventBus);
+        
+        // 注册 CreativeTab
+        CREATIVE_TABS.register(modEventBus);
         
         // 注册配置
         AttributeConfig.register();

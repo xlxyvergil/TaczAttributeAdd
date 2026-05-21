@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.tacz.guns.api.GunProperties;
-import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
