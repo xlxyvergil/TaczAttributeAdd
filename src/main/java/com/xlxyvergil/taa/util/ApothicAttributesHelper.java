@@ -1,7 +1,6 @@
 package com.xlxyvergil.taa.util;
 
 import com.xlxyvergil.taa.config.AttributeConfig;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;

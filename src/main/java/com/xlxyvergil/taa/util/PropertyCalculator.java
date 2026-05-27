@@ -100,7 +100,8 @@ public class PropertyCalculator {
         Float originalValue = cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER);
         float entityAttributeFactor = (float) entityAttribute.getHeadshotMultiplier();
         // 由于Forge会自1，所以计算时需1，然后使用加
-        return originalValue != null ? originalValue + (entityAttributeFactor - 1.0f) : 0.0f;
+        // 保底0.01，防止属性过低导致负值
+        return originalValue != null ? Math.max(originalValue + (entityAttributeFactor - 1.0f), 0.01f) : 0.0f;
     }
     
     public float calculateKnockback(AttachmentCacheProperty cacheProperty) {
@@ -211,10 +212,11 @@ public class PropertyCalculator {
         
         // 直接将偏移量加到原始MoveSpeed上（不是乘，是加）
         // 这样：final = original + (playerAttribute - 1.0)
+        // 保底0.01，防止属性过低导致负值
         return new MoveSpeed(
-            originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset,
-            originalMoveSpeed.getAimMultiplier() + playerSpeedOffset,
-            originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset
+            Math.max(originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset, 0.01f),
+            Math.max(originalMoveSpeed.getAimMultiplier() + playerSpeedOffset, 0.01f),
+            Math.max(originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset, 0.01f)
         );
     }
     
@@ -315,8 +317,8 @@ public class PropertyCalculator {
         }
         
         float entityAttributeFactor = (float) entityAttribute.getExplosionRadius();
-        // 考虑Forge默认+1
-        return originalExplosion.getRadius() + (entityAttributeFactor - 1.0f);
+        // 考虑Forge默认+1，保底0.01防止负值
+        return Math.max(originalExplosion.getRadius() + (entityAttributeFactor - 1.0f), 0.01f);
     }
     
     public float calculateExplosionDamage(AttachmentCacheProperty cacheProperty) {

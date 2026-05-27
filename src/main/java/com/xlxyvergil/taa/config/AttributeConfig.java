@@ -39,7 +39,7 @@ public class AttributeConfig {
                         "MAX: 通用与特定取最大值",
                         "ADDITIVE: 通用+特定-1",
                         "MULTIPLICATIVE: 通用*特定")
-                .defineEnum("damageCalculationMode", DamageCalculationMode.MAX);
+                .defineEnum("damageCalculationMode", DamageCalculationMode.ADDITIVE);
         
         BUILDER.pop();
         

@@ -116,7 +116,8 @@ public class EntityAttributeHelper {
         
         AttributeInstance instance = this.shooter.getAttribute(attribute);
         if (instance != null) {
-            return instance.getValue();
+            // 在源头保护：确保属性值不低于最小阈值
+            return AttributeValueGuard.clamp(instance.getValue());
         }
         
         return defaultValue;
@@ -167,9 +168,9 @@ public class EntityAttributeHelper {
         double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
         double specificDamage = getSpecificGunDamageBonus(this.gunType);
         
-        // 规则2：通用+特定-1
-        return genericDamage + specificDamage - 1.0D;
-    }
+        // 规则2：通用+特定，若和值大于1则减去一个基础值避免重复计算
+        double sum = genericDamage + specificDamage;
+        return sum > 1.0D ? sum - 1.0D : sum;    }
     
     /**
      * 计算枪械伤害加成 - 规则3：通用*特定
