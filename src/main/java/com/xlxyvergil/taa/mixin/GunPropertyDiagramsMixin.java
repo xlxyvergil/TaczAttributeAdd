@@ -17,7 +17,6 @@ import com.tacz.guns.resource.modifier.custom.*;
 import com.tacz.guns.resource.pojo.data.gun.Bolt;
 import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
-import com.tacz.guns.resource.pojo.data.gun.FeedType;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
 import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
@@ -26,9 +25,7 @@ import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage;
 import com.tacz.guns.resource.pojo.data.gun.ExtraDamage.DistanceDamagePair;
-import com.tacz.guns.util.AttachmentDataUtils;
 import com.xlxyvergil.taa.config.AttributeConfig;
-import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.compat.kubejs.KubeJSEventHelper;
 import com.xlxyvergil.taa.modifier.*;
 import com.xlxyvergil.taa.util.ApothicAttributesHelper;
@@ -45,7 +42,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -72,43 +68,8 @@ public class GunPropertyDiagramsMixin {
             startYOffset[0] += value.getDiagramsDataSize() * 10;
         });
         
-        // 检查是否有爆炸属性：配件属性里有爆炸 OR 枪械本身数据开启了爆炸 OR 缓存中的爆炸数据启用了爆炸
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft != null && minecraft.player != null) {
-            Player player = minecraft.player;
-            ItemStack gunItem = player.getMainHandItem();
-            IGun iGun = IGun.getIGunOrNull(gunItem);
-            if (iGun != null) {
-                TimelessAPI.getCommonGunIndex(iGun.getGunId(gunItem)).ifPresent(index -> {
-                    boolean hasExplosionFromAttachments = AttachmentDataUtils.isExplodeEnabled(gunItem, index.getGunData());
-                    boolean hasExplosionFromGun = index.getGunData().getBulletData().getExplosionData() != null && 
-                                                 index.getGunData().getBulletData().getExplosionData().isExplode();
-                    
-                    // 尝试获取缓存中的爆炸数据
-                    boolean hasExplosionFromCache = false;
-                    IGunOperator operator = IGunOperator.fromLivingEntity(player);
-                    if (operator != null) {
-                        AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
-                        if (cacheProperty != null) {
-                            ExplosionData cachedExplosionData = 
-                                cacheProperty.getCache(GunProperties.EXPLOSION);
-                            if (cachedExplosionData != null) {
-                                hasExplosionFromCache = cachedExplosionData.isExplode();
-                            }
-                        }
-                    }
-                    
-                    // 检查玩家属性是否导致爆炸开启（explosion_enabled > 2.0）
-                    EntityAttributeHelper entityAttribute = new EntityAttributeHelper(player, "");
-                    boolean hasExplosionFromPlayerAttribute = entityAttribute.getExplosionEnabled() > 2.0D;
-                    
-                    if (hasExplosionFromAttachments || hasExplosionFromGun || hasExplosionFromCache || hasExplosionFromPlayerAttribute) {
-                        // 加上我们的爆炸属性（爆炸范围+爆炸伤害=20像素）+ 额外间距（15像素）
-                        startYOffset[0] += 35;
-                    }
-                });
-            }
-        }
+        // 爆炸属性常驻显示（爆炸范围+爆炸伤害=20像素）+ 额外间距（15像素）
+        startYOffset[0] += 35;
         
         // 添加后坐力显示所需的空间（Pitch和Yaw各占10像素，共20像素）
         startYOffset[0] += 20;
@@ -149,6 +110,8 @@ public class GunPropertyDiagramsMixin {
         TimelessAPI.getCommonGunIndex(gunId).ifPresent(index -> {
             GunData gunData = index.getGunData();
             FireMode fireMode = iGun.getFireMode(gunItem);
+
+            EntityAttributeHelper entityAttribute = new EntityAttributeHelper(player, "");
 
             int barStartX = x + 83;
             int barMaxWidth = 120;
@@ -194,103 +157,77 @@ public class GunPropertyDiagramsMixin {
 
             yOffset[0] += 10;
             
-            // 在所有属性后添加爆炸范围和爆炸伤害
-            // 检查：配件属性里有爆炸 OR 枪械本身数据开启了爆炸 OR 缓存中的爆炸数据启用了爆炸
-            boolean hasExplosionFromAttachments = AttachmentDataUtils.isExplodeEnabled(gunItem, gunData);
-            boolean hasExplosionFromGun = gunData.getBulletData().getExplosionData() != null && 
-                                       gunData.getBulletData().getExplosionData().isExplode();
-            
-            // 检查缓存中的爆炸数据是否启用了爆炸
-            boolean hasExplosionFromCache = false;
-            ExplosionData cachedExplosionData = cacheProperty.getCache(GunProperties.EXPLOSION);
-            if (cachedExplosionData != null) {
-                hasExplosionFromCache = cachedExplosionData.isExplode();
+            // 爆炸范围和爆炸伤害（常驻显示）
+            ExplosionData originalExplosionData = gunData.getBulletData().getExplosionData();
+            float originalExplosionRadius = originalExplosionData != null ? originalExplosionData.getRadius() : 0f;
+            float originalExplosionDamage = originalExplosionData != null ? originalExplosionData.getDamage() : 0f;
+
+            ExplosionData modifiedExplosionData = cacheProperty.getCache(GunProperties.EXPLOSION);
+            if (modifiedExplosionData == null && originalExplosionData != null) {
+                modifiedExplosionData = originalExplosionData;
             }
-            
-            // 检查玩家属性是否导致爆炸开启（explosion_enabled > 2.0）
-            EntityAttributeHelper entityAttribute = new EntityAttributeHelper(player, "");
-            boolean hasExplosionFromPlayerAttribute = entityAttribute.getExplosionEnabled() > 2.0D;
-            
-            if (hasExplosionFromAttachments || hasExplosionFromGun || hasExplosionFromCache || hasExplosionFromPlayerAttribute) {
-                // 获取原始爆炸数据
-                ExplosionData originalExplosionData = gunData.getBulletData().getExplosionData();
-                if (originalExplosionData != null) {
-                    // 获取修改后的爆炸数据（如果没有配件修改，则使用原始数据）
-                    ExplosionData modifiedExplosionData = cacheProperty.getCache(GunProperties.EXPLOSION);
-                    if (modifiedExplosionData == null) {
-                        modifiedExplosionData = originalExplosionData;
-                    }
-                    if (modifiedExplosionData != null) {
-                        // 爆炸范围
-                        float originalExplosionRadius = originalExplosionData.getRadius();
-                        float modifiedExplosionRadius = modifiedExplosionData.getRadius();
-                        
-                        double explosionRadiusPercent = Mth.clamp(originalExplosionRadius / 5.0, 0, 1);
-                        int explosionRadiusLength = (int) (barStartX + barMaxWidth * explosionRadiusPercent);
-                        float addRadius = modifiedExplosionRadius - originalExplosionRadius;
-                        int addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
-                        
-                        // 触发KubeJS事件，允许外部脚本修改显示值
-                        modifiedExplosionRadius = Math.max((float) KubeJSEventHelper.postAndGetDisplayValue(
-                            player, gunItem, "EXPLOSION_RADIUS", modifiedExplosionRadius, originalExplosionRadius
-                        ), 0f);
-                        addRadius = modifiedExplosionRadius - originalExplosionRadius;
-                        addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
+            float modifiedExplosionRadius = modifiedExplosionData != null ? modifiedExplosionData.getRadius() : originalExplosionRadius;
+            float modifiedExplosionDamage = modifiedExplosionData != null ? modifiedExplosionData.getDamage() : originalExplosionDamage;
 
-                        graphics.drawString(font, Component.literal("爆炸范围"), nameTextStartX, yOffset[0], fontColor, false);
-                        graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
-                        graphics.fill(barStartX, yOffset[0] + 2, explosionRadiusLength, yOffset[0] + 6, barBaseColor);
-                        
-                        if (addRadius > 0) {
-                            int barRight = Math.min(explosionRadiusLength + addRadiusLength, barEndX);
-                            graphics.fill(explosionRadiusLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
-                            graphics.drawString(font, String.format("%.1f §a(+%.1f)m", modifiedExplosionRadius, addRadius), valueTextStartX, yOffset[0], fontColor, false);
-                        } else if (addRadius < 0) {
-                            int barLeft = Math.max(explosionRadiusLength + addRadiusLength, barStartX);
-                            graphics.fill(barLeft, yOffset[0] + 2, explosionRadiusLength, yOffset[0] + 6, barNegativeColor);
-                            graphics.drawString(font, String.format("%.1f §c(%.1f)m", modifiedExplosionRadius, addRadius), valueTextStartX, yOffset[0], fontColor, false);
-                        } else {
-                            graphics.drawString(font, String.format("%.1fm", modifiedExplosionRadius), valueTextStartX, yOffset[0], fontColor, false);
-                        }
+            // 爆炸范围
+            double explosionRadiusPercent = Mth.clamp(originalExplosionRadius / 5.0, 0, 1);
+            int explosionRadiusLength = (int) (barStartX + barMaxWidth * explosionRadiusPercent);
+            float addRadius = modifiedExplosionRadius - originalExplosionRadius;
+            int addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
 
-                        yOffset[0] += 10;
+            modifiedExplosionRadius = Math.max((float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "EXPLOSION_RADIUS", modifiedExplosionRadius, originalExplosionRadius
+            ), 0f);
+            addRadius = modifiedExplosionRadius - originalExplosionRadius;
+            addRadiusLength = (int) (barMaxWidth * addRadius / 5.0);
 
-                        // 爆炸伤害
-                        float originalExplosionDamage = originalExplosionData.getDamage();
-                        float modifiedExplosionDamage = modifiedExplosionData.getDamage();
-                        
-                        double explosionDamagePercent = Mth.clamp(originalExplosionDamage / 100.0, 0, 1);
-                        int explosionDamageLength = (int) (barStartX + barMaxWidth * explosionDamagePercent);
-                        float addDamage = modifiedExplosionDamage - originalExplosionDamage;
-                        int addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
-                        
-                        // 触发KubeJS事件，允许外部脚本修改显示值
-                        modifiedExplosionDamage = Math.max((float) KubeJSEventHelper.postAndGetDisplayValue(
-                            player, gunItem, "EXPLOSION_DAMAGE", modifiedExplosionDamage, originalExplosionDamage
-                        ), 0f);
-                        addDamage = modifiedExplosionDamage - originalExplosionDamage;
-                        addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
+            graphics.drawString(font, Component.literal("爆炸范围"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+            graphics.fill(barStartX, yOffset[0] + 2, explosionRadiusLength, yOffset[0] + 6, barBaseColor);
 
-                        graphics.drawString(font, Component.literal("爆炸伤害"), nameTextStartX, yOffset[0], fontColor, false);
-                        graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
-                        graphics.fill(barStartX, yOffset[0] + 2, explosionDamageLength, yOffset[0] + 6, barBaseColor);
-                        
-                        if (addDamage > 0) {
-                            int barRight = Math.min(explosionDamageLength + addDamageLength, barEndX);
-                            graphics.fill(explosionDamageLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
-                            graphics.drawString(font, String.format("%.1f §a(+%.1f)", modifiedExplosionDamage, addDamage), valueTextStartX, yOffset[0], fontColor, false);
-                        } else if (addDamage < 0) {
-                            int barLeft = Math.max(explosionDamageLength + addDamageLength, barStartX);
-                            graphics.fill(barLeft, yOffset[0] + 2, explosionDamageLength, yOffset[0] + 6, barNegativeColor);
-                            graphics.drawString(font, String.format("%.1f §c(%.1f)", modifiedExplosionDamage, addDamage), valueTextStartX, yOffset[0], fontColor, false);
-                        } else {
-                            graphics.drawString(font, String.format("%.1f", modifiedExplosionDamage), valueTextStartX, yOffset[0], fontColor, false);
-                        }
-
-                        yOffset[0] += 10;
-                    }
-                }
+            if (addRadius > 0) {
+                int barRight = Math.min(explosionRadiusLength + addRadiusLength, barEndX);
+                graphics.fill(explosionRadiusLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                graphics.drawString(font, String.format("%.1f §a(+%.1f)m", modifiedExplosionRadius, addRadius), valueTextStartX, yOffset[0], fontColor, false);
+            } else if (addRadius < 0) {
+                int barLeft = Math.max(explosionRadiusLength + addRadiusLength, barStartX);
+                graphics.fill(barLeft, yOffset[0] + 2, explosionRadiusLength, yOffset[0] + 6, barNegativeColor);
+                graphics.drawString(font, String.format("%.1f §c(%.1f)m", modifiedExplosionRadius, addRadius), valueTextStartX, yOffset[0], fontColor, false);
+            } else {
+                graphics.drawString(font, String.format("%.1fm", modifiedExplosionRadius), valueTextStartX, yOffset[0], fontColor, false);
             }
+
+            yOffset[0] += 10;
+
+            // 爆炸伤害
+            double explosionDamagePercent = Mth.clamp(originalExplosionDamage / 100.0, 0, 1);
+            int explosionDamageLength = (int) (barStartX + barMaxWidth * explosionDamagePercent);
+            float addDamage = modifiedExplosionDamage - originalExplosionDamage;
+            int addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
+
+            modifiedExplosionDamage = Math.max((float) KubeJSEventHelper.postAndGetDisplayValue(
+                player, gunItem, "EXPLOSION_DAMAGE", modifiedExplosionDamage, originalExplosionDamage
+            ), 0f);
+            addDamage = modifiedExplosionDamage - originalExplosionDamage;
+            addDamageLength = (int) (barMaxWidth * addDamage / 100.0);
+
+            graphics.drawString(font, Component.literal("爆炸伤害"), nameTextStartX, yOffset[0], fontColor, false);
+            graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
+            graphics.fill(barStartX, yOffset[0] + 2, explosionDamageLength, yOffset[0] + 6, barBaseColor);
+
+            if (addDamage > 0) {
+                int barRight = Math.min(explosionDamageLength + addDamageLength, barEndX);
+                graphics.fill(explosionDamageLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                graphics.drawString(font, String.format("%.1f §a(+%.1f)", modifiedExplosionDamage, addDamage), valueTextStartX, yOffset[0], fontColor, false);
+            } else if (addDamage < 0) {
+                int barLeft = Math.max(explosionDamageLength + addDamageLength, barStartX);
+                graphics.fill(barLeft, yOffset[0] + 2, explosionDamageLength, yOffset[0] + 6, barNegativeColor);
+                graphics.drawString(font, String.format("%.1f §c(%.1f)", modifiedExplosionDamage, addDamage), valueTextStartX, yOffset[0], fontColor, false);
+            } else {
+                graphics.drawString(font, String.format("%.1f", modifiedExplosionDamage), valueTextStartX, yOffset[0], fontColor, false);
+            }
+
+            yOffset[0] += 10;
             
             // ========== 枪械伤害显示（整合KuvaLich）==========
             // 必要数据获取
@@ -406,97 +343,49 @@ public class GunPropertyDiagramsMixin {
             }
             yOffset[0] += 10;
             
-            // 弹匣容量 - 修改后的逻辑
+            // 弹匣容量
             if (iGun.useInventoryAmmo(gunItem)) {
-                // 如果使用背包直读，则直接显示满条和 INV 的标注
                 graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
                 graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
                 graphics.fill(barStartX, yOffset[0] + 2, barStartX + barMaxWidth, yOffset[0] + 6, barBaseColor);
                 graphics.drawString(font, Component.literal("INV"), valueTextStartX, yOffset[0], fontColor, false);
             } else {
-                // 修改这里：ammoAmount计算包含枪管中的子弹（与原版保持一致）
                 int barrelBulletAmount = (iGun.hasBulletInBarrel(gunItem) && index.getGunData().getBolt() != Bolt.OPEN_BOLT) ? 1 : 0;
                 int ammoAmount = gunData.getAmmoAmount() + barrelBulletAmount;
                 double ammoAmountPercent = Math.min(ammoAmount / 100.0, 1);
-                // 修复计算方式，避免自动减1的问题
                 int ammoLength = barStartX + (int) (barMaxWidth * ammoAmountPercent);
-                
-                // 修改这里：只使用我们的缓存值，并加上枪管中的子弹
-                int maxAmmoCount = ammoAmount; // 默认值
-                
-                // 检查是否为背包供弹模式，如果是则不修改
-                boolean isUsingInventoryAsMagazine = gunData.getReloadData() != null && 
-                    gunData.getReloadData().getType() == FeedType.INVENTORY;
-                    
-                if (!isUsingInventoryAsMagazine) {
-                    // 首先尝试从ShooterContext获取缓存数据（最高优先级）
-                    LivingEntity shooter = ShooterContext.getShooter();
-                    if (shooter != null) {
-                        IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
-                        if (operator != null) {
-                            AttachmentCacheProperty cache = operator.getCacheProperty();
-                            if (cache != null) {
-                                Integer modifiedAmmoCount = cache.getCache(AmmoCountModifier.ID);
-                                if (modifiedAmmoCount != null) {
-                                    maxAmmoCount = modifiedAmmoCount + barrelBulletAmount; // 使用缓存值并加上枪管中的子弹
-                                }
-                            }
-                        }
+
+                int maxAmmoCount = ammoAmount;
+
+                Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
+                if (modifiedAmmoCount != null) {
+                    maxAmmoCount = modifiedAmmoCount + barrelBulletAmount;
+
+                    if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                        maxAmmoCount = GunsmithLibHelper.getAmmoCapacity(gunItem, maxAmmoCount);
                     }
-                    
-                    // 如果ShooterContext中没有，尝试从客户端玩家获取缓存数据（用于配件面板显示）
-                    if (maxAmmoCount == ammoAmount) { // 只有在还没有修改值时才尝试
-                        try {
-                            LocalPlayer clientPlayer = Minecraft.getInstance().player;
-                            if (clientPlayer != null) {
-                                IGunOperator operator = IGunOperator.fromLivingEntity(clientPlayer);
-                                if (operator != null) {
-                                    AttachmentCacheProperty cache = operator.getCacheProperty();
-                                    if (cache != null) {
-                                        Integer modifiedAmmoCount = cache.getCache(AmmoCountModifier.ID);
-                                        if (modifiedAmmoCount != null) {
-                                            maxAmmoCount = modifiedAmmoCount + barrelBulletAmount; // 使用缓存值并加上枪管中的子弹
-                                            
-                                            // 整合GunsmithLib弹匣容量属性
-                                            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
-                                                maxAmmoCount = GunsmithLibHelper.getAmmoCapacity(gunItem, maxAmmoCount);
-                                            }
-                                            
-                                            // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
-                                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
-                                            if (kuvaMagazineMod != 0) {
-                                                maxAmmoCount = (int) (maxAmmoCount * (1 + kuvaMagazineMod));
-                                            }
-                                            
-                                            // 触发KubeJS事件，允许外部脚本修改显示值
-                                            maxAmmoCount = Math.max((int) KubeJSEventHelper.postAndGetDisplayValue(
-                                                clientPlayer, gunItem, "AMMO_CAPACITY", maxAmmoCount, ammoAmount
-                                            ), 0);
-                                        }
-                                    }
-                                }
-                            }
-                        } catch (Exception ignored) {
-                            // 如果出现任何异常（例如在服务器端），忽略并继续
-                        }
+
+                    float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
+                    if (kuvaMagazineMod != 0) {
+                        maxAmmoCount = (int) (maxAmmoCount * (1 + kuvaMagazineMod));
                     }
+
+                    maxAmmoCount = Math.max((int) KubeJSEventHelper.postAndGetDisplayValue(
+                        player, gunItem, "AMMO_CAPACITY", maxAmmoCount, ammoAmount
+                    ), 0);
                 }
-                
-                // 修改这里：移除Math.max限制，允许负值
+
                 int addAmmoCount = maxAmmoCount - ammoAmount;
-                // 修改这里：修复计算方式，基于基准ammoAmount计算百分比
                 int addAmmoCountLength = (int) (barMaxWidth * addAmmoCount / (double) Math.max(ammoAmount, 1));
 
                 graphics.drawString(font, Component.translatable("gui.tacz.gun_refit.property_diagrams.ammo_capacity"), nameTextStartX, yOffset[0], fontColor, false);
                 graphics.fill(barStartX, yOffset[0] + 2, barEndX, yOffset[0] + 6, barBackgroundColor);
                 graphics.fill(barStartX, yOffset[0] + 2, ammoLength, yOffset[0] + 6, barBaseColor);
-                // 修改这里：处理正值、负值和零值的情况
                 if (addAmmoCount > 0) {
                     int barRight = Math.min(ammoLength + addAmmoCountLength, barEndX);
                     graphics.fill(ammoLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
                     graphics.drawString(font, String.format("%d §a(+%d)", maxAmmoCount, addAmmoCount), valueTextStartX, yOffset[0], fontColor, false);
                 } else if (addAmmoCount < 0) {
-                    // 处理弹药减少的情况
                     int barLeft = Math.max(ammoLength + addAmmoCountLength, barStartX);
                     graphics.fill(barLeft, yOffset[0] + 2, ammoLength, yOffset[0] + 6, barNegativeColor);
                     graphics.drawString(font, String.format("%d §c(%d)", maxAmmoCount, addAmmoCount), valueTextStartX, yOffset[0], fontColor, false);
@@ -626,12 +515,12 @@ public class GunPropertyDiagramsMixin {
             graphics.fill(barStartX, yOffset[0] + 2, reloadLength, yOffset[0] + 6, barBaseColor);
             if (reloadDiff < 0) {
                 int barRight = Math.min(reloadLength + reloadDiffLength, barEndX);
-                graphics.fill(reloadLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
-                graphics.drawString(font, String.format("%.2fs §a(%.2f)", modifiedReloadTime, reloadDiff), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.fill(reloadLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor);
+                graphics.drawString(font, String.format("%.2fs §c(%.2f)", modifiedReloadTime, reloadDiff), valueTextStartX, yOffset[0], fontColor, false);
             } else if (reloadDiff > 0) {
                 int barLeft = Math.max(reloadLength + reloadDiffLength, barStartX);
-                graphics.fill(barLeft, yOffset[0] + 2, reloadLength, yOffset[0] + 6, barNegativeColor);
-                graphics.drawString(font, String.format("%.2fs §c(+%.2f)", modifiedReloadTime, reloadDiff), valueTextStartX, yOffset[0], fontColor, false);
+                graphics.fill(barLeft, yOffset[0] + 2, reloadLength, yOffset[0] + 6, barPositivelyColor);
+                graphics.drawString(font, String.format("%.2fs §a(+%.2f)", modifiedReloadTime, reloadDiff), valueTextStartX, yOffset[0], fontColor, false);
             } else {
                 graphics.drawString(font, String.format("%.2fs", modifiedReloadTime), valueTextStartX, yOffset[0], fontColor, false);
             }
@@ -720,10 +609,10 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // ========== 后坐力显示（整合KuvaLich）==========
+            
             // 获取缓存中的后坐力数据（包含TACZ配件修改）
             ParameterizedCachePair<Float, Float> recoilData = cacheProperty.getCache(GunProperties.RECOIL);
             
-            // 重用上方已创建的EntityAttributeHelper实例来计算后坐力
             // 计算方式：综合属性 × 细分属性（乘法叠加）
             float recoilPitchFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilPitch());
             float recoilYawFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilYaw());
@@ -783,13 +672,12 @@ public class GunPropertyDiagramsMixin {
                 
                 if (pitchDifference > 0) {
                     int barRight = Math.min(pitchLength + pitchModifierLength, barEndX);
-                    graphics.fill(pitchLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor); // 后坐力增加显示为红色（不好）
-                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", finalPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(pitchLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                    graphics.drawString(font, String.format("%.2f §a(+%.2f)", finalPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else if (pitchDifference < 0) {
-                    // 后坐力减少显示为绿色（好）
                     int barLeft = Math.max(pitchLength + pitchModifierLength, barStartX);
-                    graphics.fill(barLeft, yOffset[0] + 2, pitchLength, yOffset[0] + 6, barPositivelyColor);
-                    graphics.drawString(font, String.format("%.2f §a(%.2f)", finalPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(barLeft, yOffset[0] + 2, pitchLength, yOffset[0] + 6, barNegativeColor);
+                    graphics.drawString(font, String.format("%.2f §c(%.2f)", finalPitch, pitchDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else {
                     graphics.drawString(font, String.format("%.2f", finalPitch), valueTextStartX, yOffset[0], fontColor, false);
                 }
@@ -808,13 +696,12 @@ public class GunPropertyDiagramsMixin {
                 
                 if (yawDifference > 0) {
                     int barRight = Math.min(yawLength + yawModifierLength, barEndX);
-                    graphics.fill(yawLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barNegativeColor); // 后坐力增加显示为红色（不好）
-                    graphics.drawString(font, String.format("%.2f §c(+%.2f)", finalYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(yawLength, yOffset[0] + 2, barRight, yOffset[0] + 6, barPositivelyColor);
+                    graphics.drawString(font, String.format("%.2f §a(+%.2f)", finalYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else if (yawDifference < 0) {
-                    // 后坐力减少显示为绿色（好）
                     int barLeft = Math.max(yawLength + yawModifierLength, barStartX);
-                    graphics.fill(barLeft, yOffset[0] + 2, yawLength, yOffset[0] + 6, barPositivelyColor);
-                    graphics.drawString(font, String.format("%.2f §a(%.2f)", finalYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
+                    graphics.fill(barLeft, yOffset[0] + 2, yawLength, yOffset[0] + 6, barNegativeColor);
+                    graphics.drawString(font, String.format("%.2f §c(%.2f)", finalYaw, yawDifference), valueTextStartX, yOffset[0], fontColor, false);
                 } else {
                     graphics.drawString(font, String.format("%.2f", finalYaw), valueTextStartX, yOffset[0], fontColor, false);
                 }

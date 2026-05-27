@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.modifier.ReloadModifier;
 import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
@@ -34,9 +33,8 @@ public class ModernKineticGunScriptAPIMixin {
         )
     )
     public int getModifiedAmmoCountWithAttachment(ItemStack gunItem, com.tacz.guns.resource.pojo.data.gun.GunData gunData) {
-        // 首先尝试从当前 shooter 上下文中获取缓存的修改值
-        // 由于我们无法直接访问 ModernKineticGunScriptAPI 的私有字段，我们使用 ThreadLocal 或其他方式来传递上下文
-        LivingEntity shooter = ShooterContext.getShooter();
+        // 直接使用 shadow 字段，与 modifyReloadTime 保持一致
+        LivingEntity shooter = this.shooter;
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
             if (operator != null) {
@@ -73,8 +71,8 @@ public class ModernKineticGunScriptAPIMixin {
         )
     )
     public int getModifiedAmmoCountWithAttachmentForNeeded(ItemStack gunItem, com.tacz.guns.resource.pojo.data.gun.GunData gunData) {
-        // 首先尝试从当前 shooter 上下文中获取缓存的修改值
-        LivingEntity shooter = ShooterContext.getShooter();
+        // 直接使用 shadow 字段，与 modifyReloadTime 保持一致
+        LivingEntity shooter = this.shooter;
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
             if (operator != null) {
@@ -111,8 +109,8 @@ public class ModernKineticGunScriptAPIMixin {
         )
     )
     public int getModifiedAmmoCountWithAttachmentForMax(ItemStack gunItem, com.tacz.guns.resource.pojo.data.gun.GunData gunData) {
-        // 首先尝试从当前 shooter 上下文中获取缓存的修改值
-        LivingEntity shooter = ShooterContext.getShooter();
+        // 直接使用 shadow 字段，与 modifyReloadTime 保持一致
+        LivingEntity shooter = this.shooter;
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
             if (operator != null) {
