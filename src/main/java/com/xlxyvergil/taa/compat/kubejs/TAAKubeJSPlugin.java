@@ -2,6 +2,7 @@ package com.xlxyvergil.taa.compat.kubejs;
 
 import com.xlxyvergil.taa.TaczAttributeAdd;
 import com.xlxyvergil.taa.compat.kubejs.events.TAAPropertyDisplayEvents;
+import com.xlxyvergil.taa.compat.kubejs.events.TAAContextEvents;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import org.apache.logging.log4j.LogManager;
@@ -9,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * TAA KubeJS插件
- * 提供枪械属性面板显示值修改的事件支持
+ * 提供枪械属性面板显示值修改和属性后处理的事件支持
  */
 public class TAAKubeJSPlugin extends KubeJSPlugin {
     private static final Logger LOGGER = LogManager.getLogger(TaczAttributeAdd.MODID + "-kubejs");
@@ -28,6 +29,7 @@ public class TAAKubeJSPlugin extends KubeJSPlugin {
     public void registerEvents() {
         // 注册自定义事件组
         TAAPropertyDisplayEvents.GROUP.register();
-        LOGGER.info("TAA property display events registered");
+        TAAContextEvents.GROUP.register();
+        LOGGER.info("TAA events registered");
     }
 }

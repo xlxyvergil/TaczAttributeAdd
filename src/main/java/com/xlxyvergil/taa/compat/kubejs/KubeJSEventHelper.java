@@ -1,7 +1,10 @@
 package com.xlxyvergil.taa.compat.kubejs;
 
 import com.xlxyvergil.taa.compat.kubejs.events.TAAPropertyDisplayEvents;
+import com.xlxyvergil.taa.compat.kubejs.events.TAAContextEvents;
+import com.xlxyvergil.taa.util.PropertyCalculationResults;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
@@ -42,5 +45,27 @@ public class KubeJSEventHelper {
             // 如果KubeJS未加载或发生错误，返回原值
             return displayValue;
         }
+    }
+    
+    /**
+     * 触发属性后处理事件
+     * 在 TAA 属性计算完成后触发，允许 KubeJS 脚本获取玩家实体后修改计算结果
+     * 
+     * @param shooter 玩家/射击者实体
+     * @param gunItem 枪械物品
+     * @param results 计算结果（KubeJS 可以修改此结果）
+     */
+    public static void postAttributePostEvent(LivingEntity shooter, ItemStack gunItem, PropertyCalculationResults results) {
+        // 检查KubeJS是否加载
+        if (!ModList.get().isLoaded("kubejs")) {
+            return;
+        }
+        
+        // 创建事件实例
+        TAAContextEvents.AttributePostEventJS event = 
+            new TAAContextEvents.AttributePostEventJS(shooter, gunItem, results);
+        
+        // 触发事件（服务端事件）
+        TAAContextEvents.ATTRIBUTE_POST.post(ScriptType.SERVER, null, event);
     }
 }

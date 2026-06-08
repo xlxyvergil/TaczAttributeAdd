@@ -1,0 +1,1283 @@
+[20:24:14] [INIT] KubeJS 2001.6.5-build.16; MC 2001 forge
+[20:24:14] [INIT] Loaded plugins:
+[20:24:14] [INIT] - dev.latvian.mods.kubejs.forge.BuiltinKubeJSForgePlugin
+[20:24:14] [INIT] - dev.latvian.mods.kubejs.integration.forge.gamestages.GameStagesIntegration
+[20:24:14] [INIT] - dev.ftb.mods.ftbxmodcompat.ftbquests.kubejs.KubeJSIntegration
+[20:24:14] [INIT] - dev.ftb.mods.ftbxmodcompat.ftbteams.kubejs.FTBTeamsKubeJSPlugin
+[20:24:14] [INIT] - io.github.suel_ki.timeclock.core.forge.compat.kubejs.TCKubeJSPlugin
+[20:24:14] [INIT] - net.rain.mejs.kubejs.plugin.MEJSPlugin
+[20:24:14] [INIT] - net.prizowo.keyboardjs.kubejs.KeyboardJSPlugin
+[20:24:14] [INIT] - com.github.tartaricacid.touhoulittlemaid.compat.kubejs.ModKubeJSPlugin
+[20:24:14] [INIT] - com.mega.revelationfix.common.compat.kjs.KubeJSPlugin
+[20:24:14] [INIT] - com.almostreliable.lootjs.kube.LootJSPlugin
+[20:24:14] [INIT] - com.wintercogs.beyonddimensions.integration.module.kubejs.BD_KubeJSPlugin
+[20:24:14] [INIT] - com.almostreliable.summoningrituals.compat.kubejs.AlmostKube
+[20:24:14] [INIT] - com.tacz.guns.compat.kubejs.TimelessKubeJSPlugin
+[20:24:14] [INIT] - com.xlxyvergil.taa.compat.kubejs.TAAKubeJSPlugin
+[20:24:15] [INFO] Loaded script server_scripts:ban——mob.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:boss_loot_fix.js in 0.008 s
+[20:24:15] [INFO] Loaded script server_scripts:command_handler.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:darkwand.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:death.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:deea.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:diaoluowu.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:esoteric.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:feixingyaoshui.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:fss.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:fsss.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:gear_ban.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:jitanyishi.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:koudai.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:lootremove.js in 0.002 s
+[20:24:15] [INFO] Loaded script server_scripts:lootTables.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:nether_star——coin.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/fumotai.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/peifang.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pf2.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pfdonghaihun.js in 0.002 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pfhunlei.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pfms.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pfsc.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pftaibosses.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pftianchuan.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/pfzaibian.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:peifang/shengyiwuduihauanbi.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:remove.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:shengwudiaoluowu.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:shy ice key.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:shy red key.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:source jar.js in 0.0 s
+[20:24:15] [INFO] taa_combined_with_attack_damage.js#5: Loaded Java class 'com.tacz.guns.resource.pojo.data.gun.ExtraDamage$DistanceDamagePair'
+[20:24:15] [INFO] taa_combined_with_attack_damage.js#7: Loaded Java class 'java.util.LinkedList'
+[20:24:15] [INFO] Loaded script server_scripts:taa_combined_with_attack_damage.js in 0.002 s
+[20:24:15] [INFO] Loaded script server_scripts:terramity_pocket_yuzhou.js in 0.002 s
+[20:24:15] [INFO] Loaded script server_scripts:the ars.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:the ending bow.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:the ending sword.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:tiemofashipxiugai.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:wilden——coin.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:world.js in 0.002 s
+[20:24:15] [INFO] Loaded script server_scripts:xueliangshezhi.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:zhaohuanjitan.js in 0.0 s
+[20:24:15] [INFO] Loaded script server_scripts:zhuhuoship.js in 0.001 s
+[20:24:15] [INFO] Loaded script server_scripts:zs_qj_my.js in 0.0 s
+[20:24:15] [INFO] Loaded 45/45 KubeJS server scripts in 0.048 s with 0 errors and 0 warnings
+[20:24:15] [INFO] Scripts loaded
+[20:24:15] [INFO] Initializing recipe event...
+[20:24:27] [INFO] Processing recipes...
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/arms/golden_minotaur_axe[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'cataclysm:stonecutting/azure_seastone_brick_stair_from_stonecutting[minecraft:stonecutting]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/block/locked_vanishing_block[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/tool/lamp_of_cinders_er[minecraft:crafting_shaped]'! Falling back to vanilla: Failed to parse custom ingredient ("forge:ore_dict") from {"type":"forge:ore_dict","ore":"ingotFiery"}: com.google.gson.JsonSyntaxException: Unknown ingredient type: forge:ore_dict
+[20:24:27] [WARN] Failed to parse recipe 'soulsweapons:frenzied_shade_disc[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'merorsenergeticgun:gun/crimson_cunpowder_storm[tacz:gun_smith_table_crafting]'! Falling back to vanilla: Unknown item 'jerotesvillage:meror_energy_regime'
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:ae2/cable/fluix_smart_cable[minecraft:crafting_shapeless]'! Falling back to vanilla: Unknown item 'ae2:fluix_glass_cable'
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:ae2/certus_quartz/flawless_budding_quartz[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'goety:end/big_end_stone_bricks_stonecutting[minecraft:stonecutting]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'mofus_better_end_:end_engine_recipe[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/material/alpha_yeti_fur[minecraft:crafting_shaped]'! Falling back to vanilla: Failed to parse custom ingredient ("minecraft:white_wool") from {"type":"minecraft:white_wool"}: com.google.gson.JsonSyntaxException: Unknown ingredient type: minecraft:white_wool
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/tool/peacock_fan_er[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'brazilian_expansion:glass_cup[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:ae2/certus_quartz/cut_small_certus_quartz_bud[minecraft:stonecutting]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'merorsenergeticgun:gun/star_breaker_assault_rifle[tacz:gun_smith_table_crafting]'! Falling back to vanilla: Unknown item 'jerotesvillage:meror_energy_regime'
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/block/naga_stone[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/material/raw_ironwood_materials[minecraft:crafting_shapeless]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'merorsenergeticgun:ammo/meror_energy_bottles[tacz:gun_smith_table_crafting]'! Falling back to vanilla: Unknown item 'jerotesvillage:meror_energy_regime'
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:ae2/certus_quartz/cut_certus_quartz_crystal[minecraft:stonecutting]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/block/tower_device[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/arms/tri_bow[minecraft:crafting_shaped]'! Falling back to vanilla: Failed to parse custom ingredient ("minecraft:string") from {"type":"minecraft:string"}: com.google.gson.JsonSyntaxException: Unknown ingredient type: minecraft:string
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:ae2/certus_quartz/cut_large_certus_quartz_bud[minecraft:stonecutting]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/arms/scepter_of_fortification[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/block/fire_jet[minecraft:crafting_shaped]'! Falling back to vanilla: Failed to parse custom ingredient ("minecraft:coal") from {"type":"minecraft:coal"}: com.google.gson.JsonSyntaxException: Unknown ingredient type: minecraft:coal
+[20:24:27] [WARN] Failed to parse recipe 'merorsenergeticgun:gun/meror_guardian_pistol_iv[tacz:gun_smith_table_crafting]'! Falling back to vanilla: Unknown item 'jerotesvillage:meror_energy_regime'
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:ae2/certus_quartz/cut_medium_certus_quartz_bud[minecraft:stonecutting]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'extra_recipe:twilightforest/arms/diamond_minotaur_axe[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [WARN] Failed to parse recipe 'arknights:arknights_crafttable[minecraft:crafting_shaped]'! Falling back to vanilla: ItemStack 'result' can't be empty!
+[20:24:27] [INFO] Found 14962 recipes in 370.7 ms
+[20:24:28] [INFO] Posted recipe events in 1.170 s
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:warped_chest_from_quark_warped_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:warped_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"warped\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe fmic2:melee/alloydagger[tacz:gun_smith_table_crafting]: {"materials":[{"item":{"type":"forge:partial_nbt","item":"tacz:ammo","nbt":{"AmmoId":"fmic:fam"}},"count":20},{"item":{"type":"forge:partial_nbt","item":"tacz:ammo","nbt":{"AmmoId":"fmic:fmc"}},"count":1}],"result":{"type":"custom","group":"lrtactical:melee","item":{"item":"lrtactical:melee","nbt":{"MeleeWeaponId":"fmic:alloydagger"}}},"type":"tacz:gun_smith_table_crafting"}: Unknown item 'lrtactical:melee'
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:bamboo_chest_from_quark_bamboo_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:bamboo_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"bamboo\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:jungle_chest_from_quark_jungle_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:jungle_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"jungle\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:dark_oak_chest_from_quark_dark_oak_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:dark_oak_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"dark_oak\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:crimson_chest_from_quark_crimson_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:crimson_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"crimson\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe fmic2:melee/radagger[tacz:gun_smith_table_crafting]: {"materials":[{"item":{"tag":"forge:ingots/gold"},"count":8},{"item":{"tag":"forge:ingots/iron"},"count":14}],"result":{"type":"custom","group":"lrtactical:melee","item":{"item":"lrtactical:melee","nbt":{"MeleeWeaponId":"fmic:radagger"}}},"type":"tacz:gun_smith_table_crafting"}: Unknown item 'lrtactical:melee'
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:spruce_chest_from_quark_spruce_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:spruce_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"spruce\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:mangrove_chest_from_quark_mangrove_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:mangrove_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"mangrove\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:oak_chest_from_quark_oak_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:oak_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"oak\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe fmic2:throwable/grenade[tacz:gun_smith_table_crafting]: {"type":"tacz:gun_smith_table_crafting","materials":[{"item":{"tag":"forge:ingots/iron"},"count":4},{"item":{"tag":"forge:gunpowder"},"count":6}],"result":{"type":"custom","group":"lrtactical:throwable","item":{"item":"lrtactical:throwable","nbt":{"ThrowableId":"fmic:grenade"},"count":4}}}: Unknown item 'lrtactical:throwable'
+[20:24:28] [WARN] Error parsing recipe fmic2:throwable/gasgrenade[tacz:gun_smith_table_crafting]: {"type":"tacz:gun_smith_table_crafting","materials":[{"item":{"tag":"forge:ingots/iron"},"count":3},{"item":{"tag":"forge:gunpowder"},"count":2},{"item":{"tag":"forge:gems/quartz"},"count":3}],"result":{"type":"custom","group":"lrtactical:throwable","item":{"item":"lrtactical:throwable","nbt":{"ThrowableId":"fmic:gasgrenade"},"count":2}}}: Unknown item 'lrtactical:throwable'
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:acacia_chest_from_quark_acacia_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:acacia_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"acacia\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:cherry_chest_from_quark_cherry_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:cherry_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"cherry\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [WARN] Error parsing recipe sophisticatedstorage:birch_chest_from_quark_birch_chest[minecraft:crafting_shapeless]: {"type":"minecraft:crafting_shapeless","conditions":[{"type":"forge:item_exists","item":"quark:birch_chest"},{"type":"sophisticatedcore:item_enabled","itemRegistryName":"sophisticatedstorage:chest"}],"ingredients":[[],{"item":"minecraft:lever"}],"result":{"item":"sophisticatedstorage:chest","nbt":"{woodType:\"birch\"}"}}: Item array cannot be empty, at least one item must be defined
+[20:24:28] [INFO] Added 181 recipes, removed 94 recipes, modified 4 recipes, with 15 failed recipes in 76.10 ms
+[20:24:34] [INFO] Server resource reload complete!
+[20:24:38] [ERROR] ! Error in 'EntityEvents.spawned': null
+[20:24:38] [ERROR] ! java.lang.AbstractMethodError
+[20:24:38] [ERROR] !   at java.lang.reflect.Method.invoke(Method.java:580)
+[20:24:38] [ERROR] !   at …rhino.MemberBox.invoke(MemberBox.java:160)
+[20:24:38] [ERROR] !   at …rhino.NativeJavaMethod.call(NativeJavaMethod.java:463)
+[20:24:38] [ERROR] !   at …rhino.Interpreter.interpretLoop(Interpreter.java:986)
+[20:24:38] [ERROR] !   at …rhino.Interpreter.interpret(Interpreter.java:370)
+[20:24:38] [ERROR] !   at …rhino.InterpretedFunction.call(InterpretedFunction.java:72)
+[20:24:38] [ERROR] !   at …rhino.Context.callSync(Context.java:1357)
+[20:24:38] [ERROR] !   at …rhino.ArrowFunction.call(ArrowFunction.java:42)
+[20:24:38] [ERROR] !   at …rhino.NativeArray.iterativeMethod(NativeArray.java:1314)
+[20:24:38] [ERROR] !   at …rhino.NativeArray.execIdCall(NativeArray.java:1798)
+[20:24:38] [ERROR] !   at …rhino.IdFunctionObject.call(IdFunctionObject.java:103)
+[20:24:38] [ERROR] !   at …rhino.Interpreter.interpretLoop(Interpreter.java:986)
+[20:24:38] [ERROR] !   at …rhino.Interpreter.interpret(Interpreter.java:370)
+[20:24:38] [ERROR] !   at …rhino.InterpretedFunction.call(InterpretedFunction.java:72)
+[20:24:38] [ERROR] !   at …rhino.Context.callSync(Context.java:1357)
+[20:24:38] [ERROR] !   at …rhino.Context.doTopCall(Context.java:1374)
+[20:24:38] [ERROR] !   at …rhino.InterpretedFunction.call(InterpretedFunction.java:70)
+[20:24:38] [ERROR] !   at …rhino.Context.callSync(Context.java:1357)
+[20:24:38] [ERROR] !   at …rhino.ArrowFunction.call(ArrowFunction.java:42)
+[20:24:38] [ERROR] !   at …rhino.Context.callSync(Context.java:1357)
+[20:24:38] [ERROR] !   at …rhino.InterfaceAdapter.invoke(InterfaceAdapter.java:125)
+[20:24:38] [ERROR] !   at …rhino.VMBridge.lambda$newInterfaceProxy$0(VMBridge.java:74)
+[20:24:38] [ERROR] !   at TRANSFORMER/jdk.proxy3/jdk.proxy3.$Proxy173.onEvent(Unknown Source)
+[20:24:38] [ERROR] !   at …kubejs.event.EventHandlerContainer.handle(EventHandlerContainer.java:39)
+[20:24:38] [ERROR] !   at …kubejs.event.EventHandler.postToHandlers(EventHandler.java:304)
+[20:24:38] [ERROR] !   at …kubejs.event.EventHandler.post(EventHandler.java:272)
+[20:24:38] [ERROR] !   at …kubejs.event.EventHandler.post(EventHandler.java:226)
+[20:24:38] [ERROR] !   at …kubejs.entity.KubeJSEntityEventHandler.entitySpawned(KubeJSEntityEventHandler.java:42)
+[20:24:38] [ERROR] !   at java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:733)
+[20:24:38] [ERROR] !   at dev.architectury.event.EventFactory.invokeMethod(EventFactory.java:53)
+[20:24:38] [ERROR] !   at dev.architectury.event.EventFactory$2.handleInvocation(EventFactory.java:81)
+[20:24:38] [ERROR] !   at MC-BOOTSTRAP/com.google.common@31.1-jre/com.google.common.reflect.AbstractInvocationHandler.invoke(AbstractInvocationHandler.java:87)
+[20:24:38] [ERROR] !   at TRANSFORMER/jdk.proxy3/jdk.proxy3.$Proxy233.add(Unknown Source)
+[20:24:38] [ERROR] !   at dev.architectury.event.forge.EventHandlerImplCommon.event(EventHandlerImplCommon.java:236)
+[20:24:38] [ERROR] !   at dev.architectury.event.forge.__EventHandlerImplCommon_event_EntityJoinLevelEvent.invoke(.dynamic)
+[20:24:38] [ERROR] !   at MC-BOOTSTRAP/net.minecraftforge.eventbus/net.minecraftforge.eventbus.ASMEventHandler.invoke(ASMEventHandler.java:55)
+[20:24:38] [ERROR] !   at MC-BOOTSTRAP/net.minecraftforge.eventbus/net.minecraftforge.eventbus.EventBus.post(EventBus.java:312)
+[20:24:38] [ERROR] !   at MC-BOOTSTRAP/net.minecraftforge.eventbus/net.minecraftforge.eventbus.EventBus.post(EventBus.java:298)
+[20:24:38] [ERROR] !   at net.minecraft.world.level.entity.PersistentEntitySectionManager.m_157538_(PersistentEntitySectionManager.java:79)
+[20:24:38] [ERROR] !   at net.minecraft.world.level.entity.PersistentEntitySectionManager.m_157592_(PersistentEntitySectionManager.java:260)
+[20:24:38] [ERROR] !   at java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+[20:24:38] [ERROR] !   at java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+[20:24:38] [ERROR] !   at net.minecraft.world.level.entity.PersistentEntitySectionManager.m_157582_(PersistentEntitySectionManager.java:259)
+[20:24:38] [ERROR] !   at net.minecraft.world.level.entity.PersistentEntitySectionManager.m_157506_(PersistentEntitySectionManager.java:269)
+[20:24:38] [ERROR] !   at net.minecraft.server.level.ServerLevel.m_8793_(ServerLevel.java:355)
+[20:24:38] [ERROR] !   at net.minecraft.server.MinecraftServer.m_5703_(MinecraftServer.java:893)
+[20:24:38] [ERROR] !   at net.minecraft.server.dedicated.DedicatedServer.m_5703_(DedicatedServer.java:283)
+[20:24:38] [ERROR] !   at net.minecraft.server.MinecraftServer.m_5705_(MinecraftServer.java:814)
+[20:24:38] [ERROR] !   at net.minecraft.server.MinecraftServer.m_130011_(MinecraftServer.java:661)
+[20:24:38] [ERROR] !   at net.minecraft.server.MinecraftServer.m_206580_(MinecraftServer.java:251)
+[20:24:38] [ERROR] !   at java.lang.Thread.run(Thread.java:1583)
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=27.29
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=24.02
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=20.71
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 7.546024725214465
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 27.29
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 24.02
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 20.71
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=27.29
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=24.02
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=20.71
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 7.546024725214465
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 27.29
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 24.02
+[20:26:34] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 20.71
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:37] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:38] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:39] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:40] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:41] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:42] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:26:43] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:01] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:02] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:03] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:04] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:05] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:06] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:07] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:08] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:09] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:10] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:11] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#40: TAA: Entity name: xlxyvergil
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 30: before=7.65, after=22.39
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 60: before=6.38, after=19.11
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#55: TAA: Distance 3.4028234663852886e+38: before=5.10, after=15.81
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#62: TAA: Combined - bow_strength: 2.5814794028256847, arrow_damage: 1, attack_damage: 2.6411086538250625
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#68: TAA: Modified damage list verification:
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 30: 22.39
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 60: 19.11
+[20:27:12] [INFO] taa_combined_with_attack_damage.js#71: TAA:   Distance 3.4028234663852886e+38: 15.81

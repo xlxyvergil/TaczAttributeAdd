@@ -1,6 +1,5 @@
 package com.xlxyvergil.taa.util;
 
-import com.tacz.guns.api.modifier.ParameterizedCachePair;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
