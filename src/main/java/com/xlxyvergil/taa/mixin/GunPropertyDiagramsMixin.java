@@ -674,18 +674,17 @@ public class GunPropertyDiagramsMixin {
             }
             
             // ========== 子弹数量显示 ==========
-            // 获取原始子弹数量
-            int barrelBulletAmount = (iGun.hasBulletInBarrel(gunItem) && gunData.getBolt() != Bolt.OPEN_BOLT) ? 1 : 0;
+            // 获取原始子弹数量（每次射击发射的弹头数）
             int originalBulletCount = gunData.getBulletData().getBulletAmount();
             if (originalBulletCount <= 0) {
                 originalBulletCount = 1;
             }
-            int ammoAmount = originalBulletCount + barrelBulletAmount;
+            int ammoAmount = originalBulletCount;
             // 获取缓存中的子弹数量（已包含配件加成）
             Integer cachedBulletCount = cacheProperty.<Integer>getCache(BulletCountModifier.ID);
             int displayBulletCount;
             if (cachedBulletCount != null) {
-                displayBulletCount = cachedBulletCount + barrelBulletAmount;
+                displayBulletCount = cachedBulletCount;
             } else {
                 displayBulletCount = ammoAmount;
             }

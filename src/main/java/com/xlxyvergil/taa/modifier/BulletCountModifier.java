@@ -52,6 +52,10 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
         if (currentBulletCount <= 0) {
             currentBulletCount = 1;
         }
+        // 如果安装了独头弹配件，弹头数量强制为1
+        if (hasSlugEffect(gunItem)) {
+            currentBulletCount = 1;
+        }
         return new CacheValue<>(currentBulletCount);
     }
 
