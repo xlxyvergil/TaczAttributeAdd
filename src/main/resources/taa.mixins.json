@@ -13,6 +13,7 @@
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
     "GunPropertyDiagramsMixin",
+    "GunHudOverlayMixin",
     "RecoilModifierMixin",
     "client.TaaClientPacketListenerMixin"
   ],
