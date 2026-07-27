@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.modifier.ReloadModifier;
-import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
+import com.xlxyvergil.taa.util.AmmoCapacityHelper;
+import net.minecraft.world.entity.player.Player;
 
 
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
@@ -42,15 +43,8 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        int result = modifiedAmmoCount;
-                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
-                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
-                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
-                            if (kuvaMagazineMod != 0) {
-                                result = (int) (result * (1 + kuvaMagazineMod));
-                            }
-                        }
-                        return result;
+                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, (Player) shooter, 0, 0);
                     }
                 }
             }
@@ -80,15 +74,8 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        int result = modifiedAmmoCount;
-                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
-                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
-                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
-                            if (kuvaMagazineMod != 0) {
-                                result = (int) (result * (1 + kuvaMagazineMod));
-                            }
-                        }
-                        return result;
+                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, (Player) shooter, 0, 0);
                     }
                 }
             }
@@ -118,15 +105,8 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        int result = modifiedAmmoCount;
-                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
-                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
-                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
-                            if (kuvaMagazineMod != 0) {
-                                result = (int) (result * (1 + kuvaMagazineMod));
-                            }
-                        }
-                        return result;
+                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, (Player) shooter, 0, 0);
                     }
                 }
             }

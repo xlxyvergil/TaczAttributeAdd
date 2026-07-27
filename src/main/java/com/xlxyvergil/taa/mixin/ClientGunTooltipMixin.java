@@ -15,7 +15,7 @@ import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.xlxyvergil.taa.context.GunTypeContext;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
-import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
+import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -113,15 +113,10 @@ public class ClientGunTooltipMixin {
 
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        int result = modifiedAmmoCount;
-                        // 整合KuvaLich弹匣容量公式: 最终 = 我们计算的 * (1 + magazine_size)
-                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
-                            float kuvaMagazineMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gun);
-                            if (kuvaMagazineMod != 0) {
-                                result = (int) (result * (1 + kuvaMagazineMod));
-                            }
-                        }
-                        return result;
+                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(
+                            modifiedAmmoCount, gun, mc.player, 0, 0
+                        );
                     }
                 }
             }

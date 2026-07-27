@@ -140,12 +140,8 @@ public class PropertyCalculator {
         }
         double entityAttributeFactor = entityAttribute.getBulletCount();
         double result = originalValue * entityAttributeFactor;
-        // 如果计算结果有小数部分，则向上取
-        if (result > Math.floor(result)) {
-            return (int) Math.ceil(result);
-        } else {
-            return (int) result;
-        }
+        // 四舍五入取整
+        return (int) Math.round(result);
     }
     
     public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {

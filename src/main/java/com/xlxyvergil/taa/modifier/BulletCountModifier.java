@@ -63,12 +63,8 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
     public void eval(List<Modifier> modifiers, CacheValue<Integer> cache) {
         // 使用标准的Modifier计算逻辑
         double eval = AttachmentPropertyManager.eval(modifiers, cache.getValue());
-        // 如果计算结果有小数部分，则向上取整
-        if (eval > Math.floor(eval)) {
-            cache.setValue((int) Math.ceil(eval));
-        } else {
-            cache.setValue((int) eval);
-        }
+        // 四舍五入取整
+        cache.setValue((int) Math.round(eval));
     }
 
     @Override

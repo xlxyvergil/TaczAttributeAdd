@@ -8,8 +8,9 @@ import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunReloadData;
 import com.tacz.guns.util.AttachmentDataUtils;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
-import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
+import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +29,7 @@ public class AttachmentDataUtilsMixin {
             return original;
         }
 
-        // 只应用我们的 modifier，然后计算 KuvaLich 的弹匣容量修改
+        // 只应用我们的 modifier，然后计算完整兼容链
         LivingEntity shooter = com.xlxyvergil.taa.context.ShooterContext.getShooter();
         
         if (shooter != null) {
@@ -38,14 +39,10 @@ public class AttachmentDataUtilsMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        // 计算 KuvaLich 的弹匣容量修改
-                        if (KuvaLichIntegrationHelper.isKuvaLichLoaded()) {
-                            float magazineSizeMod = KuvaLichIntegrationHelper.getMagazineSizeMod(gunItem);
-                            // 应用 KuvaLich 的修改公式：最终容量 = 原始容量 × (1 + magazine_size)
-                            int result = (int) (modifiedAmmoCount * (1f + magazineSizeMod));
-                            return Math.max(result, 1);
-                        }
-                        return modifiedAmmoCount;
+                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(
+                            modifiedAmmoCount, gunItem, (Player) shooter, original, 0
+                        );
                     }
                 }
             }

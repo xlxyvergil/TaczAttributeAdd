@@ -12,6 +12,7 @@ import com.xlxyvergil.taa.util.PropertyCacheUpdater;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
@@ -27,7 +28,9 @@ public class AttachmentPropertyEventHandler {
         PropertyCalculator calculator = new PropertyCalculator(entityAttribute);
         PropertyCalculationResults results = calculator.calculateAllProperties(cacheProperty);
         
-        KubeJSEventHelper.postAttributePostEvent(shooter, event.getGunItem(), results);
+        if (ModList.get().isLoaded("kubejs")) {
+            KubeJSEventHelper.postAttributePostEvent(shooter, event.getGunItem(), results);
+        }
         
         PropertyCacheUpdater.updateCacheProperties(cacheProperty, results);
         
