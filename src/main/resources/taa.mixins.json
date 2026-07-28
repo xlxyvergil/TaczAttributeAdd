@@ -9,6 +9,7 @@
     "minVersion": "0.5.0"
   },
   "client": [
+    "AttachmentDataUtilsMixin",
     "CameraSetupEventMixin",
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
@@ -21,7 +22,6 @@
   ],
   "mixins": [
     "AbstractGunItemMixin",
-    "AttachmentDataUtilsMixin",
     "AttachmentPropertyManagerMixin",
     "AttachmentPropertyManagerRegisterMixin",
     "GunAnimationStateContextMixin",
