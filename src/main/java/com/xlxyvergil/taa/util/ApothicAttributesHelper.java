@@ -2,9 +2,9 @@ package com.xlxyvergil.taa.util;
 
 import com.xlxyvergil.taa.config.AttributeConfig;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -42,40 +42,40 @@ public class ApothicAttributesHelper {
     }
     
     /**
-     * 获取玩家的暴击率属性数据
-     * @param player 玩家对象
+     * 获取实体的暴击率属性数据
+     * @param living 实体对象
      * @return 暴击率属性数据（包含基础值、最终值、差异）
      */
-    public static CritAttributeData getCritChanceData(Player player) {
-        if (player == null) {
+    public static CritAttributeData getCritChanceData(LivingEntity living) {
+        if (living == null) {
             return null;
         }
         
         String attributeId = AttributeConfig.getCritChanceAttribute();
-        return getAttributeData(player, attributeId);
+        return getAttributeData(living, attributeId);
     }
     
     /**
-     * 获取玩家的暴击伤害属性数据
-     * @param player 玩家对象
+     * 获取实体的暴击伤害属性数据
+     * @param living 实体对象
      * @return 暴击伤害属性数据（包含基础值、最终值、差异）
      */
-    public static CritAttributeData getCritDamageData(Player player) {
-        if (player == null) {
+    public static CritAttributeData getCritDamageData(LivingEntity living) {
+        if (living == null) {
             return null;
         }
         
         String attributeId = AttributeConfig.getCritDamageAttribute();
-        return getAttributeData(player, attributeId);
+        return getAttributeData(living, attributeId);
     }
     
     /**
      * 通用方法：根据属性ID获取属性数据
-     * @param player 玩家对象
+     * @param living 实体对象
      * @param attributeId 属性完整ID（格式：命名空间:属性名）
      * @return 属性数据（包含基础值、最终值、差异）
      */
-    private static CritAttributeData getAttributeData(Player player, String attributeId) {
+    private static CritAttributeData getAttributeData(LivingEntity living, String attributeId) {
         try {
             ResourceLocation location = new ResourceLocation(attributeId);
             Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(location);
@@ -84,7 +84,7 @@ public class ApothicAttributesHelper {
                 return null;
             }
             
-            AttributeInstance instance = player.getAttribute(attribute);
+            AttributeInstance instance = living.getAttribute(attribute);
             if (instance == null) {
                 return null;
             }

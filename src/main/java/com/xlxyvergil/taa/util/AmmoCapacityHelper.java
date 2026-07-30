@@ -5,7 +5,7 @@ import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.resource.pojo.data.gun.FeedType;
 import com.xlxyvergil.taa.compat.kubejs.KubeJSEventHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 
@@ -54,7 +54,7 @@ public class AmmoCapacityHelper {
      *
      * @param baseValue         从 cache 获取的 modifiedAmmoCount
      * @param gunItem           枪械物品
-     * @param player            玩家（用于 KubeJS，为 null 则跳过）
+     * @param shooter           射击者实体（用于 KubeJS，为 null 则跳过）
      * @param originalValue     原始值（用于 KubeJS 计算差值，传 0 则跳过）
      * @param barrelBulletAmount 枪膛中的子弹数（通常为 0 或 1）
      * @return 最终弹匣容量，至少为 1
@@ -62,7 +62,7 @@ public class AmmoCapacityHelper {
     public static int computeFinalAmmoCapacity(
             int baseValue,
             ItemStack gunItem,
-            @Nullable Player player,
+            @Nullable LivingEntity shooter,
             int originalValue,
             int barrelBulletAmount
     ) {
@@ -84,10 +84,10 @@ public class AmmoCapacityHelper {
             result = (int) (result * (1 + kuvaMagazineMod));
         }
 
-        // 3. KubeJS 兼容（仅在 KubeJS 加载且有玩家时触发）
-        if (player != null && ModList.get().isLoaded("kubejs")) {
+        // 3. KubeJS 兼容（仅在 KubeJS 加载且有射击者时触发）
+        if (shooter != null && ModList.get().isLoaded("kubejs")) {
             result = Math.max((int) KubeJSEventHelper.postAndGetDisplayValue(
-                    player, gunItem, "AMMO_CAPACITY", result, Math.max(originalValue, 1)
+                    shooter, gunItem, "AMMO_CAPACITY", result, Math.max(originalValue, 1)
             ), 0);
         }
 

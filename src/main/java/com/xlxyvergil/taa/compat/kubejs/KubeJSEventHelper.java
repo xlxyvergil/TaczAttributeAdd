@@ -5,7 +5,6 @@ import com.xlxyvergil.taa.compat.kubejs.events.TAAContextEvents;
 import com.xlxyvergil.taa.util.PropertyCalculationResults;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 
@@ -17,14 +16,14 @@ public class KubeJSEventHelper {
     /**
      * 触发属性显示事件并获取修改后的值
      * 
-     * @param player 玩家
+     * @param shooter 射击者实体
      * @param gunItem 枪械物品
      * @param propertyType 属性类型字符串
      * @param displayValue 当前显示值
      * @param originalValue 原始值
      * @return 修改后的显示值（如果未被修改则返回原值）
      */
-    public static double postAndGetDisplayValue(Player player, ItemStack gunItem, String propertyType, double displayValue, double originalValue) {
+    public static double postAndGetDisplayValue(LivingEntity shooter, ItemStack gunItem, String propertyType, double displayValue, double originalValue) {
         try {
             // 检查KubeJS是否加载
             if (!ModList.get().isLoaded("kubejs")) {
@@ -33,7 +32,7 @@ public class KubeJSEventHelper {
             
             // 创建事件实例
             TAAPropertyDisplayEvents.PropertyDisplayEventJS event = 
-                new TAAPropertyDisplayEvents.PropertyDisplayEventJS(player, gunItem, propertyType, displayValue, originalValue);
+                new TAAPropertyDisplayEvents.PropertyDisplayEventJS(shooter, gunItem, propertyType, displayValue, originalValue);
             
             // 触发事件（客户端事件需要指定ScriptType.CLIENT）
             TAAPropertyDisplayEvents.PROPERTY_DISPLAY.post(ScriptType.CLIENT, null, event);

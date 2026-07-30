@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.modifier.ReloadModifier;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
-import net.minecraft.world.entity.player.Player;
 
 
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
@@ -44,7 +43,7 @@ public class ModernKineticGunScriptAPIMixin {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
                         // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
-                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, (Player) shooter, 0, 0);
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, shooter, 0, 0);
                     }
                 }
             }
@@ -75,7 +74,7 @@ public class ModernKineticGunScriptAPIMixin {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
                         // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
-                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, (Player) shooter, 0, 0);
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, shooter, 0, 0);
                     }
                 }
             }
@@ -106,7 +105,7 @@ public class ModernKineticGunScriptAPIMixin {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
                         // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
-                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, (Player) shooter, 0, 0);
+                        return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, shooter, 0, 0);
                     }
                 }
             }

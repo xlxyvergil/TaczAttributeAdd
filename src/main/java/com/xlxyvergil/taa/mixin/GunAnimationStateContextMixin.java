@@ -12,7 +12,6 @@ import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 @Mixin(value = GunAnimationStateContext.class, remap = false)
@@ -37,7 +36,7 @@ public class GunAnimationStateContextMixin {
                         ItemStack gunItem = shooter.getMainHandItem();
                         // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
                         return AmmoCapacityHelper.computeFinalAmmoCapacity(
-                            magazineCapacity, gunItem, (Player) shooter, 0, 0
+                            magazineCapacity, gunItem, shooter, 0, 0
                         );
                     }
                 }

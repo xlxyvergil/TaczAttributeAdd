@@ -3,6 +3,8 @@ package com.xlxyvergil.taa.client.renderer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * 统一的条形渲染工具类
@@ -10,6 +12,7 @@ import net.minecraft.network.chat.Component;
  * 1. 正差值时限制总长度不超过barEndX
  * 2. 负差值时基准条缩短，红色条在左侧显示
  */
+@OnlyIn(Dist.CLIENT)
 public class BarRenderer {
 
     private static final int BAR_BACKGROUND_COLOR = 0xFF000000;

@@ -9,7 +9,6 @@ import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -52,7 +51,7 @@ public class AttachmentDataUtilsMixin {
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
                         // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容链）
                         return AmmoCapacityHelper.computeFinalAmmoCapacity(
-                            modifiedAmmoCount, gunItem, (Player) shooter, original, 0
+                            modifiedAmmoCount, gunItem, shooter, original, 0
                         );
                     }
                 }

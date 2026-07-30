@@ -2,7 +2,7 @@ package com.xlxyvergil.taa.compat.kubejs.events;
 
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -21,15 +21,15 @@ public class TAAPropertyDisplayEvents {
      * KubeJS事件包装类
      */
     public static class PropertyDisplayEventJS extends dev.latvian.mods.kubejs.event.EventJS {
-        private final Player player;
+        private final LivingEntity shooter;
         private final ItemStack gunItem;
         private final String propertyType;
         private final double originalValue;
         private double displayValue;
         private boolean modified;
         
-        public PropertyDisplayEventJS(Player player, ItemStack gunItem, String propertyType, double displayValue, double originalValue) {
-            this.player = player;
+        public PropertyDisplayEventJS(LivingEntity shooter, ItemStack gunItem, String propertyType, double displayValue, double originalValue) {
+            this.shooter = shooter;
             this.gunItem = gunItem;
             this.propertyType = propertyType;
             this.displayValue = displayValue;
@@ -38,10 +38,10 @@ public class TAAPropertyDisplayEvents {
         }
         
         /**
-         * 获取玩家
+         * 获取射击者实体
          */
-        public Player getPlayer() {
-            return player;
+        public LivingEntity getShooter() {
+            return shooter;
         }
         
         /**
