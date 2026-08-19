@@ -1,0 +1,134 @@
+package com.xlxyvergil.taa.modifier;
+
+import com.google.gson.annotations.SerializedName;
+import com.tacz.guns.api.DefaultAssets;
+import com.tacz.guns.api.TimelessAPI;
+import com.tacz.guns.api.item.IGun;
+import com.tacz.guns.api.item.attachment.AttachmentType;
+import com.tacz.guns.api.modifier.CacheValue;
+import com.tacz.guns.api.modifier.IAttachmentModifier;
+import com.tacz.guns.api.modifier.JsonProperty;
+import com.tacz.guns.resource.CommonAssetsManager;
+import com.tacz.guns.resource.index.CommonAttachmentIndex;
+import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
+import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
+import com.tacz.guns.resource.pojo.data.attachment.MeleeData;
+import com.tacz.guns.resource.pojo.data.attachment.Modifier;
+import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import com.xlxyvergil.taa.api.ExtendedGunProperties;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * 近战距离 Modifier
+ * 仅计算配件提供的近战距离，属性计算由 PropertyCalculator 处理
+ */
+public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
+    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
+    public static final String ID = ExtendedGunProperties.MELEE_DISTANCE.name();
+
+    @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
+    public JsonProperty<Modifier> readJson(String json) {
+        Data data = CommonAssetsManager.GSON.fromJson(json, Data.class);
+        return new MeleeJsonProperty(data.getMeleeDistance());
+    }
+
+    @Override
+    public CacheValue<Float> initCache(ItemStack gunItem, GunData gunData) {
+        GunMeleeData meleeData = gunData.getMeleeData();
+        if (meleeData == null) {
+            return new CacheValue<>(0.0f);
+        }
+        
+        // 只计算枪械基础距离 + 配件距离
+        float baseDistance = meleeData.getDistance();
+        
+        IGun iGun = IGun.getIGunOrNull(gunItem);
+        if (iGun != null) {
+            ResourceLocation muzzleId = iGun.getAttachmentId(gunItem, AttachmentType.MUZZLE);
+            float attachmentDistance = getMeleeAttachmentDistance(muzzleId);
+            if (attachmentDistance > 0) {
+                baseDistance += attachmentDistance;
+            } else {
+                ResourceLocation stockId = iGun.getAttachmentId(gunItem, AttachmentType.STOCK);
+                attachmentDistance = getMeleeAttachmentDistance(stockId);
+                if (attachmentDistance > 0) {
+                    baseDistance += attachmentDistance;
+                }
+            }
+        }
+        
+        return new CacheValue<>(baseDistance);
+    }
+    
+    private float getMeleeAttachmentDistance(ResourceLocation attachmentId) {
+        if (DefaultAssets.isEmptyAttachmentId(attachmentId)) {
+            return 0.0f;
+        }
+        return TimelessAPI.getCommonAttachmentIndex(attachmentId)
+                .map(CommonAttachmentIndex::getData)
+                .map(data -> data.getMeleeData())
+                .map(MeleeData::getDistance)
+                .orElse(0.0f);
+    }
+
+    @Override
+    public void eval(List<Modifier> modifiers, CacheValue<Float> cache) {
+        if (modifiers.isEmpty()) {
+            return;
+        }
+        double eval = AttachmentPropertyManager.eval(modifiers, cache.getValue());
+        cache.setValue((float) eval);
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public int getDiagramsDataSize() {
+        return 0; // 近战距离显示由GunPropertyDiagramsMixin自行处理
+    }
+
+    public static class MeleeJsonProperty extends JsonProperty<Modifier> {
+        public MeleeJsonProperty(Modifier value) {
+            super(value);
+        }
+
+        @Override
+        public void initComponents() {
+            Modifier value = getValue();
+            if (value != null) {
+                double eval = AttachmentPropertyManager.eval(value, 0.0f);
+                float distance = (float) eval;
+                if (distance > 0.0f) {
+                    components.add(Component.translatable("tooltip.tacz.attachment.melee.distance.increase").withStyle(ChatFormatting.GREEN));
+                } else if (distance < 0.0f) {
+                    components.add(Component.translatable("tooltip.tacz.attachment.melee.distance.decrease").withStyle(ChatFormatting.RED));
+                }
+            }
+        }
+    }
+
+    public static class Data {
+        @SerializedName("melee_distance")
+        @Nullable
+        private Modifier meleeDistance = null;
+
+        @Nullable
+        public Modifier getMeleeDistance() {
+            return meleeDistance;
+        }
+    }
+}

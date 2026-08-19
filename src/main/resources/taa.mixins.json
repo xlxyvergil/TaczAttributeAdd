@@ -1,0 +1,41 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.xlxyvergil.taa.mixin",
+  "refmap": "taa.refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "priority": 1000,
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
+  "client": [
+    "AttachmentDataUtilsMixin",
+    "CameraSetupEventMixin",
+    "ClientGunTooltipMixin",
+    "client.animation.ObjectAnimationRunnerMixin",
+    "GunPropertyDiagramsMixin",
+    "GunHudOverlayMixin",
+    "HeatBarOverlayMixin",
+    "RecoilModifierMixin",
+    "client.TaaClientPacketListenerMixin"
+  ],
+  "server": [
+  ],
+  "mixins": [
+    "AbstractGunItemMixin",
+    "AttachmentPropertyManagerMixin",
+    "AttachmentPropertyManagerRegisterMixin",
+    "GunAnimationStateContextMixin",
+    "GunDataHeatMixin",
+    "ModernKineticGunItemHeatMixin",
+    "ModernKineticGunItemMeleeDamageMixin",
+    "ModernKineticGunItemMeleeDistanceMixin",
+    "ModernKineticGunItemMixin",
+    "ModernKineticGunScriptAPIMixin",
+    "ModernKineticGunScriptAPIShootMixin",
+    "ModernKineticGunScriptAPIHeatMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
