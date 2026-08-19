@@ -19,6 +19,7 @@ import com.tacz.guns.resource.pojo.data.gun.BulletData;
 import com.tacz.guns.resource.pojo.data.gun.ExplosionData;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.resource.pojo.data.gun.GunFireModeAdjustData;
+import com.tacz.guns.resource.pojo.data.gun.GunHeatData;
 import com.tacz.guns.resource.pojo.data.gun.GunMeleeData;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoil;
 import com.tacz.guns.resource.pojo.data.gun.GunRecoilKeyFrame;
@@ -33,6 +34,7 @@ import com.xlxyvergil.taa.util.ApothicAttributesHelper;
 import com.xlxyvergil.taa.util.EntityAttributeHelper;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 import com.xlxyvergil.taa.util.GunsmithLibHelper;
+import com.xlxyvergil.taa.util.HeatAttributeHelper;
 import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -80,6 +82,21 @@ public class GunPropertyDiagramsMixin {
         
         // 添加暴击属性显示所需的空间（暴击率+暴击伤害=20像素）
         startYOffset[0] += 20;
+        
+        // 添加过热属性显示所需的空间（仅当枪械有热数据时，4条×10像素=40像素）
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+            ItemStack gunItem = player.getMainHandItem();
+            IGun iGun = IGun.getIGunOrNull(gunItem);
+            if (iGun != null) {
+                boolean hasHeat = TimelessAPI.getCommonGunIndex(iGun.getGunId(gunItem))
+                        .map(index -> index.getGunData().getHeatData() != null)
+                        .orElse(false);
+                if (hasHeat) {
+                    startYOffset[0] += 40;
+                }
+            }
+        }
         
         return startYOffset[0];
     }
@@ -935,6 +952,96 @@ public class GunPropertyDiagramsMixin {
                     meleeDistanceLength, meleeDistanceDiffLength, true,
                     Component.translatable("gui.tacz.gun_refit.property_diagrams.melee_distance"), meleeDistanceValueText);
             yOffset[0] += 10;
+            
+            // ========== 过热属性显示 ==========
+            GunHeatData heatData = gunData.getHeatData();
+            if (heatData != null) {
+                // 过热上限（满能量值）
+                float rawHeatMax = heatData.getHeatMax();
+                float modHeatMax = HeatAttributeHelper.getModifiedHeatMax(player, rawHeatMax);
+                float heatMaxDiff = modHeatMax - rawHeatMax;
+                double heatMaxPercent = Math.min(rawHeatMax / 500.0, 1);
+                int heatMaxLength = (int) (barMaxWidth * heatMaxPercent);
+                int heatMaxDiffLength = (int) (barMaxWidth * heatMaxDiff / 500.0);
+                
+                String heatMaxValueText;
+                if (heatMaxDiff > 0) {
+                    heatMaxValueText = String.format("%.0f §a(+%.0f)", modHeatMax, heatMaxDiff);
+                } else if (heatMaxDiff < 0) {
+                    heatMaxValueText = String.format("%.0f §c(%.0f)", modHeatMax, heatMaxDiff);
+                } else {
+                    heatMaxValueText = String.format("%.0f", modHeatMax);
+                }
+                BarRenderer.drawBarWithDiff(graphics, font, barStartX, barEndX, yOffset[0], fontColor, nameTextStartX, valueTextStartX,
+                        heatMaxLength, heatMaxDiffLength, true,
+                        Component.translatable("gui.tacz.gun_refit.property_diagrams.heat_max"), heatMaxValueText);
+                yOffset[0] += 10;
+                
+                // 散热速度（冷却倍率）
+                float rawCooling = heatData.getCoolingMultiplier();
+                float modCooling = HeatAttributeHelper.getModifiedCoolingMultiplier(player, rawCooling);
+                float coolingDiff = modCooling - rawCooling;
+                double coolingPercent = Math.min(rawCooling / 3.0, 1);
+                int coolingLength = (int) (barMaxWidth * coolingPercent);
+                int coolingDiffLength = (int) (barMaxWidth * coolingDiff / 3.0);
+                
+                String coolingValueText;
+                if (coolingDiff > 0) {
+                    coolingValueText = String.format("%.2f §a(+%.2f)", modCooling, coolingDiff);
+                } else if (coolingDiff < 0) {
+                    coolingValueText = String.format("%.2f §c(%.2f)", modCooling, coolingDiff);
+                } else {
+                    coolingValueText = String.format("%.2f", modCooling);
+                }
+                BarRenderer.drawBarWithDiff(graphics, font, barStartX, barEndX, yOffset[0], fontColor, nameTextStartX, valueTextStartX,
+                        coolingLength, coolingDiffLength, true,
+                        Component.translatable("gui.tacz.gun_refit.property_diagrams.heat_cooling"), coolingValueText);
+                yOffset[0] += 10;
+                
+                // 冷却延迟（停火后多久开始散热）
+                long rawDelay = heatData.getCoolingDelay();
+                long modDelay = HeatAttributeHelper.getModifiedCoolingDelay(player, rawDelay);
+                long delayDiff = modDelay - rawDelay;
+                double delayPercent = Math.min(rawDelay / 2000.0, 1);
+                int delayLength = (int) (barMaxWidth * delayPercent);
+                int delayDiffLength = (int) (barMaxWidth * delayDiff / 2000.0);
+                
+                String delayValueText;
+                if (delayDiff > 0) {
+                    delayValueText = String.format("%.1fs §c(+%.1fs)", modDelay / 1000.0, delayDiff / 1000.0);
+                } else if (delayDiff < 0) {
+                    delayValueText = String.format("%.1fs §a(%.1fs)", modDelay / 1000.0, delayDiff / 1000.0);
+                } else {
+                    delayValueText = String.format("%.1fs", modDelay / 1000.0);
+                }
+                // 冷却延迟越短越好，所以正向好=false
+                BarRenderer.drawBarWithDiff(graphics, font, barStartX, barEndX, yOffset[0], fontColor, nameTextStartX, valueTextStartX,
+                        delayLength, delayDiffLength, false,
+                        Component.translatable("gui.tacz.gun_refit.property_diagrams.heat_cooling_delay"), delayValueText);
+                yOffset[0] += 10;
+                
+                // 锁枪时间（完全过热后的锁枪时长）
+                long rawLock = heatData.getOverHeatTime();
+                long modLock = HeatAttributeHelper.getModifiedOverHeatTime(player, rawLock);
+                long lockDiff = modLock - rawLock;
+                double lockPercent = Math.min(rawLock / 5000.0, 1);
+                int lockLength = (int) (barMaxWidth * lockPercent);
+                int lockDiffLength = (int) (barMaxWidth * lockDiff / 5000.0);
+                
+                String lockValueText;
+                if (lockDiff > 0) {
+                    lockValueText = String.format("%.1fs §c(+%.1fs)", modLock / 1000.0, lockDiff / 1000.0);
+                } else if (lockDiff < 0) {
+                    lockValueText = String.format("%.1fs §a(%.1fs)", modLock / 1000.0, lockDiff / 1000.0);
+                } else {
+                    lockValueText = String.format("%.1fs", modLock / 1000.0);
+                }
+                // 锁枪时间越短越好，所以正向好=false
+                BarRenderer.drawBarWithDiff(graphics, font, barStartX, barEndX, yOffset[0], fontColor, nameTextStartX, valueTextStartX,
+                        lockLength, lockDiffLength, false,
+                        Component.translatable("gui.tacz.gun_refit.property_diagrams.heat_overheat_time"), lockValueText);
+                yOffset[0] += 10;
+            }
         });
     }
     

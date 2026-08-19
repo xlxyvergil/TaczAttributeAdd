@@ -46,5 +46,13 @@
   "attribute.name.taa.reload_time": "装填时间倍率",
   "attribute.name.taa.melee_damage": "近战伤害倍率",
   "attribute.name.taa.melee_distance": "近战距离倍率",
-  "attribute.name.taa.explosion_enabled": "爆炸启用"
+  "attribute.name.taa.explosion_enabled": "爆炸启用",
+  "attribute.name.taa.heat_max": "过热上限倍率",
+  "attribute.name.taa.heat_cooling": "散热速度倍率",
+  "attribute.name.taa.heat_cooling_delay": "冷却延迟倍率",
+  "attribute.name.taa.heat_overheat_time": "锁枪时间倍率",
+  "gui.tacz.gun_refit.property_diagrams.heat_max": "过热上限",
+  "gui.tacz.gun_refit.property_diagrams.heat_cooling": "散热速度",
+  "gui.tacz.gun_refit.property_diagrams.heat_cooling_delay": "冷却延迟",
+  "gui.tacz.gun_refit.property_diagrams.heat_overheat_time": "锁枪时间"
 }

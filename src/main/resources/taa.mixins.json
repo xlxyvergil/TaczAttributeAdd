@@ -15,6 +15,7 @@
     "client.animation.ObjectAnimationRunnerMixin",
     "GunPropertyDiagramsMixin",
     "GunHudOverlayMixin",
+    "HeatBarOverlayMixin",
     "RecoilModifierMixin",
     "client.TaaClientPacketListenerMixin"
   ],
@@ -25,11 +26,14 @@
     "AttachmentPropertyManagerMixin",
     "AttachmentPropertyManagerRegisterMixin",
     "GunAnimationStateContextMixin",
+    "GunDataHeatMixin",
+    "ModernKineticGunItemHeatMixin",
     "ModernKineticGunItemMeleeDamageMixin",
     "ModernKineticGunItemMeleeDistanceMixin",
     "ModernKineticGunItemMixin",
     "ModernKineticGunScriptAPIMixin",
-    "ModernKineticGunScriptAPIShootMixin"
+    "ModernKineticGunScriptAPIShootMixin",
+    "ModernKineticGunScriptAPIHeatMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -46,5 +46,13 @@
   "attribute.name.taa.reload_time": "Reload Time Multiplier",
   "attribute.name.taa.melee_damage": "Melee Damage Multiplier",
   "attribute.name.taa.melee_distance": "Melee Distance Multiplier",
-  "attribute.name.taa.explosion_enabled": "Explosion Enabled"
+  "attribute.name.taa.explosion_enabled": "Explosion Enabled",
+  "attribute.name.taa.heat_max": "Heat Capacity Multiplier",
+  "attribute.name.taa.heat_cooling": "Cooling Rate Multiplier",
+  "attribute.name.taa.heat_cooling_delay": "Cooling Delay Multiplier",
+  "attribute.name.taa.heat_overheat_time": "Lock Time Multiplier",
+  "gui.tacz.gun_refit.property_diagrams.heat_max": "Heat Capacity",
+  "gui.tacz.gun_refit.property_diagrams.heat_cooling": "Cooling Rate",
+  "gui.tacz.gun_refit.property_diagrams.heat_cooling_delay": "Cooling Delay",
+  "gui.tacz.gun_refit.property_diagrams.heat_overheat_time": "Lock Time"
 }

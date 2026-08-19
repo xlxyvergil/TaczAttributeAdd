@@ -154,6 +154,24 @@ public class EntityAttributeRegistry {
     public static final RegistryObject<Attribute> MELEE_DISTANCE = ATTRIBUTES.register("melee_distance", 
         () -> new RangedAttribute("attribute.name.taa.melee_distance", 0.0D, 0.0D, 1024.0D).setSyncable(true));
 
+    // 4个过热体系属性（均为乘法倍率，默认1.0）
+    
+    /** 过热上限属性 - 影响枪械的热量上限（满能量值） */
+    public static final RegistryObject<Attribute> HEAT_MAX = ATTRIBUTES.register("heat_max", 
+        () -> new RangedAttribute("attribute.name.taa.heat_max", 1.0D, 0.01D, 1024.0D).setSyncable(true));
+    
+    /** 散热速度属性 - 影响散热倍率（散热量随停火时长增长的速度） */
+    public static final RegistryObject<Attribute> HEAT_COOLING = ATTRIBUTES.register("heat_cooling", 
+        () -> new RangedAttribute("attribute.name.taa.heat_cooling", 1.0D, 0.01D, 1024.0D).setSyncable(true));
+    
+    /** 冷却延迟属性 - 影响停火后多久开始散热 */
+    public static final RegistryObject<Attribute> HEAT_COOLING_DELAY = ATTRIBUTES.register("heat_cooling_delay", 
+        () -> new RangedAttribute("attribute.name.taa.heat_cooling_delay", 1.0D, 0.01D, 1024.0D).setSyncable(true));
+    
+    /** 锁枪时间属性 - 影响完全过热后的锁枪时长 */
+    public static final RegistryObject<Attribute> HEAT_OVERHEAT_TIME = ATTRIBUTES.register("heat_overheat_time", 
+        () -> new RangedAttribute("attribute.name.taa.heat_overheat_time", 1.0D, 0.01D, 1024.0D).setSyncable(true));
+
     // 7个具体枪械类型伤害加成属性
     public static final RegistryObject<Attribute> BULLET_GUNDAMAGE_PISTOL = ATTRIBUTES.register("bullet_gundamage_pistol",
             () -> new RangedAttribute("attribute.name.taa.bullet_gundamage_pistol", 1.0D, 0.01D, 1024.0D).setSyncable(true));
@@ -230,6 +248,12 @@ public class EntityAttributeRegistry {
             // 添加近战相关属性
             event.add(type, MELEE_DAMAGE.get());
             event.add(type, MELEE_DISTANCE.get());
+            
+            // 添加过热体系属性
+            event.add(type, HEAT_MAX.get());
+            event.add(type, HEAT_COOLING.get());
+            event.add(type, HEAT_COOLING_DELAY.get());
+            event.add(type, HEAT_OVERHEAT_TIME.get());
         });
     }
 }
