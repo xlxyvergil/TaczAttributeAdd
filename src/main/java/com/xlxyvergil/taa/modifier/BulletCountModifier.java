@@ -25,13 +25,8 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 子弹数量 Modifier
- * 用于修改枪械每次射击发射的子弹数量
- * 完全遵循TACZ配件系统的标准模式
- */
+/** 子弹数量 Modifier，用于修改枪械每次射击发射的子弹数量 */
 public class BulletCountModifier implements IAttachmentModifier<Modifier, Integer> {
-    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
     public static final String ID = ExtendedGunProperties.BULLET_COUNT.name();
 
     @Override
@@ -47,12 +42,12 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
 
     @Override
     public CacheValue<Integer> initCache(ItemStack gunItem, GunData gunData) {
-        // 获取当前的子弹数量，默认为1
+        // 取当前子弹数量，小于等于 0 时兜底为 1
         int currentBulletCount = gunData.getBulletData().getBulletAmount();
         if (currentBulletCount <= 0) {
             currentBulletCount = 1;
         }
-        // 如果安装了独头弹配件，弹头数量强制为1
+        // 装了独头弹时弹头数量固定为 1
         if (hasSlugEffect(gunItem)) {
             currentBulletCount = 1;
         }
@@ -61,25 +56,19 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
 
     @Override
     public void eval(List<Modifier> modifiers, CacheValue<Integer> cache) {
-        // 使用标准的Modifier计算逻辑
         double eval = AttachmentPropertyManager.eval(modifiers, cache.getValue());
-        // 四舍五入取整
         cache.setValue((int) Math.round(eval));
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 0; // 子弹数量显示由GunPropertyDiagramsMixin自行处理
+        return 0; // 由 GunPropertyDiagramsMixin 处理显示
     }
 
-    /**
-     * 检测是否安装了独头弹效果
-     * 使用TACZ的标签检测机制，兼容所有使用intrinsic/slug标签的配件
-     * 仅在TACZ 1.1.7+版本中启用
-     */
+    /** 检测是否装了独头弹效果（TACZ 1.1.7+ 起支持） */
     private boolean hasSlugEffect(ItemStack gunItem) {
-        // 检查TACZ版本，1.1.7以下不启用独头弹检测
+        // 低版本不支持独头弹检测
         if (!isTacz117OrAbove()) {
             return false;
         }
@@ -96,14 +85,12 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
                 extendedMagId
             );
         } catch (Exception e) {
-            // 如果TACZ版本不兼容或其他异常，返回false
+            // 版本不兼容或异常时按未安装处理
             return false;
         }
     }
 
-    /**
-     * 检查TACZ版本是否为1.1.7或更高
-     */
+    /** TACZ 版本是否 >= 1.1.7 */
     private static boolean isTacz117OrAbove() {
         try {
             String version = net.minecraftforge.fml.ModList.get()
@@ -111,17 +98,15 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
                 .map(container -> container.getModInfo().getVersion().toString())
                 .orElse("0.0.0");
             
-            // 解析版本号，检查是否 >= 1.1.7
+            // 比较版本号
             return isVersionAtLeast(version, "1.1.7");
         } catch (Exception e) {
-            // 如果无法获取版本，假设是旧版本
+            // 拿不到版本按旧版处理
             return false;
         }
     }
     
-    /**
-     * 比较版本号，检查target是否 >= base
-     */
+    /** 比较版本号，target 是否 >= base */
     private static boolean isVersionAtLeast(String target, String base) {
         try {
             String[] targetParts = target.split("\\.");
@@ -134,7 +119,8 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
                 if (targetPart > basePart) return true;
                 if (targetPart < basePart) return false;
             }
-            return true; // 版本相等
+            // 都相等
+            return true;
         } catch (Exception e) {
             return false;
         }

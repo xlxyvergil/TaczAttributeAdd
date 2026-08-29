@@ -12,9 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class CameraSetupEventMixin {
     
     /**
-     * 修改applyCameraRecoil中pitch样条函数计算后存储到value变量的值
-     * @author TAA Team
-     * @reason 在pitch计算结果存储前应用实体属性缩放
+     * pitch 结果存入前应用实体后坐力属性缩放。
      */
     @ModifyVariable(
         method = "applyCameraRecoil",
@@ -25,11 +23,10 @@ public class CameraSetupEventMixin {
         remap = false
     )
     private static double modifyPitchStoredValue(double originalValue) {
-        // 获取当前玩家的后坐力属性
+        // 综合属性 × 细分属性（乘法叠加）
         net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
         if (mc.player != null) {
             EntityAttributeHelper entityAttribute = new EntityAttributeHelper(mc.player, "");
-            // 计算方式：综合属性 × 细分属性（乘法叠加）
             float recoilFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilPitch());
             return originalValue * recoilFactor;
         }
@@ -38,7 +35,7 @@ public class CameraSetupEventMixin {
     }
     
     /**
-     * 修改applyCameraRecoil中yaw样条函数计算后存储到value变量的值
+     * yaw 结果存入前应用实体后坐力属性缩放。
      */
     @ModifyVariable(
         method = "applyCameraRecoil",
@@ -49,11 +46,10 @@ public class CameraSetupEventMixin {
         remap = false
     )
     private static double modifyYawStoredValue(double originalValue) {
-        // 获取当前玩家的后坐力属性
+        // 综合属性 × 细分属性（乘法叠加）
         net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
         if (mc.player != null) {
             EntityAttributeHelper entityAttribute = new EntityAttributeHelper(mc.player, "");
-            // 计算方式：综合属性 × 细分属性（乘法叠加）
             float recoilFactor = (float) (entityAttribute.getRecoil() * entityAttribute.getRecoilYaw());
             return originalValue * recoilFactor;
         }

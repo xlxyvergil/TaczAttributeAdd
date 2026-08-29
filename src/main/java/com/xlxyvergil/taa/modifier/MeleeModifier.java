@@ -28,12 +28,8 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 近战距离 Modifier
- * 仅计算配件提供的近战距离，属性计算由 PropertyCalculator 处理
- */
+/** 近战距离 Modifier，只计算配件提供的距离，属性计算由 PropertyCalculator 统一处理 */
 public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
-    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
     public static final String ID = ExtendedGunProperties.MELEE_DISTANCE.name();
 
     @Override
@@ -98,7 +94,7 @@ public class MeleeModifier implements IAttachmentModifier<Modifier, Float> {
     @Override
     @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 0; // 近战距离显示由GunPropertyDiagramsMixin自行处理
+        return 0; // 由 GunPropertyDiagramsMixin 处理显示
     }
 
     public static class MeleeJsonProperty extends JsonProperty<Modifier> {

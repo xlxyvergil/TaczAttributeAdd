@@ -13,16 +13,10 @@ import javax.annotation.Nullable;
 
 /**
  * 弹匣容量计算工具类
- * 统一应用 GunsmithLib → KuvaLich → KubeJS 的完整兼容链
- * (GunsmithLib 不在 initCache 阶段计算，统一在此处应用，确保客户端/服务端值一致)
- * 所有 mixin 处统一调用此方法，确保行为一致
+ * GunsmithLib 不在 initCache 阶段计算，统一在这里按兼容链应用，保证客户端/服务端值一致
  */
 public class AmmoCapacityHelper {
 
-    /**
-     * 检查指定枪械是否需要跳过弹匣容量修改
-     * 跳过条件：背包直读型（INVENTORY）
-     */
     public static boolean shouldSkipCapacityModifier(ItemStack gunItem) {
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun == null) {
@@ -44,21 +38,6 @@ public class AmmoCapacityHelper {
         return false;
     }
 
-    /**
-     * 应用完整的兼容链计算最终弹匣容量
-     * 顺序: GunsmithLib → KuvaLich → KubeJS
-     * (GunsmithLib 不在 initCache 阶段计算，统一在此处应用，确保客户端/服务端值一致)
-     * <p>
-     * 注意：对于 {@link FeedType#INVENTORY} 类型的枪械（背包直读型），
-     * 会跳过所有修改，直接返回原始值 + 枪膛子弹。
-     *
-     * @param baseValue         从 cache 获取的 modifiedAmmoCount
-     * @param gunItem           枪械物品
-     * @param shooter           射击者实体（用于 KubeJS，为 null 则跳过）
-     * @param originalValue     原始值（用于 KubeJS 计算差值，传 0 则跳过）
-     * @param barrelBulletAmount 枪膛中的子弹数（通常为 0 或 1）
-     * @return 最终弹匣容量，至少为 1
-     */
     public static int computeFinalAmmoCapacity(
             int baseValue,
             ItemStack gunItem,

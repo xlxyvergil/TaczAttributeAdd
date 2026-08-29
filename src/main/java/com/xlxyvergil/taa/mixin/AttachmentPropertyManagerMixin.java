@@ -20,10 +20,9 @@ public class AttachmentPropertyManagerMixin {
     
     @Inject(method = "postChangeEvent", at = @At("HEAD"), remap = false)
     private static void onPostChangeEvent(LivingEntity shooter, ItemStack gunItem, org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
-        // 设置shooter上下文，供事件监听器使用
+        // 记录当前射击者与枪型，供事件监听器使用
         ShooterContext.setShooter(shooter);
         
-        // 从gunItem中获取gunId并存储到上下文
         if (gunItem != null) {
             String gunType = getGunType(gunItem);
             if (gunType != null) {
@@ -32,11 +31,8 @@ public class AttachmentPropertyManagerMixin {
         }
     }
     
-/**
-     * 通过Tacz API获取枪械类型
-     * 
-     * @param gunItem 枪械物品
-     * @return 枪械类型字符串，失败返回null
+    /**
+     * 通过 TACZ API 获取枪械类型，失败返回 null。
      */
     @Unique
     private static String getGunType(ItemStack gunItem) {

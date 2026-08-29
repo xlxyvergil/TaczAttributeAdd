@@ -17,27 +17,19 @@ import com.xlxyvergil.taa.api.ExtendedGunProperties;
 import it.unimi.dsi.fastutil.Pair;
 
 /**
- * 属性计算器
- * 纯计算类，基于cacheProperty原始数据和entityAttribute进行计算
+ * 基于缓存属性与实体属性计算枪械各项数值
  */
 public class PropertyCalculator {
     
     private final EntityAttributeHelper entityAttribute;
     
-    /**
-     * 构造函     * @param entityAttribute 实体属性助     */
     public PropertyCalculator(EntityAttributeHelper entityAttribute) {
         this.entityAttribute = entityAttribute;
     }
     
-    /**
-     * 计算所有属性（包含爆炸相关属性）
-     * @param cacheProperty 原始缓存属性数
-     */
     public PropertyCalculationResults calculateAllProperties(AttachmentCacheProperty cacheProperty) {
         PropertyCalculationResults results = new PropertyCalculationResults();
         
-        // 基于原始数据和entityAttribute计算所有属性
         results.setAdsTime(calculateAdsTime(cacheProperty));
         results.setAmmoSpeed(calculateAmmoSpeed(cacheProperty));
         results.setArmorIgnore(calculateArmorIgnore(cacheProperty));
@@ -50,7 +42,7 @@ public class PropertyCalculator {
         results.setMoveSpeed(calculateMoveSpeed(cacheProperty));
         results.setDamage(calculateDamage(cacheProperty));
         results.setInaccuracy(calculateInaccuracy(cacheProperty));
-//        results.setRecoil(calculateRecoil(cacheProperty)); // 后坐力由CameraSetupEventMixin直接处理，不通过缓存
+//        results.setRecoil(calculateRecoil(cacheProperty)); // 后坐力由 CameraSetupEventMixin 直接处理，不走缓存
         results.setSilence(calculateSilence(cacheProperty));
         results.setIgnite(calculateIgnite(cacheProperty));
         
@@ -63,13 +55,13 @@ public class PropertyCalculator {
         results.setMeleeDamage(calculateMeleeDamage(cacheProperty));
         results.setMeleeDistance(calculateMeleeDistance(cacheProperty));
         
-        // 统一计算爆炸属
+        // 统一计算爆炸属性
         results.setExplosionData(createExplosionData(cacheProperty));
         
         return results;
     }
     
-    // 基本属性计算方- 基于cacheProperty原始数据和playerAttribute
+    // 基础属性计算
     
     public float calculateAdsTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ADS_TIME);
@@ -80,7 +72,7 @@ public class PropertyCalculator {
     public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.AMMO_SPEED);
         float entityAttributeFactor = (float) entityAttribute.getAmmoSpeed();
-        // 直接截断小数部分取整，不使用四舍五入
+        // 截断小数取整，不四舍五入
         return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0.0f;
     }
     
@@ -99,8 +91,7 @@ public class PropertyCalculator {
     public float calculateHeadshotMultiplier(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER);
         float entityAttributeFactor = (float) entityAttribute.getHeadshotMultiplier();
-        // 由于Forge会自1，所以计算时需1，然后使用加
-        // 保底0.01，防止属性过低导致负值
+        // 属性默认值为 1（无加成），先减 1 得到差值再加回；保底 0.01 防止负值
         return originalValue != null ? Math.max(originalValue + (entityAttributeFactor - 1.0f), 0.01f) : 0.0f;
     }
     
@@ -119,19 +110,19 @@ public class PropertyCalculator {
     public int calculatePierce(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.PIERCE);
         float entityAttributeFactor = (float) entityAttribute.getPierce();
-        // 直接截断小数部分取整，不使用四舍五入
+        // 截断小数取整，不四舍五入
         return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0;
     }
     
     public int calculateRoundsPerMinute(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.ROUNDS_PER_MINUTE);
         float entityAttributeFactor = (float) entityAttribute.getRoundsPerMinute();
-        // 直接截断小数部分取整，不使用四舍五入
+        // 截断小数取整，不四舍五入
         return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0;
     }
 
     
-    // 新增属性计算方
+    // 新增属性计算
     
     public int calculateBulletCount(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.BULLET_COUNT);
@@ -147,13 +138,12 @@ public class PropertyCalculator {
     public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.MAGAZINE_CAPACITY);
         if (originalValue == null) {
-            // 如果没有缓存值，使用默认0
             originalValue = 30; // 默认弹匣容量
         }
         double entityAttributeFactor = entityAttribute.getMagazineCapacity();
-        // 修改为直接截断，不使用四舍五
+        // 截断取整，不四舍五入
         int result = (int) (originalValue * entityAttributeFactor);
-        // 如果结果小于1，则设置
+        // 至少为 1
         if (result < 1) {
             result = 1;
         }
@@ -166,11 +156,11 @@ public class PropertyCalculator {
             originalValue = 1.0f; // 默认倍率（无加速）
         }
         double entityAttributeFactor = entityAttribute.getReloadTime();
-        // entityAttributeFactor 是属性值，直接作为倍率使用
+        // 直接用属性值作为倍率
         return originalValue * (float) entityAttributeFactor;
     }
     
-    // 近战属性计算方
+    // 近战属性计算
     
     public float calculateMeleeDamage(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DAMAGE);
@@ -187,32 +177,29 @@ public class PropertyCalculator {
             originalValue = 0.0f;
         }
         double entityAttributeFactor = entityAttribute.getMeleeDistance();
-        // 近战距离采用加法计算，属性值直接加到原始值上
+        // 近战距离用加法叠加
         return originalValue + (float) entityAttributeFactor;
     }
     
-    // 复杂属性计算方
+    // 复杂属性计算
     
     public MoveSpeed calculateMoveSpeed(AttachmentCacheProperty cacheProperty) {
         MoveSpeed originalMoveSpeed = cacheProperty.getCache(GunProperties.MOVE_SPEED);
         
-        // 移动速度计算逻辑：属性值直接作为偏移量加到原始值上
-        // 属性值解释：1.0 = 无影响，大于1.0表示加速，小于1.0表示减速
+        // 属性值作为偏移量叠加：1.0 无影响，>1 加速，<1 减速
         double playerMoveSpeed = entityAttribute.getMoveSpeed();
-        
-        // 计算相对于基础值1.0的偏移量
-        // 例如：属性值1.0 -> 偏移0（无影响）
-        //       属性值1.5 -> 偏移+0.5（+50%移速）
-        //       属性值0.5 -> 偏移-0.5（-50%移速）
+
+        // 相对基础值 1.0 的偏移量
         float playerSpeedOffset = (float) (playerMoveSpeed - 1.0D);
-        
-        // 直接将偏移量加到原始MoveSpeed上（不是乘，是加）
-        // 这样：final = original + (playerAttribute - 1.0)
-        // 保底0.01，防止属性过低导致负值
+
+        // 偏移量加到原始值上（加法而非乘法），final = original + (倍率 - 1.0)
+        // 注意：不能对这里的倍率做 Math.max(...,0.01) 保底。TACZ 的 movement_speed 是
+        // MULTIPLY_TOTAL 修饰器，开镜减速是负数（如 aim=-0.2），若被夹到 0.01，
+        // 瞄准与腰射速度会变得一样，原版的开镜减速就消失了。
         return new MoveSpeed(
-            Math.max(originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset, 0.01f),
-            Math.max(originalMoveSpeed.getAimMultiplier() + playerSpeedOffset, 0.01f),
-            Math.max(originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset, 0.01f)
+            originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset,
+            originalMoveSpeed.getAimMultiplier() + playerSpeedOffset,
+            originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset
         );
     }
     
@@ -228,7 +215,7 @@ public class PropertyCalculator {
         LinkedList<ExtraDamage.DistanceDamagePair> calculatedDamage = new LinkedList<>();
         
         for (ExtraDamage.DistanceDamagePair pair : originalDamage) {
-            // 伤害计算与属性的弹头属性值相乘，结果保留两位小数
+            // 伤害乘属性加成与弹头数，结果保留两位小数
             float rawDamage = pair.getDamage() * entityAttributeFactor * (float) bulletCountAttribute;
             // 保留两位小数
             float finalDamage = (float) (Math.round(rawDamage * 100.0) / 100.0);
@@ -247,10 +234,10 @@ public class PropertyCalculator {
             return new java.util.HashMap<>();
         }
         
-        // 创建可变的Map来存储计算结果，避免与其他mod（如Gun Durability）的兼容性问题
+        // 用可变 Map 存储结果，避免与其他 mod（如 Gun Durability）的兼容问题
         java.util.HashMap<InaccuracyType, Float> result = new java.util.HashMap<>();
         
-        // 计算方式：综合属性 × 细分属性（乘法叠加）
+        // 综合属性 × 细分属性（乘法叠加）
         float baseFactor = (float) entityAttribute.getInaccuracy();
         result.put(InaccuracyType.STAND, originalInaccuracy.getOrDefault(InaccuracyType.STAND, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracyStand());
         result.put(InaccuracyType.MOVE, originalInaccuracy.getOrDefault(InaccuracyType.MOVE, 0.0f) * baseFactor * (float) entityAttribute.getInaccuracyMove());
@@ -263,21 +250,20 @@ public class PropertyCalculator {
     public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
         Pair<Integer, Boolean> originalSilence = cacheProperty.getCache(GunProperties.SILENCE);
         
-        // 如果原始值为null，直接返回默认值（不进行属性计算）
         if (originalSilence == null) {
             return Pair.of(0, false);
         }
         
-        // 使用数值乘法因子计算声音距
+        // 用乘法因子计算消音等级
         double entityAttributeFactor = entityAttribute.getSilence();
         Integer originalLevel = originalSilence.left() != null ? originalSilence.left() : 0;
         Integer level = (int) Math.round(originalLevel * entityAttributeFactor);
         
-        // 被动消音效果：当silence属性< 1.0时，自动开启消音效
+        // 消音属性 < 1.0 时自动开启被动消音
         boolean originalEnabled = originalSilence.right() != null ? originalSilence.right() : false;
         boolean passiveSilenceEnabled = entityAttributeFactor < 1.0D;
         
-        // 合并效果：原配件消音效果 被动属性消音效
+        // 配件消音或被动消音任一开启即生效
         boolean enabled = originalEnabled || passiveSilenceEnabled;
         
         return Pair.of(level, enabled);
@@ -290,17 +276,12 @@ public class PropertyCalculator {
         }
         
         boolean entityAttributeValue = entityAttribute.isIgniteEnabled();
-        
 
-        
-        // 如果没有相关的属性增强，则直接返回原始
         if (!entityAttributeValue) {
             return originalIgnite;
         }
         
-        // 有属性增强，在原有基础上进一步增强点燃效
-        // entity保持原有值（如果配件已提供则为true，否则为false）或增强为true
-        // block从原有值增强为true
+        // 有属性增强时：entity 保留原值或被增强为 true，block 强制为 true
         return new Ignite(originalIgnite.isIgniteEntity() || entityAttributeValue, true);
     }
     
@@ -313,7 +294,7 @@ public class PropertyCalculator {
         }
         
         float entityAttributeFactor = (float) entityAttribute.getExplosionRadius();
-        // 考虑Forge默认+1，保底0.01防止负值
+        // 属性默认值为 1（无加成），先减 1 得到差值再加回；保底 0.01 防止负值
         return Math.max(originalExplosion.getRadius() + (entityAttributeFactor - 1.0f), 0.01f);
     }
     
@@ -369,7 +350,6 @@ public class PropertyCalculator {
         if (originalExplosion.isExplode()) {
             explode = true;
         } else {
-            // 判断属性爆炸是否开启的值是不是大于2
             explode = entityAttribute.getExplosionEnabled() > 2.0D;
         }
         

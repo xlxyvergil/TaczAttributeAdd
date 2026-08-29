@@ -56,34 +56,32 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * 覆写GunPropertyDiagrams类的draw方法
- * 完整复制原有功能并修改弹匣容量显示逻辑，添加后坐力显示功能
+ * 覆写 GunPropertyDiagrams 的绘制逻辑，重算弹匣容量并新增后坐力显示。
  */
 @Mixin(value = GunPropertyDiagrams.class, remap = false)
 @OnlyIn(Dist.CLIENT)
 public class GunPropertyDiagramsMixin {
     
     /**
-     * @author xlxyvergil
-     * @reason 重写按钮位置计算，考虑爆炸属性和后坐力属性
+     * 重写按钮位置计算，纳入爆炸、后坐力等新增属性占用的高度。
      */
     @Overwrite
     public static int getHidePropertyButtonYOffset() {
-        int[] startYOffset = new int[]{49}; // 基础偏移
+        int[] startYOffset = new int[]{49};
         AttachmentPropertyManager.getModifiers().forEach((key, value) -> {
             startYOffset[0] += value.getDiagramsDataSize() * 10;
         });
         
-        // 爆炸属性常驻显示（爆炸范围+爆炸伤害=20像素）+ 额外间距（15像素）
+        // 爆炸属性常驻显示 + 额外间距
         startYOffset[0] += 35;
         
-        // 添加后坐力显示所需的空间（Pitch和Yaw各占10像素，共20像素）
+        // 后坐力（Pitch + Yaw）
         startYOffset[0] += 20;
         
-        // 添加暴击属性显示所需的空间（暴击率+暴击伤害=20像素）
+        // 暴击属性（暴击率 + 暴击伤害）
         startYOffset[0] += 20;
         
-        // 添加过热属性显示所需的空间（仅当枪械有热数据时，4条×10像素=40像素）
+        // 过热属性，仅当枪械有热数据时（4 条 × 10 像素）
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             ItemStack gunItem = player.getMainHandItem();
@@ -103,15 +101,12 @@ public class GunPropertyDiagramsMixin {
     
     
     /**
-     * @author xlxyvergil
-     * @reason 完整复制功能并修改弹匣容量显示逻辑，添加后坐力显示
+     * 完整复刻原绘制功能，并重算弹匣容量、新增后坐力显示。
      */
     @Overwrite
     public static void draw(GuiGraphics graphics, Font font, int x, int y) {
-        // 计算是否需要显示暴击属性
-        boolean showCritAttributes = true; // 始终尝试显示，由工具类处理null情况
-        // 使用重写后的方法计算背景高度，与原版保持一致（按钮位置-11）
-        // getHidePropertyButtonYOffset已经包含了暴击属性的额外高度
+        boolean showCritAttributes = true;
+        // 背景高度对齐按钮位置，getHidePropertyButtonYOffset 已含新增属性高度
         graphics.fill(x, y, x + 288, y + GunPropertyDiagrams.getHidePropertyButtonYOffset() - 11, 0xAF222222);
 
         LocalPlayer player = Minecraft.getInstance().player;

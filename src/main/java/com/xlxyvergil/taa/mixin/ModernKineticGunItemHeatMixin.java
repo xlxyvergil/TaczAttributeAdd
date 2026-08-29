@@ -13,17 +13,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * 过热体系属性修饰符 - ModernKineticGunItem 注入
- * 覆盖 Java 散热路径（tickHeat → defaultTickHeat → tickNormal / tickLocked）
- * tickNormal / tickLocked 无 shooter 参数，通过 tickHeat 设置 ShooterContext 获取射击者。
- * 所有修改均为 原始值 × 实体属性倍率。
+ * 在 ModernKineticGunItem 中注入，按实体属性修正 Java 散热路径的过热相关数值。
+ * tickNormal / tickLocked 无 shooter 参数，需先经 tickHeat 设置 ShooterContext。
+ * 即 原始值 × 实体属性倍率。
  */
 @Mixin(value = ModernKineticGunItem.class, remap = false)
 public class ModernKineticGunItemHeatMixin {
 
-    /**
-     * 散热 tick 开始前设置 ShooterContext，供 tickNormal / tickLocked 读取射击者属性
-     */
     @Inject(method = "tickHeat", at = @At("HEAD"))
     private void setShooterContextOnTickHeatHead(
             com.tacz.guns.entity.shooter.ShooterDataHolder dataHolder, ItemStack gunItem,
@@ -33,9 +29,6 @@ public class ModernKineticGunItemHeatMixin {
         }
     }
 
-    /**
-     * 散热 tick 结束后清除 ShooterContext
-     */
     @Inject(method = "tickHeat", at = @At("TAIL"))
     private void clearShooterContextOnTickHeatTail(
             com.tacz.guns.entity.shooter.ShooterDataHolder dataHolder, ItemStack gunItem,
@@ -46,7 +39,7 @@ public class ModernKineticGunItemHeatMixin {
     // ========== tickNormal：冷却延迟 + 散热速度 ==========
 
     /**
-     * 普通散热开始时机的冷却延迟使用修正后的值
+     * 普通散热开始前的冷却延迟使用修正值。
      */
     @Redirect(
         method = "tickNormal",
@@ -57,7 +50,7 @@ public class ModernKineticGunItemHeatMixin {
     }
 
     /**
-     * 普通散热速度使用修正后的冷却倍率
+     * 普通散热速度使用修正后的冷却倍率。
      */
     @Redirect(
         method = "tickNormal",
@@ -70,7 +63,7 @@ public class ModernKineticGunItemHeatMixin {
     // ========== tickLocked：锁枪时间 + 散热速度 ==========
 
     /**
-     * 锁枪状态的解锁时机使用修正后的锁枪时间
+     * 锁枪状态解锁时机使用修正后的锁枪时间。
      */
     @Redirect(
         method = "tickLocked",
@@ -81,7 +74,7 @@ public class ModernKineticGunItemHeatMixin {
     }
 
     /**
-     * 锁枪状态的散热速度使用修正后的冷却倍率
+     * 锁枪状态散热速度使用修正后的冷却倍率。
      */
     @Redirect(
         method = "tickLocked",

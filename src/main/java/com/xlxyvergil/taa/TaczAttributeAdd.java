@@ -74,14 +74,11 @@ public class TaczAttributeAdd {
      * 注册Forge事件处理器 - 使用静态方法避免this泄漏
      */
     private void registerForgeEventHandlers() {
-        // 注册服务器启动前事件处理器
         MinecraftForge.EVENT_BUS.addListener(this::onServerAboutToStart);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        // 模组通用设置完成
-        
-        // 使用event参数进行异步初始化
+        // 异步初始化
         event.enqueueWork(() -> {
             // 注册网络消息
             CHANNEL.registerMessage(
@@ -102,8 +99,6 @@ public class TaczAttributeAdd {
             
             // 注册扩展Modifier系统
            // registerExtendedModifiers();
-            
-            // 可以在这里添加需要异步执行的模组初始化逻辑
         });
     }
 

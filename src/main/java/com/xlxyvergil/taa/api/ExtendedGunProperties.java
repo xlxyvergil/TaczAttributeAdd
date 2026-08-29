@@ -2,8 +2,7 @@ package com.xlxyvergil.taa.api;
 
 import com.tacz.guns.api.GunProperty;
 /**
- * 扩展的枪械属性定义
- * 包含我们新增的属性
+ * 本模组新增的枪械属性定义。
  */
 public class ExtendedGunProperties {
     

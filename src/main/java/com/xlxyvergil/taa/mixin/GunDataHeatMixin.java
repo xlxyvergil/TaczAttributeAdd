@@ -14,9 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * 过热体系属性修饰符 - GunData.getShootInterval 注入
- * 射速热惩罚（lerpRPM）使用修正后的热量上限作为百分比分母，
- * 保证热百分比与蓄热上限（handleShootHeat）保持一致，避免超出 [0,1] 插值区间。
+ * 在 GunData.getShootInterval 中注入，让射速热惩罚（lerpRPM）使用修正后的热量上限
+ * 作为百分比分母，保证与蓄热上限一致，避免插值越界。
  */
 @Mixin(value = GunData.class, remap = false)
 public class GunDataHeatMixin {
@@ -31,14 +30,14 @@ public class GunDataHeatMixin {
         if (iGun == null || !iGun.hasHeatData(gunStack)) {
             return original;
         }
-        // 获取枪械的过热配置数据
+        // 枪械过热配置
         GunHeatData heatData = TimelessAPI.getCommonGunIndex(iGun.getGunId(gunStack))
                 .map(index -> index.getGunData().getHeatData())
                 .orElse(null);
         if (heatData == null) {
             return original;
         }
-        // 用修正后的热量上限重新计算热百分比，避免超过原始上限后插值越界
+        // 用修正后的热量上限重算热百分比，避免超过原始上限后插值越界
         float heatPercentage = iGun.getHeatAmount(gunStack)
                 / HeatAttributeHelper.getModifiedHeatMax(shooter, heatData.getHeatMax());
         return Mth.lerp(heatPercentage, heatData.getMinRpmMod(), heatData.getMaxRpmMod());

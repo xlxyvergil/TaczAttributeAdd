@@ -9,8 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * TAA KubeJS插件
- * 提供枪械属性面板显示值修改和属性后处理的事件支持
+ * KubeJS 插件，注册属性面板显示与属性后处理事件
  */
 public class TAAKubeJSPlugin extends KubeJSPlugin {
     private static final Logger LOGGER = LogManager.getLogger(TaczAttributeAdd.MODID + "-kubejs");

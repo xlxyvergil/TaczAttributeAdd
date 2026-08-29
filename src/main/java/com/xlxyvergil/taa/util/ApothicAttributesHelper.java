@@ -8,14 +8,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
- * 暴击属性获取工具类
- * 支持从配置文件读取属性命名空间，默认使用 attributeslib
+ * 按配置文件中的命名空间读取暴击属性
  */
 public class ApothicAttributesHelper {
     
-    /**
-     * 暴击属性数据类
-     */
     public static class CritAttributeData {
         public final double baseValue;
         public final double modifiedValue;
@@ -29,9 +25,6 @@ public class ApothicAttributesHelper {
             this.isDecimalFormat = isDecimalFormat;
         }
         
-        /**
-         * 格式化显示值
-         */
         public String formatValue(double value) {
             if (isDecimalFormat) {
                 return String.format("%.2f%%", value * 100);
@@ -41,11 +34,6 @@ public class ApothicAttributesHelper {
         }
     }
     
-    /**
-     * 获取实体的暴击率属性数据
-     * @param living 实体对象
-     * @return 暴击率属性数据（包含基础值、最终值、差异）
-     */
     public static CritAttributeData getCritChanceData(LivingEntity living) {
         if (living == null) {
             return null;
@@ -55,11 +43,6 @@ public class ApothicAttributesHelper {
         return getAttributeData(living, attributeId);
     }
     
-    /**
-     * 获取实体的暴击伤害属性数据
-     * @param living 实体对象
-     * @return 暴击伤害属性数据（包含基础值、最终值、差异）
-     */
     public static CritAttributeData getCritDamageData(LivingEntity living) {
         if (living == null) {
             return null;
@@ -69,12 +52,6 @@ public class ApothicAttributesHelper {
         return getAttributeData(living, attributeId);
     }
     
-    /**
-     * 通用方法：根据属性ID获取属性数据
-     * @param living 实体对象
-     * @param attributeId 属性完整ID（格式：命名空间:属性名）
-     * @return 属性数据（包含基础值、最终值、差异）
-     */
     private static CritAttributeData getAttributeData(LivingEntity living, String attributeId) {
         try {
             ResourceLocation location = new ResourceLocation(attributeId);
@@ -93,7 +70,7 @@ public class ApothicAttributesHelper {
             double modifiedValue = instance.getValue();
             double difference = modifiedValue - baseValue;
             
-            // 通过 crit_damage 基础值判断格式化方式
+            // 用 crit_damage 的基础值判断格式化方式
             String damageAttributeId = AttributeConfig.getCritDamageAttribute();
             ResourceLocation damageLocation = new ResourceLocation(damageAttributeId);
             Attribute damageAttribute = ForgeRegistries.ATTRIBUTES.getValue(damageLocation);

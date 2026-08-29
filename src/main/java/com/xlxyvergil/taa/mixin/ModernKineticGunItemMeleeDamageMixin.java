@@ -22,38 +22,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 
 /**
- * 重构近战伤害计算的 mixin
- * 完全替换 melee 方法，实现自定义的伤害计算逻辑
+ * 注入并替换 melee 方法，实现自定义近战伤害计算。
  */
 @Mixin(value = ModernKineticGunItem.class, remap = false)
 public class ModernKineticGunItemMeleeDamageMixin {
     
-    /**
-     * 注入并完全替换 melee 方法
-     * 在方法开始时取消原方法执行，然后执行我们自己的逻辑
-     */
     @Inject(
         method = "melee",
         at = @At("HEAD"),
         cancellable = true
     )
     public void modifyMelee(ShooterDataHolder dataHolder, LivingEntity user, ItemStack gunItem, CallbackInfo ci) {
-        // 设置 ShooterContext 确保上下文正确
         com.xlxyvergil.taa.context.ShooterContext.setShooter(user);
-        
-        // 取消原始方法执行
         ci.cancel();
-        
-        // 执行我们自定义的近战逻辑
         executeCustomMelee(dataHolder, user, gunItem, (ModernKineticGunItem) (Object) this);
     }
     
     /**
-     * 自定义近战逻辑
-     * 复用 TACZ 原版逻辑，但使用缓存的伤害值（已包含属性修改）
-     * 
-     * 注意：MeleeDamageModifier.initCache 已经按照 TACZ 原版逻辑计算了基础伤害
-     * （有配件用配件伤害，无配件用默认伤害），然后 eval 应用了属性修改器的倍率/加值
+     * 复用 TACZ 原版近战流程，仅将伤害替换为缓存值（已含配件伤害与属性倍率）。
      */
     private void executeCustomMelee(ShooterDataHolder dataHolder, LivingEntity user, ItemStack gunItem, ModernKineticGunItem gunItemObj) {
         ResourceLocation gunId = gunItemObj.getGunId(gunItem);
@@ -61,10 +47,9 @@ public class ModernKineticGunItemMeleeDamageMixin {
             GunMeleeData meleeData = gunIndex.getGunData().getMeleeData();
             float distance = meleeData.getDistance();
             
-            // 获取缓存的伤害值（已包含配件伤害和属性修改）
             float finalDamage = getModifiedDamage(user);
 
-            // 1. 检查枪口配件（刺刀）- 复用 TACZ 原版逻辑
+            // 枪口配件（刺刀）
             ResourceLocation muzzleId = gunItemObj.getAttachmentId(gunItem, AttachmentType.MUZZLE);
             MeleeData muzzleData = getMeleeData(muzzleId);
             if (muzzleData != null) {
@@ -73,7 +58,7 @@ public class ModernKineticGunItemMeleeDamageMixin {
                 return;
             }
 
-            // 2. 检查枪托配件 - 复用 TACZ 原版逻辑
+            // 枪托配件
             ResourceLocation stockId = gunItemObj.getAttachmentId(gunItem, AttachmentType.STOCK);
             MeleeData stockData = getMeleeData(stockId);
             if (stockData != null) {
@@ -82,7 +67,7 @@ public class ModernKineticGunItemMeleeDamageMixin {
                 return;
             }
 
-            // 3. 没有近战配件，使用默认近战数据 - 复用 TACZ 原版逻辑
+            // 无近战配件，用默认近战数据
             GunDefaultMeleeData defaultData = meleeData.getDefaultMeleeData();
             if (defaultData == null) {
                 return;
@@ -92,9 +77,6 @@ public class ModernKineticGunItemMeleeDamageMixin {
         });
     }
     
-    /**
-     * 获取缓存的近战伤害
-     */
     private float getModifiedDamage(LivingEntity user) {
         IGunOperator operator = IGunOperator.fromLivingEntity(user);
         if (operator != null) {
@@ -109,9 +91,6 @@ public class ModernKineticGunItemMeleeDamageMixin {
         return 0f;
     }
     
-    /**
-     * 获取近战数据
-     */
     private MeleeData getMeleeData(ResourceLocation attachmentId) {
         if (attachmentId == null || DefaultAssets.isEmptyAttachmentId(attachmentId)) {
             return null;
@@ -122,8 +101,7 @@ public class ModernKineticGunItemMeleeDamageMixin {
     }
     
     /**
-     * 调用 doMelee 方法
-     * 使用反射调用私有方法
+     * 反射调用私有 doMelee。
      */
     private void doMeleeCustom(ModernKineticGunItem gunItemObj, LivingEntity user, float gunDistance, float meleeDistance, 
                              float rangeAngle, float knockback, float damage, java.util.List effects) {
@@ -141,7 +119,7 @@ public class ModernKineticGunItemMeleeDamageMixin {
             doMeleeMethod.setAccessible(true);
             doMeleeMethod.invoke(gunItemObj, user, gunDistance, meleeDistance, rangeAngle, knockback, damage, effects);
         } catch (Exception e) {
-            // 如果反射失败，记录错误但不崩溃
+            // 反射失败记录但不崩溃
             e.printStackTrace();
         }
     }

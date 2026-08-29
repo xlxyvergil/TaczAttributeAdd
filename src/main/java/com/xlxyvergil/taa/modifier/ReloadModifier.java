@@ -20,13 +20,8 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 装填时间 Modifier
- * 用于修改枪械的装填时间属性
- * 完全遵循TACZ配件系统的标准模式
- */
+/** 装填时间 Modifier，用于修改枪械的装填时间 */
 public class ReloadModifier implements IAttachmentModifier<ReloadModifier.ReloadModifierData, Float> {
-    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
     public static final String ID = ExtendedGunProperties.RELOAD_TIME.name();
 
     @Override
@@ -42,17 +37,15 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
 
     @Override
     public CacheValue<Float> initCache(ItemStack gunItem, GunData gunData) {
-        // 初始化时存储默认乘数1.0f
+        // 默认乘数 1.0f
         float reloadMultiplier = 1.0f;
         
-        // 尝试使用GunsmithLib的GsHelper来计算RELOAD_SPEED属性
+        // 用 GunsmithLib 计算 RELOAD_SPEED 作为基础值
         try {
-            // 获取RELOAD_SPEED属性
             Class<?> gunAttributesClass = Class.forName("mod.chloeprime.gunsmithlib.api.common.GunAttributes");
             java.lang.reflect.Field reloadSpeedField = gunAttributesClass.getField("RELOAD_SPEED");
             Object reloadSpeedAttributeObj = reloadSpeedField.get(null);
             
-            // 使用GunsmithLib的GsHelper工具类计算属性值
             Class<?> gsHelperClass = Class.forName("mod.chloeprime.gunsmithlib.common.util.GsHelper");
             java.lang.reflect.Method evaluateItemAttributeMethod = gsHelperClass.getMethod(
                 "evaluateItemAttribute", 
@@ -61,7 +54,7 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
                 double.class
             );
             
-            // 创建Supplier函数接口实例
+            // 通过 Supplier 惰性取属性值
             java.util.function.Supplier<Object> attributeSupplier = () -> {
                 try {
                     Class<?> registryObjectClass = Class.forName("net.minecraftforge.registries.RegistryObject");
@@ -72,19 +65,18 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
                 }
             };
             
-            // 调用方法计算GunsmithLib修改后的值
+            // 计算 GunsmithLib 修改后的值
             double gunsmithLibModifiedValue = (Double) evaluateItemAttributeMethod.invoke(
-                null, 
-                gunItem,  // 传入实际的枪械物品
-                attributeSupplier, 
-                1.0  // 使用1.0作为基础值
+                null,
+                gunItem,
+                attributeSupplier,
+                1.0
             );
             
-            // 使用GunsmithLib的值作为我们的基础值
-            // 注意：我们需要存储倒数，因为实际计算是 original / multiplier
+            // 存倒数，因为实际计算是 original / multiplier
             reloadMultiplier = (float) (1.0 / gunsmithLibModifiedValue);
         } catch (Exception e) {
-            // GunsmithLib不存在或调用失败，使用原始值1.0f
+            // GunsmithLib 不可用或调用失败，用默认值 1.0f
         }
         
         return new CacheValue<>(reloadMultiplier);
@@ -92,34 +84,30 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
 
     @Override
     public void eval(List<ReloadModifierData> modifiers, CacheValue<Float> cache) {
-        // 计算装填时间乘数，直接使用Modifier的加法操作
+        // 只取加法部分，基础值为 0
         double reloadTimeAddition = AttachmentPropertyManager.eval(
-                modifiers.stream().map(m -> m.reloadTime).filter(m -> m != null).toList(), 
-                0.0f  // 基础值为0，因为我们只关心加法部分
+                modifiers.stream().map(m -> m.reloadTime).filter(m -> m != null).toList(),
+                0.0f
         );
         
-        // 获取初始缓存值（可能包含GunsmithLib的修改，已经是倒数形式）
+        // 缓存初始值已是 GunsmithLib 的倒数
         float baseMultiplier = cache.getValue();
         
-        // 将我们的修改转换为倒数形式
-        // 使用 1.0 + addition 作为我们的乘数，然后取倒数
+        // 自己的修改也转成倒数：1.0 + addition 再取倒数
         float ourMultiplier = 1.0f + (float) reloadTimeAddition;
         float ourInverseMultiplier = 1.0f / ourMultiplier;
         
-        // 总倒数 = GunsmithLib倒数 * 我们的倒数
+        // 总倒数 = GunsmithLib 倒数 × 我们的倒数
         cache.setValue(baseMultiplier * ourInverseMultiplier);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 0; // 装填时间显示由GunPropertyDiagramsMixin自行处理
+        return 0; // 由 GunPropertyDiagramsMixin 处理显示
     }
 
-    /**
-     * 装填修改器数据
-     * 按照TACZ标准模式，简化为单个Modifier
-     */
+    /** 装填修改器数据 */
     public static class ReloadModifierData {
         @SerializedName("reload_time")
         private Modifier reloadTime = null;
@@ -136,8 +124,7 @@ public class ReloadModifier implements IAttachmentModifier<ReloadModifier.Reload
         public void initComponents() {
             ReloadModifierData value = getValue();
             if (value != null && value.getReloadTime() != null) {
-                // 不使用硬编码的默认值，而是仅根据Modifier是否存在来判断是否有变化
-                // 这样可以避免因为不同枪械的基础装填时间不同而导致的显示问题
+                // 只按 Modifier 是否存在来显示变化，避免不同枪基础装填时间不同导致的误判
                 components.add(Component.translatable("tooltip.tacz.attachment.reload_time.change").withStyle(ChatFormatting.GOLD));
             }
         }

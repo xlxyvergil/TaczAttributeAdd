@@ -17,13 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * 弹匣容量 Modifier
- * 用于修改枪械的弹匣容量，包括基础弹匣容量和扩展弹匣容量
- * 完全遵循TACZ配件系统的标准模式
- */
+/** 弹匣容量 Modifier，用于修改枪械的弹匣容量 */
 public class AmmoCountModifier implements IAttachmentModifier<Modifier, Integer> {
-    // 使用ExtendedGunProperties中的属性作为ID，与TACZ原版保持一致
     public static final String ID = ExtendedGunProperties.MAGAZINE_CAPACITY.name();
 
     @Override
@@ -39,39 +34,29 @@ public class AmmoCountModifier implements IAttachmentModifier<Modifier, Integer>
 
     @Override
     public CacheValue<Integer> initCache(ItemStack gunItem, GunData gunData) {
-        // 获取当前的弹匣容量，考虑是否安装了扩容弹匣
-        // 注意：GunsmithLib 的弹匣容量加成不在 initCache 中计算，
-        // 而是在 AmmoCapacityHelper.computeFinalAmmoCapacity 中统一应用，
-        // 避免客户端/服务端反射结果不一致导致缓存值不同。
+        // GunsmithLib 的弹匣容量加成由 AmmoCapacityHelper.computeFinalAmmoCapacity 统一应用，
+        // 这里只算基础容量，避免客户端/服务端反射结果不一致。
         int currentAmmoCount = getCurrentMagazineCapacity(gunItem, gunData);
         return new CacheValue<>(currentAmmoCount);
     }
 
     @Override
     public void eval(@Nullable List<Modifier> modifiers, CacheValue<Integer> cache) {
-        // 只有当存在修饰符时才进行计算
         if (modifiers != null && !modifiers.isEmpty()) {
-            // 使用标准的Modifier计算逻辑
             double eval = AttachmentPropertyManager.eval(modifiers, cache.getValue());
-            // 修改为直接截断，不使用四舍五入
+            // 直接截断，不四舍五入
             int result = (int) eval;
-            // 如果结果小于1，则设置为1
+            // 结果不小于 1
             if (result < 1) {
                 result = 1;
             }
             cache.setValue(result);
         }
-        // 如果没有修饰符，则保持原始值不变
     }
 
 
 
-    /**
-     * 获取当前弹匣容量，考虑是否安装了扩容弹匣
-     * @param gunItem 枪械物品
-     * @param gunData 枪械数据
-     * @return 当前弹匣容量
-     */
+    /** 获取当前弹匣容量，考虑是否安装了扩容弹匣 */
     private int getCurrentMagazineCapacity(ItemStack gunItem, GunData gunData) {
         // 检查是否安装了扩容弹匣
         IGun iGun = IGun.getIGunOrNull(gunItem);
@@ -88,7 +73,6 @@ public class AmmoCountModifier implements IAttachmentModifier<Modifier, Integer>
                 }
             }
         }
-        // 返回基础弹匣容量
         return gunData.getAmmoAmount();
     }
 
@@ -99,7 +83,7 @@ public class AmmoCountModifier implements IAttachmentModifier<Modifier, Integer>
 
         @Override
         public void initComponents() {
-            // 弹匣容量modifier不显示tooltip，因为原弹匣容量已能正确显示修改后的数据
+            // 原弹匣容量显示已包含修改，这里不再重复展示
         }
     }
 

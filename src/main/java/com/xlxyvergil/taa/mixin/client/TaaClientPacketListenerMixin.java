@@ -23,7 +23,7 @@ import java.util.Iterator;
 public class TaaClientPacketListenerMixin {
 
     /**
-     * Records the old value of the attribute before the attribute packet begins applying new clientside modifiers
+     * 记录属性包应用新的客户端修饰符之前的旧属性值。
      */
     private double taaLastValue;
 
@@ -36,10 +36,7 @@ public class TaaClientPacketListenerMixin {
     }
 
     /**
-     * Injected after the for loop iterating {@link AttributeSnapshot#getModifiers()}, which is when after all client attribute modifiers have been cleared and
-     * reapplied.
-     * <p>
-     * Responsible for comparing {@link #taaLastValue} to the new value, and updating TACZ cache if necessary.
+     * 在清除并重应用所有客户端属性修饰符之后注入，比较新旧属性值，必要时更新 TACZ 缓存。
      */
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;addTransientModifier(Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V", shift = At.Shift.BY, by = 5), 
             method = "handleUpdateAttributes(Lnet/minecraft/network/protocol/game/ClientboundUpdateAttributesPacket;)V", 
@@ -49,28 +46,21 @@ public class TaaClientPacketListenerMixin {
         if (inst != null) {
             double newValue = inst.getValue();
             if (newValue != taaLastValue) {
-                // Only update if the entity is a player
+                // 仅处理玩家
                 if (entity instanceof Player player) {
-                    // Get player held items
                     ItemStack mainHandItem = player.getMainHandItem();
                     ItemStack offHandItem = player.getOffhandItem();
                     
-                    // Check main hand item
+                    // 优先更新主手，其次副手
                     if (mainHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
                         AttachmentPropertyManager.postChangeEvent(player, mainHandItem);
-                    }
-                    
-                    // Check off hand item
-                    else if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
+                    } else if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
                         AttachmentPropertyManager.postChangeEvent(player, offHandItem);
-                    }
-                    
-                    // Update with empty stack if no gun is held
-                    else {
+                    } else {
                         AttachmentPropertyManager.postChangeEvent(player, ItemStack.EMPTY);
                     }
                     
-                    // Send message to server to update server-side cache
+                    // 通知服务器更新服务端缓存
                     TaczAttributeAdd.CHANNEL.sendToServer(new ServerMessageUpdateTacZCache());
                 }
             }

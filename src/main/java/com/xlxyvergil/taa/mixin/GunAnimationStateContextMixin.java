@@ -18,11 +18,11 @@ import net.minecraft.world.item.ItemStack;
 public class GunAnimationStateContextMixin {
 
     /**
-     * 修改getMaxAmmoCount方法的返回值，使其使用缓存中的弹匣容量
+     * 让 getMaxAmmoCount 返回缓存中的弹匣容量。
      */
     @ModifyReturnValue(method = "getMaxAmmoCount", at = @At("RETURN"), require = 0)
     private int modifyMaxAmmoCount(int original) {
-        // 直接使用ShooterContext获取操作者
+        // 从 ShooterContext 取操作者
         LivingEntity shooter = ShooterContext.getShooter();
 
         if (shooter != null) {
@@ -32,9 +32,9 @@ public class GunAnimationStateContextMixin {
                 if (cacheProperty != null) {
                     Integer magazineCapacity = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (magazineCapacity != null) {
-                        // 尝试获取玩家手中的枪械物品用于兼容计算
+                        // 取主手物品用于兼容计算
                         ItemStack gunItem = shooter.getMainHandItem();
-                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        // 统一工具方法计算（兼容 GunsmithLib、KuvaLich、KubeJS）
                         return AmmoCapacityHelper.computeFinalAmmoCapacity(
                             magazineCapacity, gunItem, shooter, 0, 0
                         );
@@ -43,7 +43,7 @@ public class GunAnimationStateContextMixin {
             }
         }
 
-        // 如果无法从缓存获取，使用原始方法计算的结果
+        // 无法从缓存获取时用原方法结果
         return original;
     }
 }

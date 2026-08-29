@@ -23,7 +23,7 @@ public class ModernKineticGunScriptAPIMixin {
     private LivingEntity shooter;
 
     /**
-     * 确保在 putAmmoInMagazine 方法中使用经过 modifier 修改的弹匣容量
+     * putAmmoInMagazine 中使用修改后的弹匣容量。
      */
     @Redirect(
         method = "putAmmoInMagazine",
@@ -33,7 +33,7 @@ public class ModernKineticGunScriptAPIMixin {
         )
     )
     public int getModifiedAmmoCountWithAttachment(ItemStack gunItem, com.tacz.guns.resource.pojo.data.gun.GunData gunData) {
-        // 直接使用 shadow 字段，与 modifyReloadTime 保持一致
+        // 直接用 shadow 字段，与 modifyReloadTime 保持一致
         LivingEntity shooter = this.shooter;
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
@@ -42,19 +42,19 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        // 统一工具方法计算（兼容 GunsmithLib、KuvaLich、KubeJS）
                         return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, shooter, 0, 0);
                     }
                 }
             }
         }
 
-        // 如果没有缓存数据，则使用原始方法计算
+        // 无缓存时回退到原始计算
         return AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunData);
     }
 
     /**
-     * 确保在 getNeededAmmoAmount 方法中使用经过 modifier 修改的弹匣容量
+     * getNeededAmmoAmount 中使用修改后的弹匣容量。
      */
     @Redirect(
         method = "getNeededAmmoAmount",
@@ -64,7 +64,7 @@ public class ModernKineticGunScriptAPIMixin {
         )
     )
     public int getModifiedAmmoCountWithAttachmentForNeeded(ItemStack gunItem, com.tacz.guns.resource.pojo.data.gun.GunData gunData) {
-        // 直接使用 shadow 字段，与 modifyReloadTime 保持一致
+        // 直接用 shadow 字段，与 modifyReloadTime 保持一致
         LivingEntity shooter = this.shooter;
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
@@ -85,7 +85,7 @@ public class ModernKineticGunScriptAPIMixin {
     }
 
     /**
-     * 确保在 getMaxAmmoCount 方法中使用经过 modifier 修改的弹匣容量
+     * getMaxAmmoCount 中使用修改后的弹匣容量。
      */
     @Redirect(
         method = "getMaxAmmoCount",
@@ -95,7 +95,7 @@ public class ModernKineticGunScriptAPIMixin {
         )
     )
     public int getModifiedAmmoCountWithAttachmentForMax(ItemStack gunItem, com.tacz.guns.resource.pojo.data.gun.GunData gunData) {
-        // 直接使用 shadow 字段，与 modifyReloadTime 保持一致
+        // 直接用 shadow 字段，与 modifyReloadTime 保持一致
         LivingEntity shooter = this.shooter;
         if (shooter != null) {
             IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
@@ -104,19 +104,19 @@ public class ModernKineticGunScriptAPIMixin {
                 if (cacheProperty != null) {
                     Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
                     if (modifiedAmmoCount != null && modifiedAmmoCount > 0) {
-                        // 使用统一工具方法计算（包含 GunsmithLib、KuvaLich、KubeJS 兼容）
+                        // 统一工具方法计算（兼容 GunsmithLib、KuvaLich、KubeJS）
                         return AmmoCapacityHelper.computeFinalAmmoCapacity(modifiedAmmoCount, gunItem, shooter, 0, 0);
                     }
                 }
             }
         }
 
-        // 如果没有缓存数据，则使用原始方法计算
+        // 无缓存时回退到原始计算
         return AttachmentDataUtils.getAmmoCountWithAttachment(gunItem, gunData);
     }
 
     /**
-     * 修改getReloadTime方法，使其考虑我们修改的装填时间
+     * 修改 getReloadTime，应用自定义的装填时间倍率。
      */
     @ModifyReturnValue(method = "getReloadTime", at = @At("RETURN"))
     private long modifyReloadTime(long original) {
@@ -124,13 +124,12 @@ public class ModernKineticGunScriptAPIMixin {
             return original;
         }
 
-        // 从配件缓存中获取换弹时间乘数（倒数形式）
+        // 从缓存获取换弹时间倍率（存的是倒数）
         IGunOperator operator = IGunOperator.fromLivingEntity(shooter);
         if (operator != null) {
             AttachmentCacheProperty cacheProperty = operator.getCacheProperty();
             if (cacheProperty != null) {
                 Float reloadInverseMultiplier = cacheProperty.getCache(ReloadModifier.ID);
-                // 使用乘法，因为我们存储的是倒数
                 if (reloadInverseMultiplier != null && reloadInverseMultiplier > 0) {
                     return (long) (original / reloadInverseMultiplier);
                 }

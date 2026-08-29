@@ -16,20 +16,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * 修改 GunHudOverlay 中 cacheMaxAmmoCount 的计算方式，
- * 使其与 Z 面板（GunPropertyDiagramsMixin）使用同一套逻辑——从 cacheProperty 获取。
- * <p>
- * 原逻辑：cacheMaxAmmoCount = AttachmentDataUtils.getAmmoCountWithAttachment(stack, gunData)
- * 新逻辑：从 cacheProperty 读取 AmmoCountModifier 缓存值，经 AmmoCapacityHelper 兼容链计算
- * <p>
- * 这样可以确保百分比弹药 HUD 显示与 Z 面板完全一致。
+ * 修改 GunHudOverlay 的弹匣容量计算，改为与 Z 面板一致——从 cacheProperty 读取并经兼容链计算。
  */
 @Mixin(value = GunHudOverlay.class, remap = false)
 public class GunHudOverlayMixin {
 
     /**
-     * 拦截 handleCacheCount 中对 getAmmoCountWithAttachment 的调用，
-     * 改为使用和 Z 面板一样的 cacheProperty 读取 + 兼容链计算。
+     * 拦截 getAmmoCountWithAttachment 调用，改用 cacheProperty 读取 + 兼容链计算。
      */
     @ModifyExpressionValue(
         method = "handleCacheCount",
@@ -42,7 +35,7 @@ public class GunHudOverlayMixin {
         @Local(argsOnly = true) ItemStack stack,
         @Local(argsOnly = true) GunData gunData
     ) {
-        // 和 Z 面板一样：从 player 的 cacheProperty 获取 modifiedAmmoCount
+        // 与 Z 面板一致：从 player 的 cacheProperty 取 modifiedAmmoCount
         IGunOperator operator = IGunOperator.fromLivingEntity(player);
         if (operator == null) {
             return original;
@@ -57,7 +50,7 @@ public class GunHudOverlayMixin {
             return original;
         }
 
-        // 使用统一兼容链计算，与 Z 面板一致
+        // 统一兼容链计算，与 Z 面板一致
         return AmmoCapacityHelper.computeFinalAmmoCapacity(
             modifiedAmmoCount, stack, player, gunData.getAmmoAmount(), 0
         );

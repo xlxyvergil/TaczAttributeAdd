@@ -27,23 +27,20 @@ public class ServerMessageUpdateTacZCache {
                     return;
                 }
                 
-                // 获取玩家主手物品
                 var mainHandItem = player.getMainHandItem();
                 var offHandItem = player.getOffhandItem();
                 
-                // 检查主手是否是枪械
                 if (mainHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
                     AttachmentPropertyManager.postChangeEvent(player, mainHandItem);
                     return;
                 }
                 
-                // 检查副手是否是枪械
                 if (offHandItem.getItem() instanceof com.tacz.guns.api.item.IGun) {
                     AttachmentPropertyManager.postChangeEvent(player, offHandItem);
                     return;
                 }
                 
-                // 如果玩家没有持枪，也触发一次更新以确保属性正确应用
+                // 玩家未持枪时也更新一次，确保属性正确应用
                 AttachmentPropertyManager.postChangeEvent(player, net.minecraft.world.item.ItemStack.EMPTY);
             });
         }

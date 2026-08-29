@@ -11,12 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
- * 过热体系属性修饰符 - ModernKineticGunScriptAPI 注入
- * 覆盖：
- * 1. Java 蓄热路径（handleShootHeat 的热量上限）
- * 2. Java 热散射路径（shootOnce 的热量上限）
- * 3. Lua 脚本路径（getHeatMax / getCoolingDelay / getOverheatTime / calcHeatReduction）
- * 所有修改均为 原始值 × 实体属性倍率
+ * 在 ModernKineticGunScriptAPI 中注入，按实体属性修正过热相关数值。
+ * 覆盖 Java 蓄热/热散射路径（handleShootHeat、shootOnce）与 Lua 脚本路径
+ * （getHeatMax、getCoolingDelay、getOverheatTime、calcHeatReduction），
+ * 即 原始值 × 实体属性倍率。
  */
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
 public class ModernKineticGunScriptAPIHeatMixin {
@@ -27,7 +25,7 @@ public class ModernKineticGunScriptAPIHeatMixin {
     // ========== Java 蓄热路径：handleShootHeat ==========
 
     /**
-     * 蓄热时 clamp 上限：min(heat + per_shot, 修正后的max)
+     * 蓄热 clamp 上限：min(heat + per_shot, 修正后的 max)
      */
     @Redirect(
         method = "handleShootHeat",
@@ -38,7 +36,7 @@ public class ModernKineticGunScriptAPIHeatMixin {
     }
 
     /**
-     * 蓄热时锁定判断：newHeat >= 修正后的max
+     * 蓄热锁定判断：newHeat >= 修正后的 max
      */
     @Redirect(
         method = "handleShootHeat",
@@ -51,8 +49,8 @@ public class ModernKineticGunScriptAPIHeatMixin {
     // ========== Java 热散射路径：shootOnce ==========
 
     /**
-     * 热散射百分比的分母（heatMax）使用修正后的上限，保持与蓄热一致
-     * 注：该值仍会继续经过 modifyProperty(MAX_HEAT) 供 Lua 脚本调整
+     * 热散射百分比分母（heatMax）使用修正后的上限，与蓄热一致。
+     * 该值仍会继续经过 modifyProperty(MAX_HEAT) 供 Lua 脚本调整。
      */
     @Redirect(
         method = "shootOnce",
@@ -65,7 +63,7 @@ public class ModernKineticGunScriptAPIHeatMixin {
     // ========== Lua 脚本路径：ScriptAPI getter ==========
 
     /**
-     * Lua 脚本读取热量上限时返回修正后的值
+     * Lua 读取热量上限时返回修正值。
      */
     @ModifyReturnValue(method = "getHeatMax", at = @At("RETURN"))
     private float modifyGetHeatMax(float original) {
@@ -73,7 +71,7 @@ public class ModernKineticGunScriptAPIHeatMixin {
     }
 
     /**
-     * Lua 脚本读取冷却延迟时返回修正后的值
+     * Lua 读取冷却延迟时返回修正值。
      */
     @ModifyReturnValue(method = "getCoolingDelay", at = @At("RETURN"))
     private long modifyGetCoolingDelay(long original) {
@@ -81,7 +79,7 @@ public class ModernKineticGunScriptAPIHeatMixin {
     }
 
     /**
-     * Lua 脚本读取锁枪时间时返回修正后的值
+     * Lua 读取锁枪时间时返回修正值。
      */
     @ModifyReturnValue(method = "getOverheatTime", at = @At("RETURN"))
     private long modifyGetOverheatTime(long original) {
@@ -89,7 +87,7 @@ public class ModernKineticGunScriptAPIHeatMixin {
     }
 
     /**
-     * Lua 脚本计算散热值时返回修正后的值（乘散热速度倍率）
+     * Lua 计算散热值时乘散热速度倍率。
      */
     @ModifyReturnValue(method = "calcHeatReduction", at = @At("RETURN"))
     private float modifyCalcHeatReduction(float original) {

@@ -124,43 +124,28 @@ public class AttributeConfig {
         }
     }
     
-    /**
-     * 注册配置
-     */
     public static void register() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC, "taa-attributes.toml");
     }
-    
-    /**
-     * 获取当前伤害计算模式
-     */
+
     public static DamageCalculationMode getDamageCalculationMode() {
         return DAMAGE_CALCULATION_MODE.get();
     }
-    
-    /**
-     * 获取当前显示语言
-     */
+
     public static DisplayLanguage getDisplayLanguage() {
         return DISPLAY_LANGUAGE.get();
     }
-    
-    /**
-     * 获取暴击率属性ID
-     */
+
     public static String getCritChanceAttribute() {
         return CRIT_CHANCE_ATTRIBUTE.get();
     }
-    
-    /**
-     * 获取暴击伤害属性ID
-     */
+
     public static String getCritDamageAttribute() {
         return CRIT_DAMAGE_ATTRIBUTE.get();
     }
-    
+
     /**
-     * 获取暴击率显示名称（根据语言自动选择）
+     * 根据语言选择暴击率显示名称
      */
     public static String getCritChanceName() {
         return DISPLAY_LANGUAGE.get() == DisplayLanguage.ZH ? 
@@ -168,7 +153,7 @@ public class AttributeConfig {
     }
     
     /**
-     * 获取暴击伤害显示名称（根据语言自动选择）
+     * 根据语言选择暴击伤害显示名称
      */
     public static String getCritDamageName() {
         return DISPLAY_LANGUAGE.get() == DisplayLanguage.ZH ? 
