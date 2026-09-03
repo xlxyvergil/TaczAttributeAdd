@@ -16,6 +16,7 @@ import com.xlxyvergil.taa.context.GunTypeContext;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
+import com.xlxyvergil.taa.util.EntityAttributeHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -64,6 +65,31 @@ public class ClientGunTooltipMixin {
         }
 
         return original;
+    }
+
+    /**
+     * 枪械伤害显示：读取玩家基于枪械类型的伤害加成（通用/特定，按配置文件合并），
+     * 重算 tooltip 中的伤害值。
+     */
+    @ModifyExpressionValue(
+        method = "getText",
+        at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/AttachmentDataUtils;getDamageWithAttachment(Lnet/minecraft/world/item/ItemStack;Lcom/tacz/guns/resource/pojo/data/gun/GunData;)D"),
+        require = 0
+    )
+    private double modifyGunDamageDisplay(double original) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return original;
+        }
+
+        // 根据枪械类型从玩家身上读取伤害加成（通用 + 特定，按配置合并）
+        String type = gunIndex != null ? gunIndex.getType() : null;
+        double multiplier = new EntityAttributeHelper(mc.player, type).getGunDamageBonus();
+
+        if (multiplier == 1.0D) {
+            return original;
+        }
+        return original * multiplier;
     }
 
     /**
