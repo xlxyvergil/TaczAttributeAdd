@@ -68,8 +68,8 @@ public class ClientGunTooltipMixin {
     }
 
     /**
-     * 枪械伤害显示：读取玩家基于枪械类型的伤害加成（通用/特定，按配置文件合并），
-     * 重算 tooltip 中的伤害值。
+     * 枪械伤害显示：读取玩家基于枪械类型的伤害加成（通用/特定，按配置合并）与弹头数加成，
+     * 重算 tooltip 中的伤害值，使 tooltip 与面板（PropertyCalculator.calculateDamage）保持一致。
      */
     @ModifyExpressionValue(
         method = "getText",
@@ -82,9 +82,10 @@ public class ClientGunTooltipMixin {
             return original;
         }
 
-        // 根据枪械类型从玩家身上读取伤害加成（通用 + 特定，按配置合并）
+        // 根据枪械类型从玩家身上读取伤害加成（通用 + 特定，按配置合并）与弹头数加成
         String type = gunIndex != null ? gunIndex.getType() : null;
-        double multiplier = new EntityAttributeHelper(mc.player, type).getGunDamageBonus();
+        EntityAttributeHelper helper = new EntityAttributeHelper(mc.player, type);
+        double multiplier = helper.getGunDamageBonus() * helper.getBulletCount();
 
         if (multiplier == 1.0D) {
             return original;
