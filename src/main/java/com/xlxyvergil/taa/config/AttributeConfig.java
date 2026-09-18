@@ -36,10 +36,10 @@ public class AttributeConfig {
         
         DAMAGE_CALCULATION_MODE = BUILDER
                 .comment("枪械伤害计算模式",
-                        "MAX: 通用与特定取最大值",
-                        "ADDITIVE: 通用+特定-1",
-                        "MULTIPLICATIVE: 通用*特定")
-                .defineEnum("damageCalculationMode", DamageCalculationMode.ADDITIVE);
+                        "ONLY_SPECIFIC: 仅使用专属枪械伤害加成",
+                        "ONLY_GENERIC: 仅使用通用枪械伤害加成",
+                        "MULTIPLY: 通用伤害 × 专属伤害（默认）")
+                .defineEnum("damageCalculationMode", DamageCalculationMode.MULTIPLY);
         
         BUILDER.pop();
         
@@ -91,9 +91,9 @@ public class AttributeConfig {
      * 枪械伤害计算模式枚举
      */
     public enum DamageCalculationMode {
-        MAX("通用与特定取最大值"),
-        ADDITIVE("通用+特定-1"),
-        MULTIPLICATIVE("通用*特定");
+        ONLY_SPECIFIC("仅专属"),
+        ONLY_GENERIC("仅通用"),
+        MULTIPLY("通用×专属");
         
         private final String description;
         

@@ -117,37 +117,15 @@ public class EntityAttributeHelper {
     private double calculateGunDamageBonus() {
         // 按配置选择伤害计算规则
         AttributeConfig.DamageCalculationMode mode = AttributeConfig.getDamageCalculationMode();
-        
+
+        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
+        double specificDamage = getSpecificGunDamageBonus(this.gunType);
+
         return switch (mode) {
-            case MAX -> calculateGunDamageBonusRule1();
-            case ADDITIVE -> calculateGunDamageBonusRule2();
-            case MULTIPLICATIVE -> calculateGunDamageBonusRule3();
-            default -> calculateGunDamageBonusRule1();
+            case ONLY_SPECIFIC -> specificDamage;
+            case ONLY_GENERIC -> genericDamage;
+            default -> genericDamage * specificDamage;
         };
-    }
-
-    private double calculateGunDamageBonusRule1() {
-        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
-        double specificDamage = getSpecificGunDamageBonus(this.gunType);
-        
-        // 通用与特定取最大
-        return Math.max(genericDamage, specificDamage);
-    }
-
-    private double calculateGunDamageBonusRule2() {
-        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
-        double specificDamage = getSpecificGunDamageBonus(this.gunType);
-        
-        // 和值大于 1 时减 1，避免把基础值算重
-        double sum = genericDamage + specificDamage;
-        return sum > 1.0D ? sum - 1.0D : sum;    }
-
-    private double calculateGunDamageBonusRule3() {
-        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
-        double specificDamage = getSpecificGunDamageBonus(this.gunType);
-        
-        // 通用 × 特定
-        return genericDamage * specificDamage;
     }
 
     private double getSpecificGunDamageBonus(String gunType) {
