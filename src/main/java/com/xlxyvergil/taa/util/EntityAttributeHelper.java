@@ -138,51 +138,15 @@ public class EntityAttributeHelper {
      * @return 伤害加成 
      */
     private double calculateGunDamageBonus() {
-        // 根据配置项决定具体生效的规则
+        // 按配置选择伤害计算规则
         AttributeConfig.DamageCalculationMode mode = AttributeConfig.getDamageCalculationMode();
-        
+        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
+        double specificDamage = getSpecificGunDamageBonus(this.gunType);
         return switch (mode) {
-            case MAX -> calculateGunDamageBonusRule1();
-            case ADDITIVE -> calculateGunDamageBonusRule2();
-            case MULTIPLICATIVE -> calculateGunDamageBonusRule3();
-            default -> calculateGunDamageBonusRule1();
+            case ONLY_SPECIFIC -> specificDamage;
+            case ONLY_GENERIC -> genericDamage;
+            default -> genericDamage * specificDamage;
         };
-    }
-    
-    /**
-     * 计算枪械伤害加成 - 规则1：通用与特定取最 
-     * @return 伤害加成 
-     */
-    private double calculateGunDamageBonusRule1() {
-        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
-        double specificDamage = getSpecificGunDamageBonus(this.gunType);
-        
-        // 规则1：通用与特定取最 
-        return Math.max(genericDamage, specificDamage);
-    }
-    
-    /**
-     * 计算枪械伤害加成 - 规则2：通用+特定-1
-     * @return 伤害加成 
-     */
-    private double calculateGunDamageBonusRule2() {
-        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
-        double specificDamage = getSpecificGunDamageBonus(this.gunType);
-        
-        // 规则2：通用+特定，若和值大于1则减去一个基础值避免重复计算
-        double sum = genericDamage + specificDamage;
-        return sum > 1.0D ? sum - 1.0D : sum;    }
-    
-    /**
-     * 计算枪械伤害加成 - 规则3：通用*特定
-     * @return 伤害加成 
-     */
-    private double calculateGunDamageBonusRule3() {
-        double genericDamage = getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE.get(), 1.0D);
-        double specificDamage = getSpecificGunDamageBonus(this.gunType);
-        
-        // 规则3：通用*特定
-        return genericDamage * specificDamage;
     }
     
     /**

@@ -208,11 +208,13 @@ public class PropertyCalculator {
         
         // 直接将偏移量加到原始MoveSpeed上（不是乘，是加）
         // 这样：final = original + (playerAttribute - 1.0)
-        // 保底0.01，防止属性过低导致负值
+        // 注意：不能对这里的倍率做 Math.max(...,0.01) 保底。TACZ 的 movement_speed 是
+        // MULTIPLY_TOTAL 修饰器，开镜减速是负数（如 aim=-0.2），若被夹到 0.01，
+        // 瞄准与腰射速度会变得一样，原版的开镜减速就消失了。
         return new MoveSpeed(
-            Math.max(originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset, 0.01f),
-            Math.max(originalMoveSpeed.getAimMultiplier() + playerSpeedOffset, 0.01f),
-            Math.max(originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset, 0.01f)
+            originalMoveSpeed.getBaseMultiplier() + playerSpeedOffset,
+            originalMoveSpeed.getAimMultiplier() + playerSpeedOffset,
+            originalMoveSpeed.getReloadMultiplier() + playerSpeedOffset
         );
     }
     

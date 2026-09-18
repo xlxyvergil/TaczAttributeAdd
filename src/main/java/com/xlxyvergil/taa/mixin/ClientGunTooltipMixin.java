@@ -16,6 +16,7 @@ import com.xlxyvergil.taa.context.GunTypeContext;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.modifier.AmmoCountModifier;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
+import com.xlxyvergil.taa.util.EntityAttributeHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -65,6 +66,32 @@ public class ClientGunTooltipMixin {
 
         // 如果不匹配，返回原始值
         return original;
+    }
+
+    /**
+     * 枪械伤害显示：读取玩家基于枪械类型的伤害加成（通用/特定，按配置合并）与弹头数加成，
+     * 重算 tooltip 中的伤害值，使 tooltip 与面板（PropertyCalculator.calculateDamage）保持一致。
+     */
+    @ModifyExpressionValue(
+        method = "getText",
+        at = @At(value = "INVOKE", target = "Lcom/tacz/guns/util/AttachmentDataUtils;getDamageWithAttachment(Lnet/minecraft/world/item/ItemStack;Lcom/tacz/guns/resource/pojo/data/gun/GunData;)D"),
+        require = 0
+    )
+    private double modifyGunDamageDisplay(double original) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return original;
+        }
+
+        // 根据枪械类型从玩家身上读取伤害加成（通用 + 特定，按配置合并）与弹头数加成
+        String type = gunIndex != null ? gunIndex.getType() : null;
+        EntityAttributeHelper helper = new EntityAttributeHelper(mc.player, type);
+        double multiplier = helper.getGunDamageBonus() * helper.getBulletCount();
+
+        if (multiplier == 1.0D) {
+            return original;
+        }
+        return original * multiplier;
     }
 
     /**

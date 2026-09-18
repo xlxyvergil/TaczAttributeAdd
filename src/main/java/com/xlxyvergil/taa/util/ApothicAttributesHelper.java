@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 /**
  * 暴击属性获取工具类
- * 支持从配置文件读取属性命名空间，默认使用 attributeslib
+ * 支持从配置文件读取属性命名空间，默认使用 apothic_attributes
  */
 public class ApothicAttributesHelper {
     
