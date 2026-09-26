@@ -45,12 +45,6 @@ public class EntityAttributeHelper {
     
     // 新增属性
     private final double bulletCount;
-    private final double magazineCapacity;
-    private final double reloadTime;
-    
-    // 近战属性
-    private final double meleeDamage;
-    private final double meleeDistance;
 
     public EntityAttributeHelper(LivingEntity shooter, String gunType) {
         this.shooter = shooter;
@@ -88,12 +82,6 @@ public class EntityAttributeHelper {
         
         // 新增属性
         this.bulletCount = getAttributeValue(EntityAttributeRegistry.BULLET_COUNT.get(), 1.0D);
-        this.magazineCapacity = getAttributeValue(EntityAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
-        this.reloadTime = getAttributeValue(EntityAttributeRegistry.RELOAD_TIME.get(), 1.0D);
-        
-        // 近战属性
-        this.meleeDamage = getAttributeValue(EntityAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
-        this.meleeDistance = getAttributeValue(EntityAttributeRegistry.MELEE_DISTANCE.get(), 1.0D);
     }
 
     private double getAttributeValue(Attribute attribute, double defaultValue) {
@@ -158,7 +146,6 @@ public class EntityAttributeHelper {
     public double getExplosionEnabled() { return explosionEnabled; }
     public double getMoveSpeed() { return moveSpeed; }
     public double getHeadshotMultiplier() { return headshotMultiplier; }
-    public double getIgnite() { return ignite; }
     public double getInaccuracy() { return inaccuracy; }
     public double getInaccuracyStand() { return inaccuracyStand; }
     public double getInaccuracyMove() { return inaccuracyMove; }
@@ -177,23 +164,50 @@ public class EntityAttributeHelper {
     
     // 新增属性
     public double getBulletCount() { return bulletCount; }
-    public double getMagazineCapacity() { return magazineCapacity; }
-    public double getReloadTime() { return reloadTime; }
-    
-    // 近战属性
-    public double getMeleeDamage() { return meleeDamage; }
-    public double getMeleeDistance() { return meleeDistance; }
     
     // 布尔属性
     public boolean isIgniteEnabled() { return convertDoubleToBoolean(ignite); }
     public boolean isExplosionKnockbackEnabled() { return convertDoubleToBoolean(explosionKnockback); }
     public boolean isExplosionDestroyBlockEnabled() { return convertDoubleToBoolean(explosionDestroyBlock); }
-    public boolean isExplosionEnabled() { return convertDoubleToBoolean(explosionEnabled); }
 
-    public boolean getBooleanValue(double doubleValue) {
-        return convertDoubleToBoolean(doubleValue);
+    /**
+     * 读取实体属性值（在源头统一夹到最小值）。
+     * shooter 为 null 或属性不存在时返回默认值。
+     */
+    public static double getAttributeValue(LivingEntity shooter, Attribute attribute, double defaultValue) {
+        if (shooter == null) {
+            return defaultValue;
+        }
+        AttributeInstance instance = shooter.getAttribute(attribute);
+        if (instance == null) {
+            return defaultValue;
+        }
+        return AttributeValueGuard.clamp(instance.getValue());
     }
-    
-    public LivingEntity getShooter() { return shooter; }
-    public String getGunType() { return gunType; }
+
+    /**
+     * 读取实体属性值（仅保证非负，不做 0.01 最小值保护）。
+     * 用于默认值为 0 的加法型属性，例如近战距离。
+     */
+    public static double getAttributeValueNonNegative(LivingEntity shooter, Attribute attribute, double defaultValue) {
+        if (shooter == null) {
+            return defaultValue;
+        }
+        AttributeInstance instance = shooter.getAttribute(attribute);
+        if (instance == null) {
+            return defaultValue;
+        }
+        return Math.max(instance.getValue(), 0.0D);
+    }
+
+    /**
+     * 近战伤害属性：原始伤害 × 属性倍率（默认 1.0 无加成）。
+     */
+    public static float applyMeleeDamageAttribute(LivingEntity shooter, float original) {
+        double factor = getAttributeValue(shooter, EntityAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
+        if (factor == 1.0D) {
+            return original;
+        }
+        return (float) (original * factor);
+    }
 }

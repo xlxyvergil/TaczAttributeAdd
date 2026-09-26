@@ -3,6 +3,9 @@ package com.xlxyvergil.taa.util;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.resource.pojo.data.gun.FeedType;
+import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.util.AttachmentDataUtils;
+import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.compat.kubejs.KubeJSEventHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +16,8 @@ import javax.annotation.Nullable;
 
 /**
  * 弹匣容量计算工具类
- * GunsmithLib 不在 initCache 阶段计算，统一在这里按兼容链应用，保证客户端/服务端值一致
+ * 以 TACZ 原生容量（含扩容弹匣）为基数，依次套用玩家属性、GunsmithLib、KuvaLich、KubeJS，
+ * 保证客户端/服务端值一致
  */
 public class AmmoCapacityHelper {
 
@@ -38,6 +42,46 @@ public class AmmoCapacityHelper {
         return false;
     }
 
+    /**
+     * TACZ 原生基础容量（含扩容弹匣），等价于 {@link AttachmentDataUtils#getAmmoCountWithAttachment}。
+     * 展示层直接调用，避免再次触发该方法的拦截而导致重复计算。
+     */
+    public static int resolveBaseCapacity(ItemStack gunItem, GunData gunData) {
+        int[] extendedMagAmmoAmount = gunData.getExtendedMagAmmoAmount();
+        if (extendedMagAmmoAmount == null) {
+            return gunData.getAmmoAmount();
+        }
+        int level = AttachmentDataUtils.getMagExtendLevel(gunItem, gunData);
+        if (level <= 0 || level > extendedMagAmmoAmount.length) {
+            return gunData.getAmmoAmount();
+        }
+        return extendedMagAmmoAmount[level - 1];
+    }
+
+    /**
+     * 基础容量 × 玩家弹匣容量属性（默认 1.0，无加成），结果不小于 1。
+     */
+    public static int applyMagazineAttribute(int base, @Nullable LivingEntity shooter) {
+        double factor = EntityAttributeHelper.getAttributeValue(
+                shooter, EntityAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
+        int result = (int) (base * factor);
+        return Math.max(result, 1);
+    }
+
+    /**
+     * 以 TACZ 原生容量为基数，套用玩家属性与兼容链（GunsmithLib / KuvaLich / KubeJS）算出最终容量。
+     * 无射击者或该枪为背包直读型时，原样返回 original。
+     *
+     * @param original TACZ 原生容量（含扩容弹匣），仅在 KubeJS 兼容中作为原值参数使用
+     */
+    public static int applyCapacity(int original, ItemStack gunItem, @Nullable LivingEntity shooter) {
+        if (shooter == null || shouldSkipCapacityModifier(gunItem)) {
+            return original;
+        }
+        int base = applyMagazineAttribute(original, shooter);
+        return computeFinalAmmoCapacity(base, gunItem, shooter, original, 0);
+    }
+
     public static int computeFinalAmmoCapacity(
             int baseValue,
             ItemStack gunItem,
@@ -53,8 +97,6 @@ public class AmmoCapacityHelper {
         }
 
         // 1. GunsmithLib 兼容
-        // initCache 阶段不应用 GunsmithLib（客户端/服务端反射结果不一致），
-        // 统一在此处应用，确保所有路径使用同一值
         result = GunsmithLibHelper.getAmmoCapacity(gunItem, result);
 
         // 2. KuvaLich 兼容

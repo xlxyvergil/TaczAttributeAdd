@@ -9,31 +9,32 @@
     "minVersion": "0.5.0"
   },
   "client": [
-    "AttachmentDataUtilsMixin",
+    "client.AttachmentDataUtilsClientMixin",
     "CameraSetupEventMixin",
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
     "GunPropertyDiagramsMixin",
-    "GunHudOverlayMixin",
     "HeatBarOverlayMixin",
-    "RecoilModifierMixin",
     "client.TaaClientPacketListenerMixin"
   ],
   "server": [
   ],
   "mixins": [
     "AbstractGunItemMixin",
+    "AttachmentDataUtilsMixin",
     "AttachmentPropertyManagerMixin",
     "AttachmentPropertyManagerRegisterMixin",
-    "GunAnimationStateContextMixin",
-    "GunDataHeatMixin",
+    "GunDataContextMixin",
+    "GunDefaultMeleeDataMixin",
+    "GunHeatDataMixin",
+    "GunMeleeDataMixin",
+    "GunReloadTimeMixin",
+    "MeleeDataMixin",
     "ModernKineticGunItemHeatMixin",
-    "ModernKineticGunItemMeleeDamageMixin",
-    "ModernKineticGunItemMeleeDistanceMixin",
+    "ModernKineticGunItemMeleeContextMixin",
     "ModernKineticGunItemMixin",
-    "ModernKineticGunScriptAPIMixin",
-    "ModernKineticGunScriptAPIShootMixin",
-    "ModernKineticGunScriptAPIHeatMixin"
+    "ModernKineticGunScriptAPIContextMixin",
+    "ModernKineticGunScriptAPIShootMixin"
   ],
   "injectors": {
     "defaultRequire": 1

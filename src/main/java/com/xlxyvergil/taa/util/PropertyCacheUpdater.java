@@ -27,12 +27,6 @@ public class PropertyCacheUpdater {
         
         // 新增属性
         cacheProperty.setCache(ExtendedGunProperties.BULLET_COUNT, results.getBulletCount());
-        cacheProperty.setCache(ExtendedGunProperties.MAGAZINE_CAPACITY, results.getMagazineCapacity());
-        cacheProperty.setCache(ExtendedGunProperties.RELOAD_TIME, results.getReloadTime());
-        
-        // 近战属性
-        cacheProperty.setCache(ExtendedGunProperties.MELEE_DAMAGE, results.getMeleeDamage());
-        cacheProperty.setCache(ExtendedGunProperties.MELEE_DISTANCE, results.getMeleeDistance());
         
         // 复杂属性
         cacheProperty.setCache(GunProperties.MOVE_SPEED, results.getMoveSpeed());

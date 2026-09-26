@@ -2,8 +2,6 @@ package com.xlxyvergil.taa.mixin;
 
 import com.tacz.guns.client.event.CameraSetupEvent;
 import com.xlxyvergil.taa.util.EntityAttributeHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;

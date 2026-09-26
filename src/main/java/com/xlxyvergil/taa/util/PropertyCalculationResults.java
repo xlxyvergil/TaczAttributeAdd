@@ -35,12 +35,6 @@ public class PropertyCalculationResults {
     
     // 新增属性
     private Integer bulletCount;
-    private Integer magazineCapacity;
-    private Float reloadTime;
-    
-    // 近战相关属性
-    private Float meleeDamage;
-    private Float meleeDistance;
     
     public Float getAdsTime() { return adsTime; }
     public void setAdsTime(Float adsTime) { this.adsTime = adsTime; }
@@ -93,17 +87,4 @@ public class PropertyCalculationResults {
     // 新增属性
     public Integer getBulletCount() { return bulletCount; }
     public void setBulletCount(Integer bulletCount) { this.bulletCount = bulletCount; }
-    
-    public Integer getMagazineCapacity() { return magazineCapacity; }
-    public void setMagazineCapacity(Integer magazineCapacity) { this.magazineCapacity = magazineCapacity; }
-    
-    public Float getReloadTime() { return reloadTime; }
-    public void setReloadTime(Float reloadTime) { this.reloadTime = reloadTime; }
-    
-    // 近战属性
-    public Float getMeleeDamage() { return meleeDamage; }
-    public void setMeleeDamage(Float meleeDamage) { this.meleeDamage = meleeDamage; }
-    
-    public Float getMeleeDistance() { return meleeDistance; }
-    public void setMeleeDistance(Float meleeDistance) { this.meleeDistance = meleeDistance; }
 }

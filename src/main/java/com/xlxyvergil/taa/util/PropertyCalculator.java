@@ -48,12 +48,6 @@ public class PropertyCalculator {
         
         // 新增属性的计算
         results.setBulletCount(calculateBulletCount(cacheProperty));
-        results.setMagazineCapacity(calculateMagazineCapacity(cacheProperty));
-        results.setReloadTime(calculateReloadTime(cacheProperty));
-        
-        // 近战属性的计算
-        results.setMeleeDamage(calculateMeleeDamage(cacheProperty));
-        results.setMeleeDistance(calculateMeleeDistance(cacheProperty));
         
         // 统一计算爆炸属性
         results.setExplosionData(createExplosionData(cacheProperty));
@@ -133,52 +127,6 @@ public class PropertyCalculator {
         double result = originalValue * entityAttributeFactor;
         // 四舍五入取整
         return (int) Math.round(result);
-    }
-    
-    public int calculateMagazineCapacity(AttachmentCacheProperty cacheProperty) {
-        Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.MAGAZINE_CAPACITY);
-        if (originalValue == null) {
-            originalValue = 30; // 默认弹匣容量
-        }
-        double entityAttributeFactor = entityAttribute.getMagazineCapacity();
-        // 截断取整，不四舍五入
-        int result = (int) (originalValue * entityAttributeFactor);
-        // 至少为 1
-        if (result < 1) {
-            result = 1;
-        }
-        return result;
-    }
-    
-    public float calculateReloadTime(AttachmentCacheProperty cacheProperty) {
-        Float originalValue = cacheProperty.getCache(ExtendedGunProperties.RELOAD_TIME);
-        if (originalValue == null) {
-            originalValue = 1.0f; // 默认倍率（无加速）
-        }
-        double entityAttributeFactor = entityAttribute.getReloadTime();
-        // 直接用属性值作为倍率
-        return originalValue * (float) entityAttributeFactor;
-    }
-    
-    // 近战属性计算
-    
-    public float calculateMeleeDamage(AttachmentCacheProperty cacheProperty) {
-        Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DAMAGE);
-        if (originalValue == null) {
-            originalValue = 5.0f; // 默认近战伤害
-        }
-        double entityAttributeFactor = entityAttribute.getMeleeDamage();
-        return originalValue * (float) entityAttributeFactor;
-    }
-    
-    public float calculateMeleeDistance(AttachmentCacheProperty cacheProperty) {
-        Float originalValue = cacheProperty.getCache(ExtendedGunProperties.MELEE_DISTANCE);
-        if (originalValue == null) {
-            originalValue = 0.0f;
-        }
-        double entityAttributeFactor = entityAttribute.getMeleeDistance();
-        // 近战距离用加法叠加
-        return originalValue + (float) entityAttributeFactor;
     }
     
     // 复杂属性计算

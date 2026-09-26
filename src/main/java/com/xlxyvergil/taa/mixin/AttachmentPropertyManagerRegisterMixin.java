@@ -17,10 +17,6 @@ public class AttachmentPropertyManagerRegisterMixin {
     private static void registerCustomModifiers(CallbackInfo ci) {
         var modifiers = AttachmentPropertyManager.getModifiers();
         
-        modifiers.put(AmmoCountModifier.ID, new AmmoCountModifier());
         modifiers.put(BulletCountModifier.ID, new BulletCountModifier());
-        modifiers.put(ReloadModifier.ID, new ReloadModifier());
-        modifiers.put(MeleeModifier.ID, new MeleeModifier());
-        modifiers.put(MeleeDamageModifier.ID, new MeleeDamageModifier());
     }
 }

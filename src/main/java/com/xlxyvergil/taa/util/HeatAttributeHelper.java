@@ -4,6 +4,7 @@ import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 /**
  * 过热体系属性助手类
@@ -40,10 +41,17 @@ public class HeatAttributeHelper {
     }
 
     /**
-     * 获取实体上的乘法倍率属性值
-     * 属性注册时已绑定到所有实体类型，且最小值为 0.01，必然可取，不需兜底（兜底会掩盖配置错误）。
+     * 获取实体上的乘法倍率属性值。
+     * shooter 为 null（例如没有射击上下文）或属性不存在时返回 1.0（无加成）。
      */
     private static double getMultiplier(LivingEntity shooter, Attribute attribute) {
-        return shooter.getAttribute(attribute).getValue();
+        if (shooter == null) {
+            return 1.0D;
+        }
+        AttributeInstance instance = shooter.getAttribute(attribute);
+        if (instance == null) {
+            return 1.0D;
+        }
+        return instance.getValue();
     }
 }
