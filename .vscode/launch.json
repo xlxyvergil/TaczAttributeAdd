@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - TaczAttributeAdd",
+        "order": 0
+      },
+      "projectName": "TaczAttributeAdd",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtaa%%D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - TaczAttributeAdd",
+        "order": 1
+      },
+      "projectName": "TaczAttributeAdd",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtaa%%D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - TaczAttributeAdd",
+        "order": 2
+      },
+      "projectName": "TaczAttributeAdd",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtaa%%D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - TaczAttributeAdd",
+        "order": 3
+      },
+      "projectName": "TaczAttributeAdd",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dtaa%%D:\\TaczAttributeAdd\\TaczAttributeAdd 1.20.1\\TaczAttributeAdd\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}
