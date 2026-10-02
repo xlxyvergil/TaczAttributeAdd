@@ -30,6 +30,7 @@ import com.xlxyvergil.taa.client.renderer.BarRenderer;
 import com.xlxyvergil.taa.config.AttributeConfig;
 import com.xlxyvergil.taa.compat.kubejs.KubeJSEventHelper;
 import com.xlxyvergil.taa.modifier.*;
+import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.util.ApothicAttributesHelper;
 import com.xlxyvergil.taa.util.EntityAttributeHelper;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
@@ -178,16 +179,21 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // 爆炸范围和爆炸伤害（常驻显示）
+            // 与 TACZ ExplosionModifier.initCache 的兜底保持一致：枪械未配置爆炸数据时用默认值（半径 0.5、伤害 2），
+            // 否则原值会算成 0，无任何属性加成时也会错误显示差值
             ExplosionData originalExplosionData = gunData.getBulletData().getExplosionData();
-            float originalExplosionRadius = originalExplosionData != null ? originalExplosionData.getRadius() : 0f;
-            float originalExplosionDamage = originalExplosionData != null ? originalExplosionData.getDamage() : 0f;
+            if (originalExplosionData == null) {
+                originalExplosionData = new ExplosionData(false, 0.5f, 2, false, 30, false);
+            }
+            float originalExplosionRadius = originalExplosionData.getRadius();
+            float originalExplosionDamage = originalExplosionData.getDamage();
 
             ExplosionData modifiedExplosionData = cacheProperty.getCache(GunProperties.EXPLOSION);
-            if (modifiedExplosionData == null && originalExplosionData != null) {
+            if (modifiedExplosionData == null) {
                 modifiedExplosionData = originalExplosionData;
             }
-            float modifiedExplosionRadius = modifiedExplosionData != null ? modifiedExplosionData.getRadius() : originalExplosionRadius;
-            float modifiedExplosionDamage = modifiedExplosionData != null ? modifiedExplosionData.getDamage() : originalExplosionDamage;
+            float modifiedExplosionRadius = modifiedExplosionData.getRadius();
+            float modifiedExplosionDamage = modifiedExplosionData.getDamage();
 
             // 爆炸范围
             double explosionRadiusPercent = Mth.clamp(originalExplosionRadius / 5.0, 0, 1);
@@ -349,14 +355,11 @@ public class GunPropertyDiagramsMixin {
                 double ammoAmountPercent = Math.min(ammoAmount / 100.0, 1);
                 int ammoLength = barStartX + (int) (barMaxWidth * ammoAmountPercent);
 
-                int maxAmmoCount = ammoAmount;
-
-                Integer modifiedAmmoCount = cacheProperty.getCache(AmmoCountModifier.ID);
-                if (modifiedAmmoCount != null) {
-                    maxAmmoCount = AmmoCapacityHelper.computeFinalAmmoCapacity(
-                        modifiedAmmoCount, gunItem, player, ammoAmount, barrelBulletAmount
-                    );
-                }
+                int baseAmmoCount = AmmoCapacityHelper.resolveBaseCapacity(gunItem, gunData);
+                int maxAmmoCount = AmmoCapacityHelper.computeFinalAmmoCapacity(
+                        AmmoCapacityHelper.applyMagazineAttribute(baseAmmoCount, player),
+                        gunItem, player, baseAmmoCount, barrelBulletAmount
+                );
 
                 int addAmmoCount = maxAmmoCount - ammoAmount;
                 int addAmmoCountLength = (int) (barMaxWidth * addAmmoCount / (double) Math.max(ammoAmount, 1));
@@ -453,9 +456,13 @@ public class GunPropertyDiagramsMixin {
             if (gunData.getReloadData() != null && gunData.getReloadData().getFeed() != null) {
                 originalReloadTime = gunData.getReloadData().getFeed().getTacticalTime();
             }
-            Float reloadInverseMultiplier = cacheProperty.<Float>getCache(ReloadModifier.ID);
-            float reloadMultiplier = reloadInverseMultiplier != null ? (1.0f / reloadInverseMultiplier) : 1.0f;
-            float modifiedReloadTime = originalReloadTime / reloadMultiplier;
+            double reloadMultiplier = EntityAttributeHelper.getAttributeValue(
+                    player, EntityAttributeRegistry.RELOAD_TIME.get(), 1.0D);
+            float modifiedReloadTime = (float) (originalReloadTime * reloadMultiplier);
+            // 整合GunsmithLib换弹速度（由 GunsmithLib 自身在运行时生效，缓存已不含该项，这里仅用于显示）
+            if (GunsmithLibHelper.isGunsmithLibLoaded()) {
+                modifiedReloadTime /= (float) GunsmithLibHelper.getReloadSpeed(gunItem, 1.0);
+            }
 
             // 触发KubeJS事件，允许外部脚本修改显示值
             modifiedReloadTime = Math.max((float) kubejsDisplayValue(
@@ -839,10 +846,7 @@ public class GunPropertyDiagramsMixin {
             if (meleeData != null && meleeData.getDefaultMeleeData() != null) {
                 baseModifierDamage = meleeData.getDefaultMeleeData().getDamage();
             }
-            Float finalModifierDamage = cacheProperty.getCache(MeleeDamageModifier.ID);
-            if (finalModifierDamage == null) {
-                finalModifierDamage = baseModifierDamage;
-            }
+            float finalModifierDamage = EntityAttributeHelper.applyMeleeDamageAttribute(player1, baseModifierDamage);
             float baseTotalDamage = otherModifiers + baseModifierDamage;
             float finalTotalDamage = otherModifiers + finalModifierDamage;
             
@@ -872,11 +876,9 @@ public class GunPropertyDiagramsMixin {
             
             // ========== 近战距离显示 ==========
             float baseDistance = meleeData != null ? meleeData.getDistance() : 0.0f;
-            Float modifiedDistance = cacheProperty.getCache(MeleeModifier.ID);
-            if (modifiedDistance == null) {
-                modifiedDistance = baseDistance;
-            }
-            
+            float modifiedDistance = (float) (baseDistance + EntityAttributeHelper.getAttributeValueNonNegative(
+                    player, EntityAttributeRegistry.MELEE_DISTANCE.get(), 0.0D));
+
             // 触发KubeJS事件，允许外部脚本修改显示值
             modifiedDistance = Math.max((float) kubejsDisplayValue(
                 player, gunItem, "MELEE_DISTANCE", modifiedDistance, baseDistance

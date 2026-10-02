@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
@@ -18,24 +19,25 @@ import net.minecraft.world.item.ItemStack;
 public class AttachmentPropertyManagerMixin {
     
     @Inject(method = "postChangeEvent", at = @At("HEAD"), remap = false)
-    private static void onPostChangeEvent(LivingEntity shooter, ItemStack gunItem, org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
-        // 从gunItem中获取gunId并存储到上下文
-        if (gunItem != null) {
-            String gunType = getGunType(gunItem);
-            if (gunType != null) {
-                GunTypeContext.setGunType(gunType);
-            }
-        }
+    private static void onPostChangeEvent(LivingEntity shooter, ItemStack gunItem, CallbackInfo ci) {
+        // 压入当前枪型，供同步触发的事件监听器使用
+        GunTypeContext.pushGunType(getGunType(gunItem));
     }
     
-/**
-     * 通过Tacz API获取枪械类型
-     * 
-     * @param gunItem 枪械物品
-     * @return 枪械类型字符串，失败返回null
+    @Inject(method = "postChangeEvent", at = @At("RETURN"), remap = false)
+    private static void afterPostChangeEvent(LivingEntity shooter, ItemStack gunItem, CallbackInfo ci) {
+        // 无论 postChangeEvent 是否因非枪物品而提前返回，都必须成对弹出，避免上下文泄漏
+        GunTypeContext.popGunType();
+    }
+    
+    /**
+     * 通过 TACZ API 获取枪械类型，失败返回 null。
      */
     @Unique
     private static String getGunType(ItemStack gunItem) {
+        if (gunItem == null || gunItem.isEmpty()) {
+            return null;
+        }
         try {
             IGun iGun = IGun.getIGunOrNull(gunItem);
             if (iGun == null) {

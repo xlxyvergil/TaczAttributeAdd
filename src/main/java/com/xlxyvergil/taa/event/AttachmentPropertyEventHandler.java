@@ -33,7 +33,5 @@ public class AttachmentPropertyEventHandler {
         }
         
         PropertyCacheUpdater.updateCacheProperties(cacheProperty, results);
-        
-        GunTypeContext.clearGunType();
     }
 }

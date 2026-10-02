@@ -3,6 +3,9 @@ package com.xlxyvergil.taa.util;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.resource.pojo.data.gun.FeedType;
+import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.tacz.guns.util.AttachmentDataUtils;
+import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.compat.kubejs.KubeJSEventHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,16 +16,11 @@ import javax.annotation.Nullable;
 
 /**
  * 弹匣容量计算工具类
- * 统一应用 GunsmithLib → KubeJS 的完整兼容链
- * (GunsmithLib 不在 initCache 阶段计算，统一在此处应用，确保客户端/服务端值一致)
- * 所有 mixin 处统一调用此方法，确保行为一致
+ * 以 TACZ 原生容量（含扩容弹匣）为基数，依次套用玩家属性、GunsmithLib、KubeJS，
+ * 保证客户端/服务端值一致
  */
 public class AmmoCapacityHelper {
 
-    /**
-     * 检查指定枪械是否需要跳过弹匣容量修改
-     * 跳过条件：背包直读型（INVENTORY）
-     */
     public static boolean shouldSkipCapacityModifier(ItemStack gunItem) {
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun == null) {
@@ -45,20 +43,45 @@ public class AmmoCapacityHelper {
     }
 
     /**
-     * 应用完整的兼容链计算最终弹匣容量
-     * 顺序: GunsmithLib → KubeJS
-     * (GunsmithLib 不在 initCache 阶段计算，统一在此处应用，确保客户端/服务端值一致)
-     * <p>
-     * 注意：对于 {@link FeedType#INVENTORY} 类型的枪械（背包直读型），
-     * 会跳过所有修改，直接返回原始值 + 枪膛子弹。
-     *
-     * @param baseValue         从 cache 获取的 modifiedAmmoCount
-     * @param gunItem           枪械物品
-     * @param shooter           射击者实体（用于 KubeJS，为 null 则跳过）
-     * @param originalValue     原始值（用于 KubeJS 计算差值，传 0 则跳过）
-     * @param barrelBulletAmount 枪膛中的子弹数（通常为 0 或 1）
-     * @return 最终弹匣容量，至少为 1
+     * TACZ 原生基础容量（含扩容弹匣），等价于 {@link AttachmentDataUtils#getAmmoCountWithAttachment}。
+     * 展示层直接调用，避免再次触发该方法的拦截而导致重复计算。
      */
+    public static int resolveBaseCapacity(ItemStack gunItem, GunData gunData) {
+        int[] extendedMagAmmoAmount = gunData.getExtendedMagAmmoAmount();
+        if (extendedMagAmmoAmount == null) {
+            return gunData.getAmmoAmount();
+        }
+        int level = AttachmentDataUtils.getMagExtendLevel(gunItem, gunData);
+        if (level <= 0 || level > extendedMagAmmoAmount.length) {
+            return gunData.getAmmoAmount();
+        }
+        return extendedMagAmmoAmount[level - 1];
+    }
+
+    /**
+     * 基础容量 × 玩家弹匣容量属性（默认 1.0，无加成），结果不小于 1。
+     */
+    public static int applyMagazineAttribute(int base, @Nullable LivingEntity shooter) {
+        double factor = EntityAttributeHelper.getAttributeValue(
+                shooter, EntityAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
+        int result = (int) (base * factor);
+        return Math.max(result, 1);
+    }
+
+    /**
+     * 以 TACZ 原生容量为基数，套用玩家属性与兼容链（GunsmithLib / KubeJS）算出最终容量。
+     * 无射击者或该枪为背包直读型时，原样返回 original。
+     *
+     * @param original TACZ 原生容量（含扩容弹匣），仅在 KubeJS 兼容中作为原值参数使用
+     */
+    public static int applyCapacity(int original, ItemStack gunItem, @Nullable LivingEntity shooter) {
+        if (shooter == null || shouldSkipCapacityModifier(gunItem)) {
+            return original;
+        }
+        int base = applyMagazineAttribute(original, shooter);
+        return computeFinalAmmoCapacity(base, gunItem, shooter, original, 0);
+    }
+
     public static int computeFinalAmmoCapacity(
             int baseValue,
             ItemStack gunItem,
@@ -74,8 +97,6 @@ public class AmmoCapacityHelper {
         }
 
         // 1. GunsmithLib 兼容
-        // initCache 阶段不应用 GunsmithLib（客户端/服务端反射结果不一致），
-        // 统一在此处应用，确保所有路径使用同一值
         result = GunsmithLibHelper.getAmmoCapacity(gunItem, result);
 
         // 2. KubeJS 兼容（仅在 KubeJS 加载且有射击者时触发）
