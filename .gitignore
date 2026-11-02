@@ -13,3 +13,6 @@ debug
 .gradle/8.4/fileHashes/fileHashes.lock
 .gradle/buildOutputCleanup/buildOutputCleanup.lock
 .gradle/buildOutputCleanup/outputFiles.bin
+/.mcdev
+/run-server
+/run

@@ -13,8 +13,10 @@ import com.tacz.guns.resource.pojo.data.gun.Ignite;
 import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 import com.tacz.guns.resource.pojo.data.gun.MoveSpeed;
 import com.xlxyvergil.taa.api.ExtendedGunProperties;
+import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 
 import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.world.entity.LivingEntity;
 
 /**
  * 基于缓存属性与实体属性计算枪械各项数值
@@ -25,6 +27,85 @@ public class PropertyCalculator {
     
     public PropertyCalculator(EntityAttributeHelper entityAttribute) {
         this.entityAttribute = entityAttribute;
+    }
+    
+    // ==================== 换弹速度 ====================
+    // 换弹数据（reload.feed / reload.cooldown）不在 AttachmentCacheProperty 里，也没有对应的
+    // GunProperties 键，所以换弹速度只能按「基础耗时 × 玩家倍率」现场计算，无法进入
+    // calculateAllProperties 的缓存流程。下面这几个静态方法就是换弹速度的唯一计算入口，
+    // 换弹时长的三个消费者（GunReloadTime 拦截、服务端脚本时钟、客户端动画速度）以及属性面板
+    // 必须全部从这里取值，任何一处自行读属性都会导致各条时间线脱钩。
+    
+    /**
+     * 换弹耗时倍率下限：0.1，即最多加速到 10 倍。
+     * <p>
+     * 再快没有意义：服务端换弹状态机按 tick（50ms）推进，总时长压到几十毫秒就会被整段吞掉，
+     * 反而会重新出现「动画播完却没装弹」的脱钩，因此把倍率夹在这个硬下限上。
+     */
+    public static final double MIN_RELOAD_SPEED_MULTIPLIER = 0.1D;
+    
+    /**
+     * 换弹耗时倍率（玩家 {@code reload_time} 属性）。
+     * <p>
+     * 语义是「耗时倍率」而不是「速度倍率」：小于 1 表示换弹更快，1.0 为原速。
+     *
+     * @return 已夹到 {@link #MIN_RELOAD_SPEED_MULTIPLIER} 的倍率
+     */
+    public static double getReloadSpeedMultiplier(LivingEntity shooter) {
+        double value = EntityAttributeHelper.getAttributeValue(
+                shooter, EntityAttributeRegistry.RELOAD_TIME.get(), 1.0D);
+        return Math.max(value, MIN_RELOAD_SPEED_MULTIPLIER);
+    }
+    
+    /**
+     * 时间推进速率 = 1 / 换弹耗时倍率。
+     * <p>
+     * 用于「按真实时间推进、需要被加速」的消费者：客户端动画进度（alphaProgress）、
+     * 服务端脚本时钟 —— 它们要的是「同一段真实时间里能走过多少动画/脚本时间」。
+     *
+     * @return 1.0 为原速，2.0 为两倍速
+     */
+    public static double getReloadTimeScale(LivingEntity shooter) {
+        return 1.0D / getReloadSpeedMultiplier(shooter);
+    }
+    
+    /**
+     * 换弹时长（秒）= 枪包基础时长 × 换弹耗时倍率。
+     *
+     * @param baseTime 枪包里的原始换弹时长
+     * @return 玩家实际需要的换弹时长
+     */
+    public static float calculateReloadTime(float baseTime, LivingEntity shooter) {
+        return (float) (baseTime * getReloadSpeedMultiplier(shooter));
+    }
+    
+    /**
+     * 换弹时长（毫秒）= 基础毫秒 / 换弹耗时倍率。
+     * <p>
+     * 脚本枪的 Lua 侧比较的是 {@code api:getReloadTime()}（真实流逝的墙钟毫秒）与
+     * {@code script_param} 的毫秒阈值，因此这里把「已流逝的真实时间」换算成
+     * 「脚本应当认为已流逝的时间」，让脚本整条时间线等比缩短。
+     *
+     * @param elapsedMillis 真实流逝的毫秒数
+     * @return 换算后的脚本时间
+     */
+    public static long calculateReloadTime(long elapsedMillis, LivingEntity shooter) {
+        return (long) (elapsedMillis / getReloadSpeedMultiplier(shooter));
+    }
+    
+    /**
+     * 拉栓时间（毫秒）= 已流逝的真实毫秒 / 换弹耗时倍率。
+     * <p>
+     * 拉栓（bolt action）与换弹共用同一份「动作耗时倍率」：如果只加速换弹而让拉栓保持原速
+     * （如 SPAS-12 的 {@code bolt_time} 0.53s），倍率压得越低，射速瓶颈就越会转移到拉栓上，
+     * 换弹加速的收益被吃掉。因此这里和 {@link #calculateReloadTime(long, LivingEntity)}
+     * 用同一个倍率、同一套下限，只是命名上把消费者区分开。
+     *
+     * @param elapsedMillis 真实流逝的毫秒数
+     * @return 换算后的脚本/拉栓逻辑时间
+     */
+    public static long calculateBoltTime(long elapsedMillis, LivingEntity shooter) {
+        return calculateReloadTime(elapsedMillis, shooter);
     }
     
     public PropertyCalculationResults calculateAllProperties(AttachmentCacheProperty cacheProperty) {
