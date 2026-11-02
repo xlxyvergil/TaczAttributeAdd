@@ -36,6 +36,8 @@ import com.xlxyvergil.taa.util.EntityAttributeHelper;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 import com.xlxyvergil.taa.util.GunsmithLibHelper;
 import com.xlxyvergil.taa.util.HeatAttributeHelper;
+import com.xlxyvergil.taa.util.PropertyCalculator;
+import com.xlxyvergil.taa.util.ReloadTimeScope;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -452,13 +454,19 @@ public class GunPropertyDiagramsMixin {
             yOffset[0] += 10;
             
             // ========== 装填时间显示 ==========
+            // 面板要「枪包原始耗时」与「实际耗时」两个值。原始值必须走 ReloadTimeScope 读取：
+            // GunReloadTimeMixin 会拦 getTacticalTime 并乘上倍率，若这里再乘一次，差值会被放大成两倍。
+            // 实际值统一由 PropertyCalculator 计算（含 0.1 下限），与换弹时长、脚本时钟、动画速度同源。
             float originalReloadTime = 0.0f;
             if (gunData.getReloadData() != null && gunData.getReloadData().getFeed() != null) {
-                originalReloadTime = gunData.getReloadData().getFeed().getTacticalTime();
+                ReloadTimeScope.enterAuthoredTimeRead();
+                try {
+                    originalReloadTime = gunData.getReloadData().getFeed().getTacticalTime();
+                } finally {
+                    ReloadTimeScope.exitAuthoredTimeRead();
+                }
             }
-            double reloadMultiplier = EntityAttributeHelper.getAttributeValue(
-                    player, EntityAttributeRegistry.RELOAD_TIME.get(), 1.0D);
-            float modifiedReloadTime = (float) (originalReloadTime * reloadMultiplier);
+            float modifiedReloadTime = PropertyCalculator.calculateReloadTime(originalReloadTime, player);
             // 整合GunsmithLib换弹速度（由 GunsmithLib 自身在运行时生效，缓存已不含该项，这里仅用于显示）
             if (GunsmithLibHelper.isGunsmithLibLoaded()) {
                 modifiedReloadTime /= (float) GunsmithLibHelper.getReloadSpeed(gunItem, 1.0);

@@ -30,9 +30,11 @@
     "GunMeleeDataMixin",
     "GunReloadTimeMixin",
     "MeleeDataMixin",
+    "ModernKineticGunItemDefaultReloadMixin",
     "ModernKineticGunItemHeatMixin",
     "ModernKineticGunItemMeleeContextMixin",
     "ModernKineticGunItemMixin",
+    "ModernKineticGunScriptAPIClockMixin",
     "ModernKineticGunScriptAPIContextMixin",
     "ModernKineticGunScriptAPIShootMixin"
   ],
