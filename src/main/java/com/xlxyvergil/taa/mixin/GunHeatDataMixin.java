@@ -38,4 +38,16 @@ public class GunHeatDataMixin {
         LivingEntity shooter = ShooterContext.getShooter();
         return HeatAttributeHelper.getModifiedOverHeatTime(shooter, original);
     }
+
+    /**
+     * TACZ 1.2.0 新增：枪收起后在背包里逐 tick 散热（inventory_cooling_per_tick）。
+     * 与冷却倍率共用同一属性倍率，使「散热快」对随身散热的枪同样成立。
+     * 该字段默认为 0（关闭），倍率作用于 0 仍是 0，因此未使用此字段的枪包行为不变。
+     * TACZ 1.1.x 没有此方法，require = 0 使其在这些版本上静默跳过。
+     */
+    @ModifyReturnValue(method = "getInventoryCoolingPerTick", at = @At("RETURN"), require = 0)
+    private float taa$modifyInventoryCoolingPerTick(float original) {
+        LivingEntity shooter = ShooterContext.getShooter();
+        return HeatAttributeHelper.getModifiedCoolingMultiplier(shooter, original);
+    }
 }
