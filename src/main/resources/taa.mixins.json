@@ -13,7 +13,6 @@
     "CameraSetupEventMixin",
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
-    "GunPropertyDiagramsMixin",
     "HeatBarOverlayMixin",
     "client.TaaClientPacketListenerMixin"
   ],
