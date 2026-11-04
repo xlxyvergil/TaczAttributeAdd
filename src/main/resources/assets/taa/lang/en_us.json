@@ -54,5 +54,7 @@
   "gui.tacz.gun_refit.property_diagrams.heat_max": "Heat Capacity",
   "gui.tacz.gun_refit.property_diagrams.heat_cooling": "Cooling Rate",
   "gui.tacz.gun_refit.property_diagrams.heat_cooling_delay": "Cooling Delay",
-  "gui.tacz.gun_refit.property_diagrams.heat_overheat_time": "Lock Time"
+  "gui.tacz.gun_refit.property_diagrams.heat_overheat_time": "Lock Time",
+  "gui.tacz.gun_refit.property_diagrams.explosion_radius": "Explosion Radius",
+  "gui.tacz.gun_refit.property_diagrams.explosion_damage": "Explosion Damage"
 }

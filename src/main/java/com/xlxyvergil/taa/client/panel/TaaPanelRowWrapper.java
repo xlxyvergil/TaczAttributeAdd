@@ -5,6 +5,7 @@ import com.tacz.guns.api.modifier.IAttachmentModifier;
 import com.tacz.guns.api.modifier.JsonProperty;
 import com.tacz.guns.resource.modifier.AttachmentCacheProperty;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
+import com.xlxyvergil.taa.modifier.BulletCountModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -56,9 +57,10 @@ public final class TaaPanelRowWrapper implements IAttachmentModifier<Object, Obj
         return this.delegate.getOptionalFields();
     }
 
-    // getOptionalFieldList() 是 TACZ 1.2.0 才有的接口方法；当前编译目标仍是 1.1.7 的 jar，
-    // 所以这里只转发 getOptionalFields()（1.2.0 的默认实现会用它推导列表）。
-    // 依赖升到 1.2.0 之后可以补上 getOptionalFieldList() 的直接转发。
+    @Override
+    public List<String> getOptionalFieldList() {
+        return this.delegate.getOptionalFieldList();
+    }
 
     @Override
     public JsonProperty<Object> readJson(String json) {
@@ -77,6 +79,10 @@ public final class TaaPanelRowWrapper implements IAttachmentModifier<Object, Obj
 
     @Override
     public int getDiagramsDataSize() {
+        if (BulletCountModifier.ID.equals(this.delegate.getId())) {
+            // TACZ 的 bullet_count 修改器不上面板（size 0），这一行由本模组补画
+            return 1;
+        }
         return this.delegate.getDiagramsDataSize();
     }
 
@@ -84,6 +90,11 @@ public final class TaaPanelRowWrapper implements IAttachmentModifier<Object, Obj
     @OnlyIn(Dist.CLIENT)
     public List<DiagramsData> getPropertyDiagramsData(ItemStack gunItem, GunData gunData,
                                                       AttachmentCacheProperty cacheProperty) {
+        if (BulletCountModifier.ID.equals(this.delegate.getId())) {
+            TaaPanelRows.remember(gunData);
+            DiagramsData row = TaaPanelRows.bulletCount(gunItem, gunData, cacheProperty);
+            return row == null ? List.of() : List.of(row);
+        }
         List<DiagramsData> rows = this.delegate.getPropertyDiagramsData(gunItem, gunData, cacheProperty);
         if (rows == null || rows.isEmpty()) {
             return rows == null ? List.of() : rows;

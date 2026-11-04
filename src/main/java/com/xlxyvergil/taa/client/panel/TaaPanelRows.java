@@ -36,6 +36,7 @@ import com.xlxyvergil.taa.util.HeatAttributeHelper;
 import com.xlxyvergil.taa.util.KuvaLichIntegrationHelper;
 import com.xlxyvergil.taa.util.PropertyCalculator;
 import com.xlxyvergil.taa.util.ReloadTimeScope;
+import com.xlxyvergil.taa.modifier.BulletCountModifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -116,6 +117,7 @@ public final class TaaPanelRows {
     private static final double SCALE_HEAT_COOLING = 3.0;
     private static final double SCALE_HEAT_DELAY_MS = 2000.0;
     private static final double SCALE_HEAT_LOCK_MS = 5000.0;
+    private static final double SCALE_BULLET_COUNT = 10.0;
 
     private TaaPanelRows() {
     }
@@ -352,23 +354,25 @@ public final class TaaPanelRows {
 
     /** 过热行数：供 {@code getDiagramsDataSize()} 使用。 */
     public static int heatRowCount() {
+        // 优先看主手：改装界面画背景时用的是 getHidePropertyButtonYOffset()，
+        // 那一刻本帧的行数据还没生成，读「上一次绘制记住的枪」会慢一帧（换枪时高度跳一下）。
+        ItemStack stack = null;
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+            stack = player.getMainHandItem();
+            IGun iGun = IGun.getIGunOrNull(stack);
+            if (iGun != null) {
+                return TimelessAPI.getCommonGunIndex(iGun.getGunId(stack))
+                        .map(index -> index.getGunData().getHeatData() != null ? 4 : 0)
+                        .orElse(0);
+            }
+        }
+        // 主手不是枪（理论上改装界面不会这样）时退回上一次绘制记住的枪
         GunData remembered = lastGunData;
         if (remembered != null) {
             return remembered.getHeatData() != null ? 4 : 0;
         }
-        // 面板还没画过一次时退化成主手武器
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) {
-            return 0;
-        }
-        ItemStack stack = player.getMainHandItem();
-        IGun iGun = IGun.getIGunOrNull(stack);
-        if (iGun == null) {
-            return 0;
-        }
-        return TimelessAPI.getCommonGunIndex(iGun.getGunId(stack))
-                .map(index -> index.getGunData().getHeatData() != null ? 4 : 0)
-                .orElse(0);
+        return 0;
     }
 
     // ==================== TACZ 自有行的改写 ====================
@@ -397,7 +401,7 @@ public final class TaaPanelRows {
             case KEY_DAMAGE:
                 return rewriteDamage(player, gunItem, gunData, cache, adjust, original);
             case KEY_HEAD_SHOT:
-                return rewriteHeadShot(player, gunItem, gunData, adjust, original);
+                return rewriteHeadShot(player, gunItem, gunData, cache, adjust, original);
             case KEY_RPM:
                 // 连发模式显示的是 bpm，与本模组的射速属性不是同一口径，原样保留
                 return fireMode == FireMode.BURST ? original : rewriteRpm(player, gunItem, gunData, cache, fireMode, original);
@@ -456,14 +460,17 @@ public final class TaaPanelRows {
     }
 
     private static DiagramsData rewriteHeadShot(LocalPlayer player, ItemStack gunItem, GunData gunData,
-                                                @Nullable GunFireModeAdjustData adjust, DiagramsData original) {
+                                                AttachmentCacheProperty cache, @Nullable GunFireModeAdjustData adjust,
+                                                DiagramsData original) {
         ExtraDamage extraDamage = gunData.getBulletData().getExtraDamage();
         float base = extraDamage != null ? extraDamage.getHeadShotMultiplier() : 0;
         if (adjust != null) {
             base += adjust.getHeadShotMultiplier();
         }
         base *= SyncConfig.HEAD_SHOT_BASE_MULTIPLIER.get();
-        float modified = base;
+        // 先取缓存值：配件与属性的爆头加成都在这里，漏掉这一步面板就只剩枪包原值
+        Float cached = cache.getCache(HeadShotModifier.ID);
+        float modified = cached != null ? cached : base;
         if (GunsmithLibHelper.isGunsmithLibLoaded()) {
             modified = (float) GunsmithLibHelper.getHeadshotMultiplier(gunItem, modified);
         }
@@ -663,6 +670,36 @@ public final class TaaPanelRows {
             return 0;
         }
         return Math.max(Math.abs(value[0]), Math.abs(value[1]));
+    }
+
+    /**
+     * 「弹头数量」行。TACZ 的 bullet_count 修改器不上面板（{@code getDiagramsDataSize} 为 0、
+     * {@code getPropertyDiagramsData} 返回空），由本模组补一行，数值取
+     * {@link BulletCountModifier} 写进缓存的弹丸数，再叠 KuvaLich 与 KubeJS。
+     */
+    @Nullable
+    public static DiagramsData bulletCount(ItemStack gunItem, GunData gunData,
+                                           AttachmentCacheProperty cacheProperty) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        BulletData bulletData = gunData.getBulletData();
+        float base = Math.max(bulletData.getBulletAmount(), 1);
+        Integer cached = cacheProperty.getCache(BulletCountModifier.ID);
+        float modified = cached == null ? base : cached.floatValue();
+        if (player != null) {
+            float kuva = KuvaLichIntegrationHelper.getMultishotMod(gunItem, player);
+            if (kuva != 0) {
+                modified = modified * (1 + kuva);
+            }
+            modified = (float) kubejsDisplayValue(player, gunItem, "BULLET_COUNT", modified, base);
+        }
+        modified = Math.max(modified, 0f);
+        int shown = Math.round(modified);
+        int shownDiff = Math.round(modified - base);
+        // 弹丸越多越好
+        return row("gui.tacz.gun_refit.property_diagrams.bullet_count", base, modified, SCALE_BULLET_COUNT,
+                String.format("%d §a(+%d)", shown, shownDiff),
+                String.format("%d §c(%d)", shown, shownDiff),
+                String.format("%d", shown), true);
     }
 
     // ==================== 工具 ====================

@@ -217,8 +217,14 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    // TACZ
-    implementation fg.deobf("curse.maven:timeless-and-classics-zero-1028108:8055552")
+    // TACZ —— 使用 libs 目录里的本地构建（当前为最新版），不再从 CurseForge 拉旧版本。
+    // 必须走 flatDir 坐标而不是 files(...)：TACZ 的 jar 是生产（reobf/SRG）构建，
+    // 里面既有 SRG 类名也有需要反转的 tacz.refmap.json。只有 flatDir + fg.deobf 这条路径
+    // ForgeGradle 才能真正做 deobf 并重写 refmap；用 files(...) 会打印
+    // "Cannot deobfuscate dependency ... using obfuscated version"，编译能过但开发运行时
+    // 会以 @Shadow field f_9743_ 崩溃。
+    // 依赖文件：libs/tacz-1.2.0.jar（= tacz-1.20.1-1026-094236-all.jar 的副本，仅供 flatDir 解析名字）
+    implementation fg.deobf("local:tacz:1.2.0")
 
     // KuvaLich - 可选依赖（编译时需要，运行时可选）
     compileOnly fg.deobf("curse.maven:kuvalich-996638:7979035")

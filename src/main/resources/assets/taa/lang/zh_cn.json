@@ -54,5 +54,7 @@
   "gui.tacz.gun_refit.property_diagrams.heat_max": "过热上限",
   "gui.tacz.gun_refit.property_diagrams.heat_cooling": "散热速度",
   "gui.tacz.gun_refit.property_diagrams.heat_cooling_delay": "冷却延迟",
-  "gui.tacz.gun_refit.property_diagrams.heat_overheat_time": "锁枪时间"
+  "gui.tacz.gun_refit.property_diagrams.heat_overheat_time": "锁枪时间",
+  "gui.tacz.gun_refit.property_diagrams.explosion_radius": "爆炸范围",
+  "gui.tacz.gun_refit.property_diagrams.explosion_damage": "爆炸伤害"
 }
