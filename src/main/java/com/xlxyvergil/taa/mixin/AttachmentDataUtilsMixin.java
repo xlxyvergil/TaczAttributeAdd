@@ -3,6 +3,7 @@ package com.xlxyvergil.taa.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.tacz.guns.resource.pojo.data.gun.GunData;
 import com.tacz.guns.util.AttachmentDataUtils;
+import com.xlxyvergil.taa.context.PanelDrawScope;
 import com.xlxyvergil.taa.context.ShooterContext;
 import com.xlxyvergil.taa.util.AmmoCapacityHelper;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +21,10 @@ public class AttachmentDataUtilsMixin {
     @ModifyReturnValue(method = "getAmmoCountWithAttachment", at = @At("RETURN"))
     private static int modifyAmmoCountWithAttachment(int original, ItemStack gunItem, GunData gunData) {
         LivingEntity shooter = ShooterContext.getShooter();
+        if (shooter == null) {
+            // 属性面板绘制期没有射击者上下文，用观看者保证面板显示的容量同样吃属性
+            shooter = PanelDrawScope.getViewer();
+        }
         return AmmoCapacityHelper.applyCapacity(original, gunItem, shooter);
     }
 }

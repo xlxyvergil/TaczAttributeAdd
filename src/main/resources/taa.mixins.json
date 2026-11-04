@@ -13,7 +13,8 @@
     "client.AttachmentPropertyManagerPanelMixin",
     "CameraSetupEventMixin",
     "ClientGunTooltipMixin",
-    "client.animation.ObjectAnimationRunnerMixin",
+    "client.Animation.ObjectAnimationRunnerMixin",
+    "client.GunPropertyDiagramsPanelScopeMixin",
     "HeatBarOverlayMixin",
     "client.TaaClientPacketListenerMixin"
   ],
