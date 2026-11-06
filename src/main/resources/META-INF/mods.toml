@@ -19,6 +19,6 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="tacz"
 mandatory=true
-versionRange="[${tacz_version},)"
+versionRange="${tacz_version_range}"
 ordering="NONE"
 side="BOTH"
