@@ -36,7 +36,7 @@ public class ModernKineticGunItemHeatMixin {
      * 它内部读取 GunHeatData.getInventoryCoolingPerTick()，但不携带射击者上下文。
      * 这里为该调用压入「物品所在实体」作为射击者，使 GunHeatDataMixin 里的
      * 散热倍率能被正确取到；非生物容器（箱子/展示框等）压入 null，倍率回落 1.0。
-     * TACZ 1.1.x 的 ModernKineticGunItem 未覆写 inventoryTick，require = 0 使其静默跳过。
+     * 旧版本若没有该覆写或该字段，require = 0 会让这两处注入静默跳过。
      */
 
     @Inject(method = "inventoryTick", at = @At("HEAD"), require = 0)

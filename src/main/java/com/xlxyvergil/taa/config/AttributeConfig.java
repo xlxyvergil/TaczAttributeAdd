@@ -7,20 +7,23 @@ import net.minecraftforge.fml.config.ModConfig;
 /**
  * 属性配置类
  * 用于管理枪械伤害计算模式等配置项
+ * 配置规约在下面的静态块里一次性构建，再由 {@link #register()} 注册成 taa-attributes.toml；
+ * 服务端用它决定弹丸伤害怎么算，客户端用它决定属性面板里暴击相关文本显示成什么。
  */
 public class AttributeConfig {
     
+    // 配置构建器与最终规约：静态块内 push/pop 分区并定义各项，末尾 build 出 SPEC
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
     
-    // 枪械伤害计算模式配置
+    // 枪械伤害计算模式配置（服务端结算弹丸伤害时按此分支）
     public static final ForgeConfigSpec.EnumValue<DamageCalculationMode> DAMAGE_CALCULATION_MODE;
     
-    // 暴击属性命名空间配置
+    // 暴击属性命名空间配置（填属性注册名，默认指向 Apothic Attributes 提供的暴击属性）
     public static final ForgeConfigSpec.ConfigValue<String> CRIT_CHANCE_ATTRIBUTE;
     public static final ForgeConfigSpec.ConfigValue<String> CRIT_DAMAGE_ATTRIBUTE;
     
-    // 语言配置
+    // 语言配置（决定属性面板取中文还是英文显示名）
     public static final ForgeConfigSpec.EnumValue<DisplayLanguage> DISPLAY_LANGUAGE;
     
     // 中文显示名称
@@ -89,6 +92,8 @@ public class AttributeConfig {
     
     /**
      * 枪械伤害计算模式枚举
+     * 决定通用枪械伤害加成与具体枪种加成如何组合：ONLY_SPECIFIC 只取枪种加成、
+     * ONLY_GENERIC 只取通用加成、MULTIPLY 两者相乘（默认）。
      */
     public enum DamageCalculationMode {
         ONLY_SPECIFIC("仅专属"),
@@ -108,6 +113,7 @@ public class AttributeConfig {
     
     /**
      * 显示语言枚举
+     * 只影响名称类配置项的选取（中文名/英文名），不改变属性 ID，也不影响任何数值。
      */
     public enum DisplayLanguage {
         ZH("中文"),
@@ -124,10 +130,19 @@ public class AttributeConfig {
         }
     }
     
+    /**
+     * 向 Forge 注册配置文件
+     * 以 COMMON 类型注册为 taa-attributes.toml，在 Mod 构造函数里调用一次。用 COMMON 而不是 SERVER，
+     * 是因为这份配置两端都要读：伤害计算模式只在服务端生效，显示名称只在客户端面板生效。
+     */
     public static void register() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC, "taa-attributes.toml");
     }
 
+    /**
+     * 当前生效的伤害计算模式
+     * 直接读配置值：本分支既没有服务端下发，也没有客户端缓存覆盖。
+     */
     public static DamageCalculationMode getDamageCalculationMode() {
         return DAMAGE_CALCULATION_MODE.get();
     }

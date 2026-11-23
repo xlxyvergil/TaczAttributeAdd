@@ -22,6 +22,14 @@ import javax.annotation.Nullable;
  */
 public class AmmoCapacityHelper {
 
+    /**
+     * 判断该枪是否应跳过所有容量修改
+     * 背包直读型（{@link FeedType#INVENTORY}，装填时直接消耗背包里的弹药、不经过弹匣）容量没有意义；
+     * 枪械数据解析不出来时按「不跳过」处理，交由后续步骤原样返回。
+     *
+     * @param gunItem 枪械物品
+     * @return true 表示不要应用容量属性与兼容链
+     */
     public static boolean shouldSkipCapacityModifier(ItemStack gunItem) {
         IGun iGun = IGun.getIGunOrNull(gunItem);
         if (iGun == null) {
@@ -116,6 +124,18 @@ public class AmmoCapacityHelper {
         return Math.min(capacity, originalAmmoAmount);
     }
 
+    /**
+     * 在已算好「基数 + 枪管附加弹数」的基础上，依次套用兼容链得出最终容量。
+     * 顺序固定为 GunsmithLib → KuvaLich → KubeJS，与展示层保持一致；
+     * KubeJS 需要射击者（用于脚本事件上下文），没有射击者时跳过该步。
+     *
+     * @param baseValue 已含玩家容量属性或 TACZ 原生容量的基数
+     * @param gunItem 枪械物品
+     * @param shooter 射击者，可为 null（服务端无实体上下文时）
+     * @param originalValue 未修改的原值，仅作为 KubeJS 事件的原值参数
+     * @param barrelBulletAmount 枪管部件带来的额外弹数
+     * @return 最终容量，最低为 1
+     */
     public static int computeFinalAmmoCapacity(
             int baseValue,
             ItemStack gunItem,

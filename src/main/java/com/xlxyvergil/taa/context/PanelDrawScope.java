@@ -20,11 +20,19 @@ public class PanelDrawScope {
 
     private PanelDrawScope() {}
 
+    /**
+     * 进入面板绘制期：记录观看者并把嵌套计数加一
+     * 每次 enter 都必须配一次 {@link #exit()}；面板绘制可能被其它读取嵌套，计数归零才算真正离开。
+     */
     public static void enter(LivingEntity viewer) {
         SHOOTER.set(viewer);
         DEPTH.get()[0]++;
     }
 
+    /**
+     * 离开面板绘制期：计数减一到 0 时清理 ThreadLocal，避免残留观看者引用
+     * 计数已是 0 时不处理，防止多调一次就把状态减成负数。
+     */
     public static void exit() {
         int[] depth = DEPTH.get();
         if (depth[0] > 0) {
@@ -36,22 +44,38 @@ public class PanelDrawScope {
         }
     }
 
+    /**
+     * 当前面板绘制的观看者；不在绘制期返回 null
+     * 由 {@code GunDataContextMixin}、{@code AttachmentDataUtilsMixin} 在 TACZ 取值时读取。
+     */
     public static LivingEntity getViewer() {
         return SHOOTER.get();
     }
 
+    /**
+     * 当前是否处于面板绘制期（只看观看者是否已设置，不看嵌套计数）
+     */
     public static boolean isActive() {
         return SHOOTER.get() != null;
     }
 
+    /**
+     * 容量计算期间为 true，供 {@code getAmmoAmount()} 判断本次读取是否由本模组自己的计算引起
+     */
     public static boolean isComputing() {
         return COMPUTING.get()[0];
     }
 
+    /**
+     * 标记开始计算容量：AmmoCapacityHelper 计算期间置位，避免求容量时再次走 TACZ 的取值入口造成递归
+     */
     public static void beginCompute() {
         COMPUTING.get()[0] = true;
     }
 
+    /**
+     * 结束容量计算并清除标记（直接 remove，重复调用也安全）
+     */
     public static void endCompute() {
         COMPUTING.remove();
     }

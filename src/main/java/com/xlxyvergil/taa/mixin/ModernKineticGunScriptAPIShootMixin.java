@@ -10,6 +10,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
+/**
+ * 弹头数属性生效点：shootOnce 用 {@code Math.max(弹匣余量, 1)} 决定本次射出的弹头数，
+ * 这里拦截该调用的结果，改为 {@link BulletCountModifier} 计算出的玩家弹头数（至少 1）。
+ * 通过 {@code @ModifyExpressionValue} 改写第一次 {@code Math.max(II)I} 的返回值；
+ * require = 0 保证 TACZ 调整调用点时只跳过注入，不影响开火。
+ */
 @Mixin(value = ModernKineticGunScriptAPI.class, remap = false)
 public class ModernKineticGunScriptAPIShootMixin {
     

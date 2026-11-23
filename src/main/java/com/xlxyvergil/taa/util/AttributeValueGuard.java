@@ -1,16 +1,38 @@
 package com.xlxyvergil.taa.util;
 
 /**
- * 保证属性值不低于最小值
+ * 属性值保护工具类
+ * 确保属性计算后的值不会低于最小阈值，避免为 0 导致的问题
+ * （属性值为 0 或负数时，倍率相乘会直接把枪械数值清零）
  */
 public class AttributeValueGuard {
     
+    /**
+     * 属性值的最小阈值
+     * 任何计算后的属性值都不应低于此值
+     */
     public static final double MIN_ATTRIBUTE_VALUE = 0.01D;
     
+    /**
+     * 确保属性值不低于最小阈值
+     * 属性均为倍率，0.01 相当于保留 1% 的数值，防止后续乘法把结果压成 0
+     *
+     * @param value 原始属性值
+     * @return 保护后的属性值（最低为 0.01）
+     */
     public static double clamp(double value) {
         return Math.max(value, MIN_ATTRIBUTE_VALUE);
     }
     
+    /**
+     * 确保属性值在指定范围内
+     * 下限取 max(min, 0.01)，即调用方给的下限也不允许低于最小阈值
+     *
+     * @param value 原始属性值
+     * @param min 业务下限
+     * @param max 业务上限
+     * @return 限制后的属性值
+     */
     public static double clamp(double value, double min, double max) {
         double clamped = Math.max(value, Math.max(min, MIN_ATTRIBUTE_VALUE));
         return Math.min(clamped, max);

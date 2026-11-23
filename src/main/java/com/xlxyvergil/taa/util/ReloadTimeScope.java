@@ -11,9 +11,13 @@ package com.xlxyvergil.taa.util;
  *     由 {@code ModernKineticGunItemDefaultReloadMixin} 打标，供
  *     {@code ModernKineticGunScriptAPIClockMixin} 读取；</li>
  *     <li>{@link #enterAuthoredTimeRead()} —— 需要拿到枪包原始耗时（未乘倍率）的场合，
- *     目前只有属性面板的数值对比，由 {@code GunPropertyDiagramsMixin} 打标，供
- *     {@code GunReloadTimeMixin} 读取，避免「原值已被乘过、再乘一次」导致面板差值翻倍。</li>
+ *     目前只有属性面板的数值对比（{@code TaaPanelRows#reload}），由它在读
+ *     {@code getFeed().getTacticalTime()} 前后打标，供 {@code GunReloadTimeMixin} 读取，
+ *     避免「原值已被乘过、再乘一次」导致面板差值翻倍。</li>
  * </ul>
+ * <p>
+ * 两种标记都放在 {@link ThreadLocal} 上：换弹逻辑可能在服务端和客户端线程各自执行，
+ * 用全局布尔会把两条线程的状态串在一起。
  */
 public final class ReloadTimeScope {
 
@@ -23,10 +27,17 @@ public final class ReloadTimeScope {
     private ReloadTimeScope() {
     }
 
+    /**
+     * 标记进入 TACZ 的无脚本换弹路径
+     * 必须在 {@code defaultTickReload} 调用前后成对使用（try/finally），否则标记会泄漏到同线程的后续换弹。
+     */
     public static void enterDefaultReloadPath() {
         IN_DEFAULT_RELOAD.set(Boolean.TRUE);
     }
 
+    /**
+     * 清除「无脚本换弹路径」标记
+     */
     public static void exitDefaultReloadPath() {
         IN_DEFAULT_RELOAD.remove();
     }
@@ -38,10 +49,17 @@ public final class ReloadTimeScope {
         return IN_DEFAULT_RELOAD.get() != null;
     }
 
+    /**
+     * 标记接下来的换弹耗时读取要取枪包原始值
+     * 打标期间 {@code GunReloadTimeMixin} 会跳过换弹耗时变换，所以读取完成后必须立刻在 finally 里退出。
+     */
     public static void enterAuthoredTimeRead() {
         READING_AUTHORED_TIME.set(Boolean.TRUE);
     }
 
+    /**
+     * 清除「读取原始耗时」标记
+     */
     public static void exitAuthoredTimeRead() {
         READING_AUTHORED_TIME.remove();
     }

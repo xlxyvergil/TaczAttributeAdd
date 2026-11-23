@@ -20,11 +20,19 @@ import net.minecraft.world.entity.LivingEntity;
 
 /**
  * 基于缓存属性与实体属性计算枪械各项数值
+ * <p>
+ * 输入是 TACZ 已经算好配件加成的 {@link AttachmentCacheProperty}，再乘上本模组的玩家属性倍率；
+ * 输出是 {@link PropertyCalculationResults}，由 {@link PropertyCacheUpdater} 写回缓存。
+ * 除换弹速度（见下方静态方法区块）外，所有计算都遵循「缓存原值 × 属性倍率」，倍率默认 1.0 表示无加成。
  */
 public class PropertyCalculator {
     
+    /** 属性快照，构造时已读好，计算过程中不再访问实体，保证同一把枪的各属性来自同一时刻 */
     private final EntityAttributeHelper entityAttribute;
     
+    /**
+     * @param entityAttribute 已读取完毕的射击者属性快照
+     */
     public PropertyCalculator(EntityAttributeHelper entityAttribute) {
         this.entityAttribute = entityAttribute;
     }
@@ -108,6 +116,13 @@ public class PropertyCalculator {
         return calculateReloadTime(elapsedMillis, shooter);
     }
     
+    /**
+     * 按缓存属性逐项算出全部枪械数值
+     * 调用顺序固定：由事件链在配件/属性变动时调用一次，结果随后写回缓存，供游戏逻辑与面板共用。
+     *
+     * @param cacheProperty 枪械当前缓存属性，可能缺少某些键（对应项会按 0 或默认值处理）
+     * @return 全部计算结果
+     */
     public PropertyCalculationResults calculateAllProperties(AttachmentCacheProperty cacheProperty) {
         PropertyCalculationResults results = new PropertyCalculationResults();
         
@@ -136,14 +151,20 @@ public class PropertyCalculator {
         return results;
     }
     
-    // 基础属性计算
+    // 基础属性计算（缓存原值 × 属性倍率；缓存缺项时返回 0）
     
+    /**
+     * 开镜时间：原值 × 开镜时间属性，单位秒（属性是耗时倍率，小于 1 表示开镜更快）
+     */
     public float calculateAdsTime(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ADS_TIME);
         float entityAttributeFactor = (float) entityAttribute.getAdsTime();
         return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
+    /**
+     * 弹速：原值 × 弹速属性；属性是倍率，结果转 int 时直接截断
+     */
     public float calculateAmmoSpeed(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.AMMO_SPEED);
         float entityAttributeFactor = (float) entityAttribute.getAmmoSpeed();
@@ -151,18 +172,28 @@ public class PropertyCalculator {
         return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0.0f;
     }
     
+    /**
+     * 穿甲比例：原值 × 穿甲属性（比例本身不取整，保持 0~1 精度）
+     */
     public float calculateArmorIgnore(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.ARMOR_IGNORE);
         float entityAttributeFactor = (float) entityAttribute.getArmorIgnore();
         return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
+    /**
+     * 有效射程：原值 × 射程属性，单位格
+     */
     public float calculateEffectiveRange(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.EFFECTIVE_RANGE);
         float entityAttributeFactor = (float) entityAttribute.getEffectiveRange();
         return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
+    /**
+     * 爆头倍率：原倍率加上「属性倍率 - 1」的差值（加法而非乘法），最低 0.01
+     * 例：原 2.0、属性 1.5 → 2.5，而不是 3.0。
+     */
     public float calculateHeadshotMultiplier(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.HEADSHOT_MULTIPLIER);
         float entityAttributeFactor = (float) entityAttribute.getHeadshotMultiplier();
@@ -170,18 +201,27 @@ public class PropertyCalculator {
         return originalValue != null ? Math.max(originalValue + (entityAttributeFactor - 1.0f), 0.01f) : 0.0f;
     }
     
+    /**
+     * 击退：原值 × 击退属性（影响命中生物时的击退强度）
+     */
     public float calculateKnockback(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.KNOCKBACK);
         float entityAttributeFactor = (float) entityAttribute.getKnockback();
         return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
+    /**
+     * 重量：原值 × 重量属性（TACZ 用它换算持枪减速，倍率越大越沉）
+     */
     public float calculateWeight(AttachmentCacheProperty cacheProperty) {
         Float originalValue = cacheProperty.getCache(GunProperties.WEIGHT);
         float entityAttributeFactor = (float) entityAttribute.getWeight();
         return originalValue != null ? originalValue * entityAttributeFactor : 0.0f;
     }
     
+    /**
+     * 穿透数：原值 × 穿透属性，结果截断取整（0 表示不穿透）
+     */
     public int calculatePierce(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.PIERCE);
         float entityAttributeFactor = (float) entityAttribute.getPierce();
@@ -189,6 +229,9 @@ public class PropertyCalculator {
         return originalValue != null ? (int) (originalValue * entityAttributeFactor) : 0;
     }
     
+    /**
+     * 射速：原值（发/分钟）× 射速属性，结果截断取整
+     */
     public int calculateRoundsPerMinute(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(GunProperties.ROUNDS_PER_MINUTE);
         float entityAttributeFactor = (float) entityAttribute.getRoundsPerMinute();
@@ -199,6 +242,10 @@ public class PropertyCalculator {
     
     // 新增属性计算
     
+    /**
+     * 弹丸数：缓存值（由弹丸数修改器写入）× 多弹头属性，四舍五入取整
+     * 缓存为 null 时按 1 颗起算（没有修改器介入的普通枪）。
+     */
     public int calculateBulletCount(AttachmentCacheProperty cacheProperty) {
         Integer originalValue = cacheProperty.getCache(ExtendedGunProperties.BULLET_COUNT);
         if (originalValue == null) {
@@ -212,6 +259,10 @@ public class PropertyCalculator {
     
     // 复杂属性计算
     
+    /**
+     * 移速：三档（腰射/开镜/换弹）倍率各加深玩家的偏移量
+     * 加法叠加而非乘法，且刻意不做 0.01 保底，理由见方法内的行内注释。
+     */
     public MoveSpeed calculateMoveSpeed(AttachmentCacheProperty cacheProperty) {
         MoveSpeed originalMoveSpeed = cacheProperty.getCache(GunProperties.MOVE_SPEED);
         
@@ -232,6 +283,10 @@ public class PropertyCalculator {
         );
     }
     
+    /**
+     * 伤害表：每个距离段的伤害 ×（伤害加成 × 弹丸数），逐段保留两位小数
+     * 距离键原样保留——距离段由枪包决定，属性只改每段的数值。
+     */
     public LinkedList<ExtraDamage.DistanceDamagePair> calculateDamage(AttachmentCacheProperty cacheProperty) {
         LinkedList<ExtraDamage.DistanceDamagePair> originalDamage = cacheProperty.getCache(GunProperties.DAMAGE);
         if (originalDamage == null || originalDamage.isEmpty()) {
@@ -257,6 +312,10 @@ public class PropertyCalculator {
         return calculatedDamage;
     }
     
+    /**
+     * 散布：综合属性 × 各姿态细分属性，两项都乘（都是倍率，1.0 无影响）
+     * 结果用可变 HashMap 承载，便于其他模组（如 Gun Durability）在其上继续调整。
+     */
     public Map<InaccuracyType, Float> calculateInaccuracy(AttachmentCacheProperty cacheProperty) {
         Map<InaccuracyType, Float> originalInaccuracy = cacheProperty.getCache(GunProperties.INACCURACY);
         if (originalInaccuracy == null || originalInaccuracy.isEmpty()) {
@@ -276,6 +335,10 @@ public class PropertyCalculator {
         return result;
     }
     
+    /**
+     * 消音：等级 = 原等级 × 消音属性后四舍五入；属性倍率小于 1 时额外开启被动消音
+     * 返回（等级, 是否消音），被动消音与配件消音取或，任一成立即生效。
+     */
     public Pair<Integer, Boolean> calculateSilence(AttachmentCacheProperty cacheProperty) {
         Pair<Integer, Boolean> originalSilence = cacheProperty.getCache(GunProperties.SILENCE);
         
@@ -298,6 +361,10 @@ public class PropertyCalculator {
         return Pair.of(level, enabled);
     }
     
+    /**
+     * 点燃：属性达到开启阈值（>= 2.0）时强制开启点燃，并把「点燃方块」一并打开
+     * 属性未开启时原样返回缓存里的点燃配置——本模组只会加强，不会关闭枪包自带的点火。
+     */
     public Ignite calculateIgnite(AttachmentCacheProperty cacheProperty) {
         Ignite originalIgnite = cacheProperty.getCache(GunProperties.IGNITE);
         if (originalIgnite == null) {
@@ -314,8 +381,12 @@ public class PropertyCalculator {
         return new Ignite(originalIgnite.isIgniteEntity() || entityAttributeValue, true);
     }
     
-    // 爆炸相关属性计
+    // 爆炸相关属性计算（缓存无爆炸配置时按关闭处理）
     
+    /**
+     * 爆炸半径：原半径加「属性倍率 - 1」的差值，最低 0.01
+     * 与爆头倍率同一套加法语义；保底 0.01 防止削减属性后半径为 0 或负数。
+     */
     public float calculateExplosionRadius(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {
@@ -327,6 +398,9 @@ public class PropertyCalculator {
         return Math.max(originalExplosion.getRadius() + (entityAttributeFactor - 1.0f), 0.01f);
     }
     
+    /**
+     * 爆炸伤害：原值 × 爆炸伤害属性（这里用乘法，不减不加差值）
+     */
     public float calculateExplosionDamage(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {
@@ -337,6 +411,10 @@ public class PropertyCalculator {
         return originalExplosion.getDamage() * entityAttributeFactor;
     }
     
+    /**
+     * 爆炸击退开关：枪包原值与属性开关交给 TACZ 的 {@link AttachmentPropertyManager#eval} 合并
+     * 用 eval 而不是直接「或」，是为了尊重 TACZ 自己的布尔合并规则（配件里的同类开关）。
+     */
     public boolean calculateExplosionKnockback(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {
@@ -348,6 +426,9 @@ public class PropertyCalculator {
         return AttachmentPropertyManager.eval(knockbackValues, false);
     }
     
+    /**
+     * 爆炸破坏方块开关：合并方式同上，交给 {@link AttachmentPropertyManager#eval}
+     */
     public boolean calculateExplosionDestroyBlock(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {
@@ -359,6 +440,9 @@ public class PropertyCalculator {
         return AttachmentPropertyManager.eval(destroyBlockValues, false);
     }
     
+    /**
+     * 爆炸延迟：原延迟 × 爆炸延迟属性，四舍五入取整，单位为 tick
+     */
     public int calculateExplosionDelay(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {
@@ -369,6 +453,12 @@ public class PropertyCalculator {
         return Math.round(originalExplosion.getDelay() * entityAttributeFactor);
     }
     
+    /**
+     * 组装最终爆炸配置
+     * 是否爆炸的判定：枪包本身已开启则保持开启，否则看属性是否达到开启阈值（{@code explosion_enabled > 2.0}，
+     * 与点燃共用同一套「倍率 2.0 才算开启」的约定）。
+     * 构造顺序为（是否爆炸, 半径, 伤害, 击退, 延迟, 破坏方块），延迟是 int 算出后按 float 传入。
+     */
     public ExplosionData createExplosionData(AttachmentCacheProperty cacheProperty) {
         ExplosionData originalExplosion = cacheProperty.getCache(GunProperties.EXPLOSION);
         if (originalExplosion == null) {

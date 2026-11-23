@@ -10,14 +10,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * 在 HeatBarOverlay 中注入，让热量条以修正后的热量上限作为分母，与蓄热逻辑一致。
+ * 过热体系属性修饰符 - HeatBarOverlay（客户端热量条）注入。
+ * 热量条百分比与缩放比例都改用修正后的热量上限作为分母，与蓄热逻辑保持一致。
  */
 @Mixin(value = HeatBarOverlay.class, remap = false)
 @OnlyIn(Dist.CLIENT)
 public class HeatBarOverlayMixin {
 
     /**
-     * 百分比分母（第 1 处 getHeatMax）使用修正后的上限。
+     * 热量条百分比的分母（heatData.getHeatMax()，第 1 处）使用修正后的上限。
      */
     @ModifyExpressionValue(
         method = "render",
@@ -28,7 +29,7 @@ public class HeatBarOverlayMixin {
     }
 
     /**
-     * 缩放比例分母（第 2 处 getHeatMax）使用修正后的上限。
+     * 热量条缩放比例的分母（heatData.getHeatMax()，第 2 处）使用修正后的上限。
      */
     @ModifyExpressionValue(
         method = "render",

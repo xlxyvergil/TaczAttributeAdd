@@ -13,27 +13,40 @@ import com.tacz.guns.resource.pojo.data.gun.InaccuracyType;
 
 /**
  * 存储属性计算的全部结果
+ * <p>
+ * {@link PropertyCalculator} 只负责填这个对象，{@link PropertyCacheUpdater} 再把它写进 TACZ 的缓存属性。
+ * 两者解耦的好处是计算过程可以按需复用（例如只算面板显示值而不写缓存），
+ * 也便于把「算出来但暂不生效」的属性（如被注释掉的后坐力）留在对象里调试。
  */
 public class PropertyCalculationResults {
     
     private Float adsTime;
     private Float ammoSpeed;
+    /** 穿甲比例，0~1 */
     private Float armorIgnore;
     private Float effectiveRange;
+    /** 爆头伤害倍率，1.0 为无加成 */
     private Float headshotMultiplier;
     private Float knockback;
     private Float weight;
+    /** 可穿透的目标数，已取整 */
     private Integer pierce;
+    /** 射速，发/分钟，已取整 */
     private Integer roundsPerMinute;
+    /** TACZ 的移速修正对象，内部含倍率与加法项 */
     private MoveSpeed moveSpeed;
+    /** 按距离分段的伤害表，每对为（距离, 伤害），最后一段为超出有效距离后的衰减值 */
     private LinkedList<ExtraDamage.DistanceDamagePair> damage;
+    /** 各姿态（站/移动/潜行/趴下/开镜）的散布值 */
     private Map<InaccuracyType, Float> inaccuracy;
 //    private ParameterizedCachePair<Float, Float> recoil; // 后坐力由 CameraSetupEventMixin 直接处理
+    /** （消音器等级, 是否被动消音）：等级四舍五入，被动消音在倍率小于 1 时触发 */
     private Pair<Integer, Boolean> silence;
     private Ignite ignite;
     private ExplosionData explosionData;
     
     // 新增属性
+    /** 每次射击的弹丸数，已四舍五入 */
     private Integer bulletCount;
     
     public Float getAdsTime() { return adsTime; }

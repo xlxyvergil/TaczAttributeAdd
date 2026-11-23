@@ -16,6 +16,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * 属性重算上下文：在 {@code AttachmentPropertyManager#postChangeEvent} 的 HEAD / RETURN
+ * 成对压入、弹出射手与枪型，使事件同步读取数值时能拿到玩家属性。
+ */
 @Mixin(AttachmentPropertyManager.class)
 public class AttachmentPropertyManagerMixin {
     

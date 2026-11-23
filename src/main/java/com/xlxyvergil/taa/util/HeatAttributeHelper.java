@@ -14,6 +14,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正过热上限（满能量值）
+     * 原始上限 × 属性倍率，倍率大于 1 表示能打更多发才过热。
      */
     public static float getModifiedHeatMax(LivingEntity shooter, float raw) {
         return (float) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_MAX.get()));
@@ -21,6 +22,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正散热倍率（散热量随停火时长增长的速度）
+     * 原始倍率 × 属性倍率，数值越大过热消退越快。
      */
     public static float getModifiedCoolingMultiplier(LivingEntity shooter, float raw) {
         return (float) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_COOLING.get()));
@@ -28,6 +30,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正冷却延迟（停火后多久开始散热，单位 ms）
+     * 原始延迟 × 属性倍率，结果按 long 截断取整。
      */
     public static long getModifiedCoolingDelay(LivingEntity shooter, long raw) {
         return (long) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_COOLING_DELAY.get()));
@@ -35,6 +38,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正锁枪时间（完全过热后的锁枪时长，单位 ms）
+     * 原始时长 × 属性倍率，结果按 long 截断取整。
      */
     public static long getModifiedOverHeatTime(LivingEntity shooter, long raw) {
         return (long) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_OVERHEAT_TIME.get()));

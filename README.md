@@ -29,6 +29,7 @@
 - **冲锋枪**: `taa:bullet_gundamage_smg` - 冲锋枪伤害加成
 - **轻机枪**: `taa:bullet_gundamage_lmg` - 轻机枪伤害加成
 - **发射器**: `taa:bullet_gundamage_launcher` - 发射器伤害加成
+- **射手步枪**: 视作步枪，共用 `taa:bullet_gundamage_rifle`（TACZ 1.2.0+ 的 `dmr` 类型）
 
 ### 20个核心枪械属性
 

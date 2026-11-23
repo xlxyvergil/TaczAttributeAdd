@@ -9,9 +9,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 /**
  * 读取并计算指定射击者的枪械属性值
+ * <p>
+ * 构造时一次性把所有属性读成快照，之后通过 getter 取用——属性计算与展示都按「同一帧同一套数值」进行，
+ * 避免中途重新读实体属性导致同一把枪的伤害与面板显示对不上。
+ * 除布尔量外字段都是倍率口径：1.0 表示无加成，大于 1 为增益、小于 1 为削减，
+ * 读取时已在源头统一夹到 {@link AttributeValueGuard#MIN_ATTRIBUTE_VALUE}。
  */
 public class EntityAttributeHelper {
     private final LivingEntity shooter;
+    /** TACZ 的枪械类型（pistol/rifle/shotgun/sniper/smg/mg/rpg/dmr…），用于挑选特定枪种的伤害属性 */
     private final String gunType;
     
     private final double adsTime;
@@ -46,6 +52,12 @@ public class EntityAttributeHelper {
     // 新增属性
     private final double bulletCount;
 
+    /**
+     * 读取射击者的全部枪械属性并缓存
+     *
+     * @param shooter 射击者，可为 null（此时所有属性取默认值 1.0，即无加成）
+     * @param gunType TACZ 枪械类型；传空串（属性面板、把玩家当作通用来源时）或未知类型时，枪种加成为 1.0
+     */
     public EntityAttributeHelper(LivingEntity shooter, String gunType) {
         this.shooter = shooter;
         this.gunType = gunType;
@@ -84,6 +96,10 @@ public class EntityAttributeHelper {
         this.bulletCount = getAttributeValue(EntityAttributeRegistry.BULLET_COUNT.get(), 1.0D);
     }
 
+    /**
+     * 构造期使用的属性读取：读不到就用默认值，读到则夹到最小值
+     * 与静态同名方法的区别只在调用位置——这里直接持有 shooter 字段，省掉每次传参。
+     */
     private double getAttributeValue(Attribute attribute, double defaultValue) {
         if (this.shooter == null) {
             return defaultValue;
@@ -98,10 +114,20 @@ public class EntityAttributeHelper {
         return defaultValue;
     }
 
+    /**
+     * 把倍率形式的开关属性转成布尔
+     * 属性默认值为 1.0（关闭），取 2.0 作为开启阈值，即需要 100% 加成才会真正触发点燃/爆炸击退等效果，
+     * 避免模组间几点零头的加成让效果意外开启。
+     */
     private boolean convertDoubleToBoolean(double value) {
         return value >= 2.0D;
     }
 
+    /**
+     * 汇总枪械伤害加成：通用伤害属性 ×（或取其一）特定枪种伤害属性
+     * 由配置项「伤害计算模式」决定：ONLY_GENERIC 只认通用属性、ONLY_SPECIFIC 只认枪种属性、
+     * 其余（默认）两者相乘。返回值会再乘到每段弹丸伤害上，因此 1.0 即无加成。
+     */
     private double calculateGunDamageBonus() {
         // 按配置选择伤害计算规则
         AttributeConfig.DamageCalculationMode mode = AttributeConfig.getDamageCalculationMode();
@@ -116,6 +142,14 @@ public class EntityAttributeHelper {
         };
     }
 
+    /**
+     * 按枪种取专属伤害属性
+     * 枪种来自 TACZ 数据，匹配前统一转小写；射手步枪（dmr）与步枪共用同一属性，
+     * 未知枪种返回 1.0（不额外加成）。
+     *
+     * @param gunType TACZ 枪械类型
+     * @return 该枪种的伤害倍率，1.0 为无加成
+     */
     private double getSpecificGunDamageBonus(String gunType) {
         if (gunType == null) {
             return 1.0D;
@@ -129,6 +163,7 @@ public class EntityAttributeHelper {
             case "smg" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_SMG.get(), 1.0D);
             case "mg" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_LMG.get(), 1.0D);
             case "rpg" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_LAUNCHER.get(), 1.0D);
+            case "dmr" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_RIFLE.get(), 1.0D); // 射手步枪视作步枪
             default -> 1.0D;
         };
     }
@@ -165,7 +200,7 @@ public class EntityAttributeHelper {
     // 新增属性
     public double getBulletCount() { return bulletCount; }
     
-    // 布尔属性
+    // 布尔属性（倍率口径：>= 2.0 视为开启，见 convertDoubleToBoolean）
     public boolean isIgniteEnabled() { return convertDoubleToBoolean(ignite); }
     public boolean isExplosionKnockbackEnabled() { return convertDoubleToBoolean(explosionKnockback); }
     public boolean isExplosionDestroyBlockEnabled() { return convertDoubleToBoolean(explosionDestroyBlock); }

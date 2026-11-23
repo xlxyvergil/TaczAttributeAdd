@@ -15,7 +15,7 @@ import java.util.Map;
  * <p>
  * 这个 mixin 在双端都会应用，所以只能碰双端可见的类：
  * 面板专用的那些 Modifier 是 {@code @OnlyIn(Dist.CLIENT)} 的，注册它们由
- * {@code client.AttachmentPropertyManagerPanelMixin} 负责，否则专用服务器上会因为
+ * {@code com.xlxyvergil.taa.mixin.client.AttachmentPropertyManagerPanelMixin} 负责，否则专用服务器上会因为
  * RuntimeDistCleaner 拒绝加载客户端类而崩溃。
  */
 @Mixin(value = AttachmentPropertyManager.class, remap = false)
