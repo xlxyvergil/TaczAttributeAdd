@@ -1,0 +1,106 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - '1.20.1'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Collect mod jars
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          find build/libs -maxdepth 1 -name '*.jar' \
+            ! -name '*-sources.jar' ! -name '*-javadoc.jar' \
+            ! -name '*-core.jar' ! -name '*-dev.jar' \
+            -exec cp {} dist/ \;
+          test -n "$(ls -A dist)" || { echo '::error::no mod jar produced by the build'; exit 1; }
+          ls -l dist
+
+      - name: Upload mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: mod-jar
+          path: dist/*.jar
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Download mod jar
+        uses: actions/download-artifact@v4
+        with:
+          name: mod-jar
+          path: dist
+
+      - name: Resolve version and tag
+        id: meta
+        run: |
+          set -euo pipefail
+          mod_version=$(grep -E '^mod_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          mc_version=$(grep -E '^minecraft_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          mod_name=$(grep -E '^mod_name=' gradle.properties | head -n1 | cut -d= -f2- | sed 's/[[:space:]]*$//')
+          tag="v${mod_version}-${mc_version}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "title=${mod_name} ${mod_version} for Minecraft ${mc_version}" >> "$GITHUB_OUTPUT"
+          echo "resolved tag=${tag} title=${mod_name} ${mod_version} for Minecraft ${mc_version}"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag='${{ steps.meta.outputs.tag }}'
+          title='${{ steps.meta.outputs.title }}'
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists - refreshing its assets"
+            gh release upload "$tag" dist/*.jar --clobber
+          else
+            echo "Creating release $tag"
+            gh release create "$tag" dist/*.jar \
+              --target "$GITHUB_SHA" \
+              --title "$title" \
+              --generate-notes
+          fi
