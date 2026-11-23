@@ -18,12 +18,24 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      jar_base: ${{ steps.ver.outputs.jar_base }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
+
+      - name: Resolve mod id and version
+        id: ver
+        run: |
+          set -euo pipefail
+          mod_id=$(grep -E '^mod_id=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          mod_version=$(grep -E '^mod_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          mc_version=$(grep -E '^minecraft_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          echo "jar_base=${mod_id}-${mod_version}+${mc_version}" >> "$GITHUB_OUTPUT"
+          echo "resolved ${mod_id}-${mod_version}+${mc_version}"
 
       - name: Setup JDK 17
         uses: actions/setup-java@v4
@@ -54,7 +66,7 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: mod-jar
+          name: ${{ steps.ver.outputs.jar_base }}
           path: dist/*.jar
           if-no-files-found: error
 
@@ -73,7 +85,7 @@ jobs:
       - name: Download mod jar
         uses: actions/download-artifact@v4
         with:
-          name: mod-jar
+          name: ${{ needs.build.outputs.jar_base }}
           path: dist
 
       - name: Verify tag matches gradle.properties
