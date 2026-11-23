@@ -1,7 +1,7 @@
-name: Build & Release
+﻿name: Build & Release
 
-# 只有推送 v* 标签才会构建并发布 Release；分支推送不触发。
-# 手动触发（workflow_dispatch）只构建，不发布。
+# 鍙湁鎺ㄩ€?v* 鏍囩鎵嶄細鏋勫缓骞跺彂甯?Release锛涘垎鏀帹閫佷笉瑙﹀彂銆?
+# 鎵嬪姩瑙﹀彂锛坵orkflow_dispatch锛夊彧鏋勫缓锛屼笉鍙戝竷銆?
 on:
   push:
     tags:
@@ -18,12 +18,24 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      jar_base: ${{ steps.ver.outputs.jar_base }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           fetch-tags: true
+
+      - name: Resolve mod id and version
+        id: ver
+        run: |
+          set -euo pipefail
+          mod_id=$(grep -E '^mod_id=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          mod_version=$(grep -E '^mod_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          mc_version=$(grep -E '^minecraft_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
+          echo "jar_base=${mod_id}-${mod_version}+${mc_version}" >> "$GITHUB_OUTPUT"
+          echo "resolved ${mod_id}-${mod_version}+${mc_version}"
 
       - name: Setup JDK 21
         uses: actions/setup-java@v4
@@ -54,7 +66,7 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: mod-jar
+          name: ${{ steps.ver.outputs.jar_base }}
           path: dist/*.jar
           if-no-files-found: error
 
@@ -73,7 +85,7 @@ jobs:
       - name: Download mod jar
         uses: actions/download-artifact@v4
         with:
-          name: mod-jar
+          name: ${{ needs.build.outputs.jar_base }}
           path: dist
 
       - name: Verify tag matches gradle.properties
@@ -86,7 +98,7 @@ jobs:
           tag="${GITHUB_REF_NAME}"
           case "$tag" in
             *"$mod_version"*) ;;
-            *) echo "::error::标签 $tag 与 gradle.properties 的 mod_version=$mod_version 不一致，先改 mod_version 再打标签"; exit 1 ;;
+            *) echo "::error::鏍囩 $tag 涓?gradle.properties 鐨?mod_version=$mod_version 涓嶄竴鑷达紝鍏堟敼 mod_version 鍐嶆墦鏍囩"; exit 1 ;;
           esac
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           echo "title=${mod_name} ${tag}" >> "$GITHUB_OUTPUT"
