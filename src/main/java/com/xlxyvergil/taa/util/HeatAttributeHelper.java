@@ -16,10 +16,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正过热上限（满能量值）
-     *
-     * @param shooter 射击者实体
-     * @param raw     原始热量上限
-     * @return 原始上限 × 属性倍率
+     * 原始上限 × 属性倍率
      */
     public static float getModifiedHeatMax(LivingEntity shooter, float raw) {
         return (float) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_MAX.get()));
@@ -27,10 +24,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正散热倍率（散热量随停火时长增长的速度）
-     *
-     * @param shooter 射击者实体
-     * @param raw     原始冷却倍率
-     * @return 原始倍率 × 属性倍率
+     * 原始倍率 × 属性倍率
      */
     public static float getModifiedCoolingMultiplier(LivingEntity shooter, float raw) {
         return (float) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_COOLING.get()));
@@ -38,10 +32,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正冷却延迟（停火后多久开始散热，单位ms）
-     *
-     * @param shooter 射击者实体
-     * @param raw     原始冷却延迟
-     * @return 原始延迟 × 属性倍率
+     * 原始延迟 × 属性倍率
      */
     public static long getModifiedCoolingDelay(LivingEntity shooter, long raw) {
         return (long) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_COOLING_DELAY.get()));
@@ -49,10 +40,7 @@ public class HeatAttributeHelper {
 
     /**
      * 修正锁枪时间（完全过热后的锁枪时长，单位ms）
-     *
-     * @param shooter 射击者实体
-     * @param raw     原始锁枪时间
-     * @return 原始时间 × 属性倍率
+     * 原始时间 × 属性倍率
      */
     public static long getModifiedOverHeatTime(LivingEntity shooter, long raw) {
         return (long) (raw * getMultiplier(shooter, EntityAttributeRegistry.HEAT_OVERHEAT_TIME.get()));
@@ -61,10 +49,7 @@ public class HeatAttributeHelper {
     /**
      * 获取实体上的乘法倍率属性值。
      * shooter 为 null（例如没有射击上下文）或属性不存在时返回 1.0（无加成）。
-     *
-     * @param shooter   射击者实体
-     * @param attribute 要读取的属性
-     * @return 属性倍率
+     * 属性倍率
      */
     private static double getMultiplier(LivingEntity shooter, Attribute attribute) {
         if (shooter == null) {

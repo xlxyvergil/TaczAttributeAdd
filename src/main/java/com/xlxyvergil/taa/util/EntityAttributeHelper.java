@@ -2,6 +2,7 @@ package com.xlxyvergil.taa.util;
 
 import com.xlxyvergil.taa.attribute.EntityAttributeRegistry;
 import com.xlxyvergil.taa.config.AttributeConfig;
+import com.xlxyvergil.taa.context.GunTypeContext;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 /**
  * 实体属性助手类
- * 用于存储和计算特定射击者的属性 
+ * 用于存储和计算特定射击者的属性
  */
 public class EntityAttributeHelper {
     private final LivingEntity shooter;
@@ -49,14 +50,10 @@ public class EntityAttributeHelper {
     // 新增的属 
     private final double bulletCount;
 
-    /**
-     * 构造函 
-     * @param shooter 射击者实 
-     * @param gunType 枪械类型
-     */
+    /** 构造函数 */
     public EntityAttributeHelper(LivingEntity shooter, String gunType) {
         this.shooter = shooter;
-        this.gunType = gunType;
+        this.gunType = GunTypeContext.normalize(gunType);
         
         // 计算并存储所有属性 
         this.adsTime = getAttributeValue(EntityAttributeRegistry.ADS_TIME.get(), 1.0D);
@@ -92,12 +89,7 @@ public class EntityAttributeHelper {
         this.bulletCount = getAttributeValue(EntityAttributeRegistry.BULLET_COUNT.get(), 1.0D);
     }
     
-    /**
-     * 获取指定属性 
-     * @param attribute 要获取的属 
-     * @param defaultValue 默认 
-     * @return 属性值，如果无法获取则返回默认 
-     */
+    /** 获取指定属性，取不到时返回默认值 */
     private double getAttributeValue(Attribute attribute, double defaultValue) {
         if (this.shooter == null) {
             return defaultValue;
@@ -112,18 +104,14 @@ public class EntityAttributeHelper {
         return defaultValue;
     }
     
-    /**
-     * 将double值转换为布尔 
-     * @param value double 
-     * @return 转换后的布尔值（1.0D表示true .0D表示false 
-     */
+    /** double 转布尔：1.0D 为 true，0.0D 为 false */
     private boolean convertDoubleToBoolean(double value) {
         return value >= 2.0D;
     }
     
     /**
      * 计算枪械伤害加成
-     * @return 伤害加成 
+     * 伤害加成
      */
     private double calculateGunDamageBonus() {
         // 按配置选择伤害计算规则
@@ -139,15 +127,14 @@ public class EntityAttributeHelper {
     
     /**
      * 根据枪械类型获取特定枪械伤害加成
-     * @param gunType 枪械类型
-     * @return 特定枪械伤害加成 
+     * 特定枪械伤害加成
      */
     private double getSpecificGunDamageBonus(String gunType) {
         if (gunType == null) {
             return 1.0D;
         }
         
-        return switch (gunType.toLowerCase()) {
+        return switch (gunType) {
             case "pistol" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_PISTOL.get(), 1.0D);
             case "rifle" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_RIFLE.get(), 1.0D);
             case "shotgun" -> getAttributeValue(EntityAttributeRegistry.BULLET_GUNDAMAGE_SHOTGUN.get(), 1.0D);
@@ -226,9 +213,7 @@ public class EntityAttributeHelper {
         return Math.max(instance.getValue(), 0.0D);
     }
 
-    /**
-     * 近战伤害属性：原始伤害 × 属性倍率（默认 1.0 无加成）。
-     */
+    /** 近战伤害属性：原始伤害 × 属性倍率（默认 1.0 无加成）。 */
     public static float applyMeleeDamageAttribute(LivingEntity shooter, float original) {
         double factor = getAttributeValue(shooter, EntityAttributeRegistry.MELEE_DAMAGE.get(), 1.0D);
         if (factor == 1.0D) {

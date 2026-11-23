@@ -11,7 +11,7 @@ package com.xlxyvergil.taa.util;
  *     由 {@code ModernKineticGunItemDefaultReloadMixin} 打标，供
  *     {@code ModernKineticGunScriptAPIClockMixin} 读取；</li>
  *     <li>{@link #enterAuthoredTimeRead()} —— 需要拿到枪包原始耗时（未乘倍率）的场合，
- *     目前只有属性面板的数值对比，由 {@code GunPropertyDiagramsMixin} 打标，供
+ *     目前只有属性面板的数值对比，由 {@code GunPropertyDiagramsPanelScopeMixin} 打标，供
  *     {@code GunReloadTimeMixin} 读取，避免「原值已被乘过、再乘一次」导致面板差值翻倍。</li>
  * </ul>
  */
@@ -31,9 +31,7 @@ public final class ReloadTimeScope {
         IN_DEFAULT_RELOAD.remove();
     }
 
-    /**
-     * @return 当前调用是否来自无脚本的 {@code defaultTickReload} 路径
-     */
+    /** 当前调用是否来自无脚本的 {@code defaultTickReload} 路径 */
     public static boolean isDefaultReloadPath() {
         return IN_DEFAULT_RELOAD.get() != null;
     }
@@ -46,9 +44,7 @@ public final class ReloadTimeScope {
         READING_AUTHORED_TIME.remove();
     }
 
-    /**
-     * @return 当前调用是否需要枪包原始耗时（不做倍率变换）
-     */
+    /** 当前调用是否需要枪包原始耗时（不做倍率变换） */
     public static boolean isReadingAuthoredTime() {
         return READING_AUTHORED_TIME.get() != null;
     }

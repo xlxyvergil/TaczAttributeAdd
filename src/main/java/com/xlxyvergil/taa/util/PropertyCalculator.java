@@ -26,8 +26,7 @@ public class PropertyCalculator {
     
     private final EntityAttributeHelper entityAttribute;
     
-    /**
-     * 构造函     * @param entityAttribute 实体属性助     */
+    /** 构造函数 */
     public PropertyCalculator(EntityAttributeHelper entityAttribute) {
         this.entityAttribute = entityAttribute;
     }
@@ -51,8 +50,7 @@ public class PropertyCalculator {
      * 换弹耗时倍率（玩家 {@code reload_time} 属性）。
      * <p>
      * 语义是「耗时倍率」而不是「速度倍率」：小于 1 表示换弹更快，1.0 为原速。
-     *
-     * @return 已夹到 {@link #MIN_RELOAD_SPEED_MULTIPLIER} 的倍率
+     * 已夹到 {@link #MIN_RELOAD_SPEED_MULTIPLIER} 的倍率
      */
     public static double getReloadSpeedMultiplier(LivingEntity shooter) {
         double value = EntityAttributeHelper.getAttributeValue(
@@ -65,8 +63,7 @@ public class PropertyCalculator {
      * <p>
      * 用于「按真实时间推进、需要被加速」的消费者：客户端动画进度（alphaProgress）、
      * 服务端脚本时钟 —— 它们要的是「同一段真实时间里能走过多少动画/脚本时间」。
-     *
-     * @return 1.0 为原速，2.0 为两倍速
+     * 1.0 为原速，2.0 为两倍速
      */
     public static double getReloadTimeScale(LivingEntity shooter) {
         return 1.0D / getReloadSpeedMultiplier(shooter);
@@ -74,9 +71,7 @@ public class PropertyCalculator {
     
     /**
      * 换弹时长（秒）= 枪包基础时长 × 换弹耗时倍率。
-     *
-     * @param baseTime 枪包里的原始换弹时长
-     * @return 玩家实际需要的换弹时长
+     * 玩家实际需要的换弹时长
      */
     public static float calculateReloadTime(float baseTime, LivingEntity shooter) {
         return (float) (baseTime * getReloadSpeedMultiplier(shooter));
@@ -88,9 +83,7 @@ public class PropertyCalculator {
      * 脚本枪的 Lua 侧比较的是 {@code api:getReloadTime()}（真实流逝的墙钟毫秒）与
      * {@code script_param} 的毫秒阈值，因此这里把「已流逝的真实时间」换算成
      * 「脚本应当认为已流逝的时间」，让脚本整条时间线等比缩短。
-     *
-     * @param elapsedMillis 真实流逝的毫秒数
-     * @return 换算后的脚本时间
+     * 换算后的脚本时间
      */
     public static long calculateReloadTime(long elapsedMillis, LivingEntity shooter) {
         return (long) (elapsedMillis / getReloadSpeedMultiplier(shooter));
@@ -103,18 +96,13 @@ public class PropertyCalculator {
      * （如 SPAS-12 的 {@code bolt_time} 0.53s），倍率压得越低，射速瓶颈就越会转移到拉栓上，
      * 换弹加速的收益被吃掉。因此这里和 {@link #calculateReloadTime(long, LivingEntity)}
      * 用同一个倍率、同一套下限，只是命名上把消费者区分开。
-     *
-     * @param elapsedMillis 真实流逝的毫秒数
-     * @return 换算后的脚本/拉栓逻辑时间
+     * 换算后的脚本/拉栓逻辑时间
      */
     public static long calculateBoltTime(long elapsedMillis, LivingEntity shooter) {
         return calculateReloadTime(elapsedMillis, shooter);
     }
     
-    /**
-     * 计算所有属性（包含爆炸相关属性）
-     * @param cacheProperty 原始缓存属性数
-     */
+    /** 计算所有属性（包含爆炸相关属性） */
     public PropertyCalculationResults calculateAllProperties(AttachmentCacheProperty cacheProperty) {
         PropertyCalculationResults results = new PropertyCalculationResults();
         

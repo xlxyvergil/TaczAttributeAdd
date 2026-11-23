@@ -38,4 +38,15 @@ public class GunHeatDataMixin {
         LivingEntity shooter = ShooterContext.getShooter();
         return HeatAttributeHelper.getModifiedOverHeatTime(shooter, original);
     }
+
+    /**
+     * TACZ 1.2.0 新增：枪械放在背包里时按 {@code inventory_cooling_per_tick} 降温，
+     * 该读取点不经过 tickHeat，必须单独拦截，否则散热属性对背包降温不生效。
+     * require = 0：旧版本没有该字段时静默跳过，不阻塞 mixin 应用。
+     */
+    @ModifyReturnValue(method = "getInventoryCoolingPerTick", at = @At("RETURN"), require = 0)
+    private float taa$modifyInventoryCoolingPerTick(float original) {
+        LivingEntity shooter = ShooterContext.getShooter();
+        return HeatAttributeHelper.getModifiedCoolingMultiplier(shooter, original);
+    }
 }

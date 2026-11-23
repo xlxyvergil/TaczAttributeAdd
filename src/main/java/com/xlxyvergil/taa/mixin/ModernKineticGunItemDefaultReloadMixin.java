@@ -13,9 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
  * <p>
  * 用 try/finally 包裹，保证即便换弹逻辑抛异常，标记也会被清掉，
  * 不会让脚本枪的时钟缩放永久失效。
- *
- * @see ModernKineticGunScriptAPIClockMixin
- * @see ReloadTimeScope
  */
 @Mixin(value = ModernKineticGunItem.class, remap = false)
 public class ModernKineticGunItemDefaultReloadMixin {

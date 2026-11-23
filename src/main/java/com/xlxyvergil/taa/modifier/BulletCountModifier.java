@@ -70,7 +70,7 @@ public class BulletCountModifier implements IAttachmentModifier<Modifier, Intege
     @Override
     @OnlyIn(Dist.CLIENT)
     public int getDiagramsDataSize() {
-        return 0; // 子弹数量显示由GunPropertyDiagramsMixin自行处理
+        return 0; // 面板不给 TACZ 原生 bullet_count 行留位置，子弹数量行由 TaaPanelRowWrapper 单独提供
     }
 
     /**

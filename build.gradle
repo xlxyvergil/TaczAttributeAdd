@@ -139,8 +139,11 @@ configurations {
 }
 
 dependencies {
-    // TACZ (Timeless & Classics Guns: Zero) 1.21.1
-    implementation "curse.maven:tacz-1-21-1-1353462:8547439"
+    // TACZ (Timeless & Classics Guns: Zero) 1.21.1 —— 官方 1.2.0 发布版（CurseForge，官方项目 1028108）
+    implementation "curse.maven:timeless-and-classics-zero-1028108:9454361"
+    // 离线备选（官方 1.2.0 快照构建，网络不通时用）：
+    // implementation files("libs/tacz-neoforge-1.21.1-1025-040705.jar")
+    // 旧社区移植版坐标（不再使用）：curse.maven:tacz-1-21-1-1353462:8547439
 
     // 可选依赖（compileOnly，运行时按需加载）
     compileOnly "curse.maven:gunsmith-lib-1264058:8633626"

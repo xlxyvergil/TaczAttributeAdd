@@ -10,11 +10,7 @@ import com.xlxyvergil.taa.api.ExtendedGunProperties;
  */
 public class PropertyCacheUpdater {
     
-    /**
-     * 将计算结果更新到缓存属性中
-     * @param cacheProperty 目标缓存属性对象
-     * @param results 计算结果数据
-     */
+    /** 将计算结果更新到缓存属性中 */
     public static void updateCacheProperties(AttachmentCacheProperty cacheProperty, PropertyCalculationResults results) {
         if (cacheProperty == null || results == null) {
             return;

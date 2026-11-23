@@ -10,10 +10,11 @@
   },
   "client": [
     "client.AttachmentDataUtilsClientMixin",
+    "client.AttachmentPropertyManagerPanelMixin",
     "CameraSetupEventMixin",
     "ClientGunTooltipMixin",
     "client.animation.ObjectAnimationRunnerMixin",
-    "GunPropertyDiagramsMixin",
+    "client.GunPropertyDiagramsPanelScopeMixin",
     "HeatBarOverlayMixin",
     "client.TaaClientPacketListenerMixin"
   ],

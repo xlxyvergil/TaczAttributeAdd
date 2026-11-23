@@ -8,20 +8,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
 
-/**
- * KubeJS事件触发工具类
- */
+/** KubeJS事件触发工具类 */
 public class KubeJSEventHelper {
     
     /**
      * 触发属性显示事件并获取修改后的值
-     * 
-     * @param shooter 射击者实体
-     * @param gunItem 枪械物品
-     * @param propertyType 属性类型字符串
-     * @param displayValue 当前显示值
-     * @param originalValue 原始值
-     * @return 修改后的显示值（如果未被修改则返回原值）
+     * 修改后的显示值（如果未被修改则返回原值）
      */
     public static double postAndGetDisplayValue(LivingEntity shooter, ItemStack gunItem, String propertyType, double displayValue, double originalValue) {
         try {
@@ -49,10 +41,6 @@ public class KubeJSEventHelper {
     /**
      * 触发属性后处理事件
      * 在 TAA 属性计算完成后触发，允许 KubeJS 脚本获取玩家实体后修改计算结果
-     * 
-     * @param shooter 玩家/射击者实体
-     * @param gunItem 枪械物品
-     * @param results 计算结果（KubeJS 可以修改此结果）
      */
     public static void postAttributePostEvent(LivingEntity shooter, ItemStack gunItem, PropertyCalculationResults results) {
         // 检查KubeJS是否加载

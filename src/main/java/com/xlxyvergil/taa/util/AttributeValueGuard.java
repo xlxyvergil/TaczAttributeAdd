@@ -14,9 +14,7 @@ public class AttributeValueGuard {
     
     /**
      * 确保属性值不低于最小阈值
-     * 
-     * @param value 原始属性值
-     * @return 保护后的属性值（最低为0.01）
+     * 保护后的属性值（最低为0.01）
      */
     public static double clamp(double value) {
         return Math.max(value, MIN_ATTRIBUTE_VALUE);
@@ -24,11 +22,7 @@ public class AttributeValueGuard {
     
     /**
      * 确保属性值在指定范围内
-     * 
-     * @param value 原始属性值
-     * @param min 最小值
-     * @param max 最大值
-     * @return 限制后的属性值
+     * 限制后的属性值
      */
     public static double clamp(double value, double min, double max) {
         double clamped = Math.max(value, Math.max(min, MIN_ATTRIBUTE_VALUE));

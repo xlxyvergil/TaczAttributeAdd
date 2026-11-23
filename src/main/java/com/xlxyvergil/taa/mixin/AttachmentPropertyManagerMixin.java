@@ -10,6 +10,7 @@ import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.api.item.IGun;
 import com.tacz.guns.resource.modifier.AttachmentPropertyManager;
 import com.xlxyvergil.taa.context.GunTypeContext;
+import com.xlxyvergil.taa.context.ShooterContext;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +21,8 @@ public class AttachmentPropertyManagerMixin {
     
     @Inject(method = "postChangeEvent", at = @At("HEAD"), remap = false)
     private static void onPostChangeEvent(LivingEntity shooter, ItemStack gunItem, CallbackInfo ci) {
-        // 压入当前枪型，供同步触发的事件监听器使用
+        // 压入当前射击者与枪型，供同步触发的事件监听器使用
+        ShooterContext.pushShooter(shooter);
         GunTypeContext.pushGunType(getGunType(gunItem));
     }
     
@@ -28,6 +30,7 @@ public class AttachmentPropertyManagerMixin {
     private static void afterPostChangeEvent(LivingEntity shooter, ItemStack gunItem, CallbackInfo ci) {
         // 无论 postChangeEvent 是否因非枪物品而提前返回，都必须成对弹出，避免上下文泄漏
         GunTypeContext.popGunType();
+        ShooterContext.popShooter();
     }
     
     /**
