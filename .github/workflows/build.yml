@@ -1,10 +1,11 @@
 name: Build & Release
 
+# 只有推送 v* 标签才会构建并发布 Release；分支推送不触发。
+# 手动触发（workflow_dispatch）只构建，不发布。
 on:
   push:
-    branches:
-      - '1.20.1'
-  pull_request:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -60,7 +61,7 @@ jobs:
   release:
     name: Publish release
     needs: build
-    if: github.event_name != 'pull_request'
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -75,17 +76,21 @@ jobs:
           name: mod-jar
           path: dist
 
-      - name: Resolve version and tag
+      - name: Verify tag matches gradle.properties
         id: meta
         run: |
           set -euo pipefail
           mod_version=$(grep -E '^mod_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
           mc_version=$(grep -E '^minecraft_version=' gradle.properties | head -n1 | cut -d= -f2- | tr -d '[:space:]')
           mod_name=$(grep -E '^mod_name=' gradle.properties | head -n1 | cut -d= -f2- | sed 's/[[:space:]]*$//')
-          tag="v${mod_version}-${mc_version}"
+          tag="${GITHUB_REF_NAME}"
+          case "$tag" in
+            *"$mod_version"*) ;;
+            *) echo "::error::标签 $tag 与 gradle.properties 的 mod_version=$mod_version 不一致，先改 mod_version 再打标签"; exit 1 ;;
+          esac
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
-          echo "title=${mod_name} ${mod_version} for Minecraft ${mc_version}" >> "$GITHUB_OUTPUT"
-          echo "resolved tag=${tag} title=${mod_name} ${mod_version} for Minecraft ${mc_version}"
+          echo "title=${mod_name} ${tag}" >> "$GITHUB_OUTPUT"
+          echo "resolved tag=${tag} title=${mod_name} ${tag} (mod_version=${mod_version}, mc=${mc_version})"
 
       - name: Publish GitHub release
         env:
@@ -100,7 +105,6 @@ jobs:
           else
             echo "Creating release $tag"
             gh release create "$tag" dist/*.jar \
-              --target "$GITHUB_SHA" \
               --title "$title" \
               --generate-notes
           fi
