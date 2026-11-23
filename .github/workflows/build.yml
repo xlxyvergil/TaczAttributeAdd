@@ -114,19 +114,32 @@ jobs:
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "Release $tag already exists - refreshing its assets"
             gh release upload "$tag" dist/*.jar --clobber
-          else
-            # 找上一个 tag 作为 changelog 起点，否则 GitHub 只会给一个 /commits/<tag> 的全量链接
-            prev_tag=$(git describe --tags --abbrev=0 --exclude="$tag" 2>/dev/null || true)
-            extra=()
-            if [ -n "$prev_tag" ]; then
-              echo "Generating changelog since $prev_tag"
-              extra=(--notes-start-tag "$prev_tag")
-            else
-              echo "No previous tag found - changelog will be a full commit list"
-            fi
-            echo "Creating release $tag"
+            exit 0
+          fi
+
+          # 找上一个 tag 作为 changelog 起点；找不到说明是该分支首发，
+          # GitHub 的 --generate-notes 只会给一条 /commits/<tag> 全量链接，所以自己按提交类型整理。
+          prev_tag=$(git describe --tags --abbrev=0 --exclude="$tag" 2>/dev/null || true)
+
+          if [ -n "$prev_tag" ]; then
+            echo "Generating changelog since $prev_tag"
             gh release create "$tag" dist/*.jar \
               --title "$title" \
-              "${extra[@]}" \
+              --notes-start-tag "$prev_tag" \
               --generate-notes
+          else
+            echo "First release on this branch - building changelog from the full commit history"
+            {
+              echo "## $title"
+              echo
+              echo "首发构建：以下为从初始提交到 \`$tag\` 的全部提交。"
+              git log --no-merges --reverse --pretty=format:'%s%x1f%h' "$tag" \
+                | awk -F'\037' '{ t=$1; h=$2; if (t ~ /^feat/) g="新功能"; else if (t ~ /^fix/) g="修复"; else if (t ~ /^refactor/) g="重构"; else if (t ~ /^docs/) g="文档"; else if (t ~ /^(ci|build|chore)/) g="构建与维护"; else g="其他"; items[g] = items[g] "- " t " (" h ")\n" } END { n = split("新功能|修复|重构|文档|构建与维护|其他", o, "|"); for (i = 1; i <= n; i++) { k = o[i]; if (k in items) { print ""; print "### " k; printf "%s", items[k] } } }'
+              echo
+              echo "**Full Changelog**: ${{ github.server_url }}/${{ github.repository }}/commits/$tag"
+            } > release-notes.md
+            cat release-notes.md
+            gh release create "$tag" dist/*.jar \
+              --title "$title" \
+              --notes-file release-notes.md
           fi
