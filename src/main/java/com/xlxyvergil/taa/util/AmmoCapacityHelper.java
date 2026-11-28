@@ -63,7 +63,7 @@ public class AmmoCapacityHelper {
     public static int applyMagazineAttribute(int base, @Nullable LivingEntity shooter) {
         double factor = EntityAttributeHelper.getAttributeValue(
                 shooter, EntityAttributeRegistry.MAGAZINE_CAPACITY.get(), 1.0D);
-        int result = (int) (base * factor);
+        int result = (int) Math.round(base * factor);
         return Math.max(result, 1);
     }
 
