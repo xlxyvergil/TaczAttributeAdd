@@ -9,7 +9,6 @@
     "minVersion": "0.5.0"
   },
   "client": [
-    "client.AttachmentDataUtilsClientMixin",
     "client.AttachmentPropertyManagerPanelMixin",
     "CameraSetupEventMixin",
     "ClientGunTooltipMixin",
@@ -37,7 +36,8 @@
     "ModernKineticGunItemMixin",
     "ModernKineticGunScriptAPIClockMixin",
     "ModernKineticGunScriptAPIContextMixin",
-    "ModernKineticGunScriptAPIShootMixin"
+    "ModernKineticGunScriptAPIShootMixin",
+    "PlayerRespawnEventMixin"
   ],
   "injectors": {
     "defaultRequire": 1
